@@ -42,7 +42,7 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
               RUKUN TETANGGA {surat.rt} / RUKUN WARGA {surat.rw}
             </h3>
             <h4 className="font-bold text-sm sm:text-base tracking-wider uppercase text-slate-800">
-              DESA / KELURAHAN GRAHA WARGA • KECAMATAN SEJAHTERA
+              DESA / KELURAHAN SUKAMAJU
             </h4>
             <p className="text-xs font-sans text-slate-600 italic">
               Sekretariat: Jl. Graha Warga Utama No. 1, Telp/WA: 0812-9876-5432, Kode Pos 17123

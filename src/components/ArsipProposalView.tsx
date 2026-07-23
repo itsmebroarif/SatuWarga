@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import {
   FolderArchive,
   FileText,
-  Sparkles,
   Search,
   Download,
-  Plus,
   Upload,
   Printer,
-  X,
-  FileCheck,
+  Copy,
+  Check,
+  Zap,
 } from 'lucide-react';
 import { ArsipDokumen } from '../types';
 
@@ -18,23 +17,52 @@ interface ArsipProposalViewProps {
   onAddArsip: (a: ArsipDokumen) => void;
 }
 
+const TEMPLATES = [
+  {
+    id: 'hut-ri',
+    name: 'HUT RI / Peringatan 17 Agustus',
+    penyelenggara: 'Karang Taruna Karya Muda',
+    targetAnggaran: 12500000,
+    tujuan: 'Meningkatkan jiwa kebangsaan, tali silaturahmi antar warga RT 01-05, serta menyelenggarakan lomba anak-anak dan jalan sehat warga.',
+  },
+  {
+    id: 'kerja-bakti',
+    name: 'Kerja Bakti & Saluran Air Lingkungan',
+    penyelenggara: 'Pengurus RT 01 / RW 05',
+    targetAnggaran: 3500000,
+    tujuan: 'Pembersihan got, pangkas dahan pohon, perbaikan jalan fasilitas umum, dan penyemprotan desinfektan lingkungan mencegah DBD.',
+  },
+  {
+    id: 'posyandu',
+    name: 'Posyandu Balita & Lansia Rutin Bulanan',
+    penyelenggara: 'Kader Posyandu Mawar RW 05',
+    targetAnggaran: 4200000,
+    tujuan: 'Pemberian Makanan Tambahan (PMT) bergizi untuk balita, pemeriksaan gula darah & tensi lansia, serta penyuluhan kesehatan keluarga.',
+  },
+  {
+    id: 'pos-ronda',
+    name: 'Renovasi & Perlengkapan Pos Ronda',
+    penyelenggara: 'Tim Linmas & Keamanan RT 01',
+    targetAnggaran: 6800000,
+    tujuan: 'Pengadaan HT komunikasi siskamling, pengecatan ulang pos ronda, instalasi lampu LED hemat energi, dan pembelian HT security.',
+  },
+];
+
 export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
   arsipList = [],
   onAddArsip,
 }) => {
   const [activeTab, setActiveTab] = useState<'ARSIP' | 'PROPOSAL'>('ARSIP');
   const [searchTerm, setSearchTerm] = useState('');
+  const [copied, setCopied] = useState(false);
 
-  // AI Proposal Form State
-  const [judulKegiatan, setJudulKegiatan] = useState('Peringatan HUT RI ke-81 RW 05');
-  const [unitPenyelenggara, setUnitPenyelenggara] = useState('Karang Taruna');
-  const [targetAnggaran, setTargetAnggaran] = useState(15000000);
+  // Proposal Form State
+  const [judulKegiatan, setJudulKegiatan] = useState('Peringatan HUT RI ke-81 RW 05 Padamukti');
+  const [unitPenyelenggara, setUnitPenyelenggara] = useState('Karang Taruna Karya Muda');
+  const [targetAnggaran, setTargetAnggaran] = useState(12500000);
   const [tujuanSingkat, setTujuanSingkat] = useState(
-    'Meningkatkan rasa nasionalisme, kebersamaan warga, dan kompetisi olahraga antar RT 01-05.'
+    'Meningkatkan kebersamaan warga, keakraban antar RT 01-05, dan menyelenggarakan perlombaan edukatif.'
   );
-
-  const [aiProposalResult, setAiProposalResult] = useState<string | null>(null);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const filteredArsip = arsipList.filter(
     (a) =>
@@ -43,58 +71,75 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
       a.nomorDokumen.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleGenerateProposal = async () => {
-    setIsAiLoading(true);
-    try {
-      const res = await fetch('/api/ai/generate-proposal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          judulKegiatan,
-          unitPenyelenggara,
-          targetAnggaran,
-          tujuanSingkat,
-        }),
-      });
-      const data = await res.json();
-      if (data.proposal) {
-        setAiProposalResult(
-          `# ${data.proposal.judul}\n\n## 1. Pendahuluan & Latar Belakang\n${data.proposal.latarBelakang}\n\n## 2. Rincian Estimasi Anggaran\n${data.proposal.rincianAnggaran}\n\n## 3. Penutup\n${data.proposal.penutup}`
-        );
-      }
-    } catch (e) {
-      console.error('Proposal Gen Error:', e);
-    } finally {
-      setIsAiLoading(false);
-    }
+  const handleApplyTemplate = (tmpl: typeof TEMPLATES[0]) => {
+    setJudulKegiatan(tmpl.name);
+    setUnitPenyelenggara(tmpl.penyelenggara);
+    setTargetAnggaran(tmpl.targetAnggaran);
+    setTujuanSingkat(tmpl.tujuan);
+  };
+
+  const generatedProposalText = `PROPOSAL KEGIATAN LINGKUNGAN RT/RW
+NOMOR: PROP-05/RW.05/${new Date().getFullYear()}
+
+I. JUDUL KEGIATAN
+${judulKegiatan.toUpperCase()}
+
+II. PENYELENGGARA & PENANGGUNG JAWAB
+Unit Pelaksana: ${unitPenyelenggara}
+Wilayah: Lingkungan RT 01-05 / RW 05 Padamukti
+
+III. MAKSUD DAN TUJUAN
+${tujuanSingkat}
+
+IV. RINCIAN RENCANA ANGGARAN BIAYA (RAB)
+1. Perlengkapan & Konsumsi Acara       : Rp ${(targetAnggaran * 0.45).toLocaleString('id-ID')}
+2. Hadiah, Bantuan & Sembako           : Rp ${(targetAnggaran * 0.35).toLocaleString('id-ID')}
+3. Publikasi, Keamanan & Kebersihan   : Rp ${(targetAnggaran * 0.15).toLocaleString('id-ID')}
+4. Dana Darurat & Biaya Tak Terduga   : Rp ${(targetAnggaran * 0.05).toLocaleString('id-ID')}
+------------------------------------------------------------------
+TOTAL ESTIMASI KEBUTUHAN DANA       : Rp ${targetAnggaran.toLocaleString('id-ID')}
+
+V. LEMBAR PENGESAHAN & PERSETUJUAN
+Dibuat oleh,                    Disetujui oleh,
+
+( ${unitPenyelenggara} )        ( Ketua RW 05 Padamukti )`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedProposalText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-xs">
+      {/* Header Panel */}
+      <div className="neo-card p-5 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <FolderArchive className="w-5 h-5 text-emerald-600" /> Modul Arsip Digital & Generator Proposal
-          </h2>
-          <p className="text-xs text-slate-500">
-            Penyimpanan Dokumen Resmi Organisasi & Pembuatan Proposal Kegiatan Berbasis Gemini AI.
+          <div className="flex items-center gap-2 mb-1">
+            <span className="p-2 bg-[#0056b3] text-white rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
+              <FolderArchive className="w-5 h-5" />
+            </span>
+            <h2 className="text-xl font-black text-slate-900">Arsip Digital & Generator Proposal</h2>
+          </div>
+          <p className="text-xs font-semibold text-slate-600">
+            Penyimpanan dokumen resmi RT/RW & penyusun proposal naskah dinas otomatis.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => window.print()}
-            className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer border border-slate-700"
+            className="neo-btn-secondary text-xs px-3.5 py-2"
           >
-            <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan Arsip (Print)
+            <Printer className="w-4 h-4 text-slate-900" /> Cetak (Print)
           </button>
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+
+          <div className="cupertino-segmented">
             <button
               onClick={() => setActiveTab('ARSIP')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                 activeTab === 'ARSIP'
-                  ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                  ? 'bg-[#0056b3] text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
                   : 'text-slate-700 hover:text-slate-900'
               }`}
             >
@@ -102,13 +147,13 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('PROPOSAL')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                 activeTab === 'PROPOSAL'
-                  ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                  ? 'bg-[#0056b3] text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
                   : 'text-slate-700 hover:text-slate-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 inline mr-1 text-amber-300" /> AI Generator Proposal
+              Generator Proposal
             </button>
           </div>
         </div>
@@ -117,15 +162,15 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
       {/* TAB 1: ARSIP DOKUMEN */}
       {activeTab === 'ARSIP' && (
         <div className="space-y-4">
-          <div className="bg-white p-3.5 rounded-lg border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+          <div className="neo-card p-4 bg-white flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
               <input
                 type="text"
-                placeholder="Cari Judul Dokumen, SK, Kategori..."
+                placeholder="Cari Judul Dokumen, Nomor SK..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded pl-9 pr-3 py-1.5 text-xs focus:outline-none focus:border-emerald-500"
+                className="neo-input w-full pl-9"
               />
             </div>
 
@@ -139,41 +184,45 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
                   tanggal: new Date().toISOString().slice(0, 10),
                   fileSize: '1.2 MB',
                   fileUrl: '#',
-                  keterangan: 'Dokumen Peraturan Warga Resmi',
+                  keterangan: 'Dokumen Peraturan Warga Resmi Disahkan',
                 };
                 onAddArsip(newArsip);
               }}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-1.5 rounded font-medium flex items-center gap-1.5 shadow-xs"
+              className="neo-btn text-xs px-4 py-2"
             >
-              <Upload className="w-3.5 h-3.5" /> Upload Dokumen
+              <Upload className="w-4 h-4" /> Upload Dokumen Baru
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredArsip.map((doc) => (
-              <div key={doc.id} className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                    {doc.kategori}
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-500">{doc.tanggal}</span>
+              <div key={doc.id} className="neo-card p-4 bg-white space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="cupertino-pill bg-amber-200 text-slate-900 px-2.5 py-0.5 font-extrabold text-[10px]">
+                      {doc.kategori}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold text-slate-500">{doc.tanggal}</span>
+                  </div>
+
+                  <h4 className="font-extrabold text-slate-900 text-sm leading-snug">{doc.judul}</h4>
+                  <p className="font-mono text-[11px] font-bold text-slate-600 bg-slate-100 p-1.5 rounded-lg border border-slate-300">
+                    {doc.nomorDokumen}
+                  </p>
+                  <p className="text-xs text-slate-600 font-medium">{doc.keterangan}</p>
                 </div>
 
-                <h4 className="font-bold text-slate-900 text-sm leading-snug">{doc.judul}</h4>
-                <p className="font-mono text-[11px] text-slate-500">{doc.nomorDokumen}</p>
-                <p className="text-xs text-slate-600">{doc.keterangan}</p>
-
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="font-mono text-[10px] text-slate-400">{doc.fileSize}</span>
+                <div className="pt-3 border-t-2 border-slate-200 flex items-center justify-between text-xs">
+                  <span className="font-mono text-[10px] text-slate-500 font-bold">{doc.fileSize}</span>
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      alert(`Mendownload dokumen ${doc.judul}`);
+                      alert(`Mendownload dokumen PDF: ${doc.judul}`);
                     }}
-                    className="text-emerald-700 font-bold hover:underline flex items-center gap-1"
+                    className="text-[#0056b3] font-black hover:underline flex items-center gap-1"
                   >
-                    <Download className="w-3.5 h-3.5" /> Unduh PDF
+                    <Download className="w-4 h-4" /> Unduh PDF
                   </a>
                 </div>
               </div>
@@ -182,101 +231,113 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
         </div>
       )}
 
-      {/* TAB 2: AI PROPOSAL GENERATOR */}
+      {/* TAB 2: PROPOSAL GENERATOR TEMPLATE */}
       {activeTab === 'PROPOSAL' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Form */}
-          <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs space-y-4 text-xs">
-            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
-              <Sparkles className="w-4 h-4 text-amber-500" /> Parameter Proposal Kegiatan AI
-            </h3>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Judul Kegiatan *</label>
-              <input
-                type="text"
-                required
-                value={judulKegiatan}
-                onChange={(e) => setJudulKegiatan(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 font-bold text-slate-900"
-              />
+          {/* Form Side */}
+          <div className="neo-card p-5 bg-white space-y-4">
+            <div className="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
+              <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                <Zap className="w-4 h-4 text-amber-500" /> Form Parameter Proposal
+              </h3>
+              <span className="text-[10px] bg-slate-100 border border-slate-900 font-bold px-2 py-0.5 rounded-full">
+                Otomatis Sync
+              </span>
             </div>
 
+            {/* Presets */}
             <div>
-              <label className="block text-slate-700 font-semibold mb-1">Unit Penyelenggara</label>
-              <select
-                value={unitPenyelenggara}
-                onChange={(e) => setUnitPenyelenggara(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 font-medium"
-              >
-                <option value="Karang Taruna">Karang Taruna Karya Muda</option>
-                <option value="Pengurus RT 01">Pengurus RT 01</option>
-                <option value="Pengurus RW 05">Pengurus RW 05</option>
-                <option value="PKK RW 05">PKK RW 05</option>
-                <option value="DKM Al-Ikhlas">DKM Masjid Al-Ikhlas</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Estimasi Target Anggaran (Rp)</label>
-              <input
-                type="number"
-                value={targetAnggaran}
-                onChange={(e) => setTargetAnggaran(Number(e.target.value))}
-                className="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 font-mono font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Tujuan & Maksud Kegiatan</label>
-              <textarea
-                rows={3}
-                value={tujuanSingkat}
-                onChange={(e) => setTujuanSingkat(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5"
-              />
-            </div>
-
-            <button
-              onClick={handleGenerateProposal}
-              disabled={isAiLoading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-bold shadow-xs flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              {isAiLoading ? 'Gemini AI Sedang Menyusun Proposal...' : 'Generate Proposal Otomatis'}
-            </button>
-          </div>
-
-          {/* Result Output Preview */}
-          <div className="bg-slate-900 text-slate-100 p-5 rounded-lg border border-slate-800 shadow-xs space-y-3 font-mono text-xs flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
-                <span className="font-bold text-amber-400 flex items-center gap-1.5">
-                  <FileText className="w-4 h-4" /> Hasil Draft Proposal Resmi
-                </span>
-                {aiProposalResult && (
+              <label className="block text-xs font-extrabold text-slate-900 mb-1.5">
+                Pilih Template Praktis RT/RW:
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {TEMPLATES.map((tmpl) => (
                   <button
-                    onClick={() => window.print()}
-                    className="bg-slate-800 hover:bg-slate-700 text-white text-[10px] px-2.5 py-1 rounded font-sans flex items-center gap-1 border border-slate-700"
+                    key={tmpl.id}
+                    onClick={() => handleApplyTemplate(tmpl)}
+                    className="text-left p-2.5 bg-slate-50 hover:bg-amber-100 border-2 border-slate-900 rounded-xl transition text-[11px] font-bold text-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
                   >
-                    <Printer className="w-3 h-3" /> Print Proposal
+                    {tmpl.name}
                   </button>
-                )}
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="block font-extrabold text-slate-900 mb-1">Judul Kegiatan *</label>
+                <input
+                  type="text"
+                  required
+                  value={judulKegiatan}
+                  onChange={(e) => setJudulKegiatan(e.target.value)}
+                  className="neo-input w-full"
+                />
               </div>
 
-              {aiProposalResult ? (
-                <div className="whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto text-slate-200">
-                  {aiProposalResult}
+              <div>
+                <label className="block font-extrabold text-slate-900 mb-1">Unit Penyelenggara</label>
+                <input
+                  type="text"
+                  value={unitPenyelenggara}
+                  onChange={(e) => setUnitPenyelenggara(e.target.value)}
+                  className="neo-input w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block font-extrabold text-slate-900 mb-1">Target Anggaran (Rp)</label>
+                <input
+                  type="number"
+                  value={targetAnggaran}
+                  onChange={(e) => setTargetAnggaran(Number(e.target.value))}
+                  className="neo-input w-full font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block font-extrabold text-slate-900 mb-1">Maksud & Tujuan Kegiatan</label>
+                <textarea
+                  rows={3}
+                  value={tujuanSingkat}
+                  onChange={(e) => setTujuanSingkat(e.target.value)}
+                  className="neo-input w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Preview Output Side */}
+          <div className="neo-card p-5 bg-slate-950 text-slate-100 flex flex-col justify-between space-y-4">
+            <div>
+              <div className="flex items-center justify-between border-b-2 border-slate-800 pb-3 mb-3">
+                <span className="font-extrabold text-amber-300 flex items-center gap-1.5 text-xs">
+                  <FileText className="w-4 h-4" /> Draft Proposal Siap Cetak
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="p-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? 'Tersalin' : 'Salin Teks'}
+                  </button>
+                  <button
+                    onClick={() => window.print()}
+                    className="p-1.5 bg-[#0056b3] hover:bg-blue-600 text-white rounded-lg border border-slate-700 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <Printer className="w-3.5 h-3.5" /> Print
+                  </button>
                 </div>
-              ) : (
-                <div className="text-slate-500 text-center py-20 italic">
-                  Klik "Generate Proposal Otomatis" untuk menyusun struktur proposal lengkap dengan Gemini AI.
-                </div>
-              )}
+              </div>
+
+              <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-[11px] leading-relaxed whitespace-pre-wrap max-h-[380px] overflow-y-auto text-slate-200">
+                {generatedProposalText}
+              </div>
             </div>
 
-            <p className="text-[10px] text-slate-500 border-t border-slate-800 pt-2 font-sans">
-              Format proposal sesuai standar tata naskah dinas organisasi RT/RW.
+            <p className="text-[10px] text-slate-400 font-sans border-t border-slate-800 pt-2 font-medium">
+              Format naskah dinas resmi sesuai standar administrasi tata kelola wilayah RT/RW.
             </p>
           </div>
         </div>
@@ -284,3 +345,4 @@ export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
     </div>
   );
 };
+

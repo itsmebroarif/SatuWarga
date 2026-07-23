@@ -40,6 +40,21 @@ import {
   INITIAL_VOTING,
 } from '../data/mockData';
 
+const STORAGE_VERSION = 'v3_sukamaju_empty';
+
+// Auto-reset local storage cache once to guarantee blank state
+try {
+  if (typeof localStorage !== 'undefined') {
+    const curVer = localStorage.getItem('satuwarga_version');
+    if (curVer !== STORAGE_VERSION) {
+      localStorage.clear();
+      localStorage.setItem('satuwarga_version', STORAGE_VERSION);
+    }
+  }
+} catch (e) {
+  console.warn('LocalStorage clear check skipped:', e);
+}
+
 const STORAGE_KEYS = {
   WARGA: 'satuwarga_db_warga',
   KK: 'satuwarga_db_kk',
@@ -183,46 +198,14 @@ export class LocalStoreService {
   }
 
   static getSetoranSampah(): SetoranSampah[] {
-    return this.getStorage<SetoranSampah[]>('satuwarga_db_setoran_sampah', [
-      {
-        id: 'sampah-1',
-        wargaNama: 'Bambang Supriadi',
-        nomorRumah: 'A-01',
-        jenisSampah: 'Plastik / Botol PET',
-        beratKg: 3.5,
-        hargaPerKg: 3000,
-        totalRupiah: 10500,
-        tanggal: '2026-07-20',
-      },
-    ]);
+    return this.getStorage<SetoranSampah[]>('satuwarga_db_setoran_sampah', []);
   }
   static saveSetoranSampah(data: SetoranSampah[]): void {
     this.setStorage('satuwarga_db_setoran_sampah', data);
   }
 
   static getArsip(): any[] {
-    return this.getStorage<any[]>('satuwarga_db_arsip_docs', [
-      {
-        id: 'doc-1',
-        judul: 'SK Pengangkatan Pengurus RT 01 Periode 2024-2027',
-        kategori: 'Surat Keputusan (SK)',
-        nomorDokumen: 'SK-001/RW.05/VII/2024',
-        tanggal: '2024-07-01',
-        fileSize: '850 KB',
-        fileUrl: '#',
-        keterangan: 'Dokumen Legalitas Resmi Pengurus RT 01',
-      },
-      {
-        id: 'doc-2',
-        judul: 'Peraturan & Tata Tertib Warga RW 05',
-        kategori: 'Peraturan RW',
-        nomorDokumen: 'PER-005/RW.05/2025',
-        tanggal: '2025-01-10',
-        fileSize: '1.4 MB',
-        fileUrl: '#',
-        keterangan: 'Aturan Jam Malam, Tamu Wajib Lapor, dan Iuran Warga',
-      },
-    ]);
+    return this.getStorage<any[]>('satuwarga_db_arsip_docs', []);
   }
   static saveArsip(data: any[]): void {
     this.setStorage('satuwarga_db_arsip_docs', data);

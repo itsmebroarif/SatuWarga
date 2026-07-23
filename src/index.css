@@ -1,46 +1,146 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --color-slate-bg: #f4f6f9;
+  --color-slate-bg: #f4f6f8;
   --color-surface: #ffffff;
-  --color-[#0056b3]: #0056b3;
-  --color-text-main: #333333;
-  --color-text-muted: #6c757d;
-  --color-border: #dee2e6;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-primary: #0056b3;
+  --color-dark: #0f172a;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--color-slate-bg);
-  color: var(--color-text-main);
+  color: var(--color-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 /* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #e2e8f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #0f172a;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #1e293b;
 }
 
-/* Typography Hierarchy & Refined Letter Spacing */
+/* Neo Brutalism + Cupertino Special Core Design System */
+.neo-card {
+  background-color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 1rem; /* 16px */
+  box-shadow: 4px 4px 0px 0px #0f172a;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.neo-card:hover {
+  box-shadow: 5px 5px 0px 0px #0f172a;
+}
+
+.neo-btn {
+  background-color: #0056b3;
+  color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 0.75rem; /* 12px */
+  font-weight: 700;
+  box-shadow: 3px 3px 0px 0px #0f172a;
+  transition: all 0.12s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.neo-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px #0f172a;
+}
+
+.neo-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px #0f172a;
+}
+
+.neo-btn-secondary {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 2px solid #0f172a;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  box-shadow: 3px 3px 0px 0px #0f172a;
+  transition: all 0.12s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.neo-btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px #0f172a;
+  background-color: #f8fafc;
+}
+
+.neo-btn-secondary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px #0f172a;
+}
+
+.neo-input {
+  background-color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #0f172a;
+  box-shadow: 2px 2px 0px 0px #0f172a;
+  transition: all 0.15s ease;
+}
+
+.neo-input:focus {
+  outline: none;
+  box-shadow: 4px 4px 0px 0px #0056b3;
+  border-color: #0056b3;
+}
+
+.cupertino-pill {
+  border: 2px solid #0f172a;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  box-shadow: 2px 2px 0px 0px #0f172a;
+}
+
+.cupertino-segmented {
+  background-color: #e2e8f0;
+  padding: 0.25rem;
+  border: 2px solid #0f172a;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 3px 3px 0px 0px #0f172a;
+}
+
+/* Typography Hierarchy & Letter Spacing */
 h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  font-weight: 800;
 }
 
 /* Sleek Table Enhancements Across All Views */
@@ -48,18 +148,18 @@ table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.8125rem; /* 13px */
+  font-size: 0.8125rem;
 }
 
 table thead th {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  font-weight: 600;
+  background-color: #0f172a;
+  color: #ffffff;
+  font-weight: 700;
   text-transform: uppercase;
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  padding: 10px 14px;
-  border-bottom: 2px solid #dee2e6;
+  padding: 12px 14px;
+  border-bottom: 2px solid #0f172a;
   text-align: left;
   white-space: nowrap;
 }
@@ -69,46 +169,30 @@ table tbody tr {
 }
 
 table tbody tr:nth-child(even) {
-  background-color: rgba(248, 249, 250, 0.6);
+  background-color: #f8fafc;
 }
 
 table tbody tr:hover {
-  background-color: #f1f5f9;
+  background-color: #e2e8f0;
 }
 
 table tbody td {
-  padding: 11px 14px;
-  border-bottom: 1px solid #e9ecef;
-  color: #333333;
+  padding: 12px 14px;
+  border-bottom: 1px solid #cbd5e1;
+  color: #0f172a;
   vertical-align: middle;
   line-height: 1.4;
-}
-
-/* Sleek Panel & Container Utilities */
-.sleek-card {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.sleek-pill {
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  font-weight: 500;
 }
 
 /* Table container rounded wrapper */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
+  border: 2px solid #0f172a;
+  border-radius: 1rem;
   background: #ffffff;
+  box-shadow: 4px 4px 0px 0px #0f172a;
 }
 
 /* Custom Print CSS for Laporan & Keuangan PDF / Browser Print */
@@ -119,7 +203,6 @@ table tbody td {
     font-size: 11pt !important;
   }
 
-  /* Hide UI controls, sidebars, buttons, modals during print */
   aside,
   header,
   nav,
@@ -139,7 +222,6 @@ table tbody td {
     width: 100% !important;
   }
 
-  /* Force table formatting for printable reports */
   table {
     width: 100% !important;
     border-collapse: collapse !important;
@@ -170,4 +252,5 @@ table tbody td {
     margin-bottom: 15px;
   }
 }
+
 

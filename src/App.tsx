@@ -14,12 +14,11 @@ import { ArsipProposalView } from './components/ArsipProposalView';
 import { AduanWargaView } from './components/AduanWargaView';
 import { PengumumanView } from './components/PengumumanView';
 import { VotingView } from './components/VotingView';
-import { AIAssistantModal } from './components/AIAssistantModal';
+import { Footer } from './components/Footer';
 
 export default function App() {
-  const [currentRole, setCurrentRole] = useState<UserRole>('RT');
+  const [currentRole, setCurrentRole] = useState<UserRole>('KETUA_RW');
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // State
@@ -228,12 +227,11 @@ export default function App() {
   const normalizedTab = String(activeTab || '').toLowerCase();
 
   return (
-    <div className="min-h-screen bg-slate-100/80 font-sans text-slate-800 antialiased flex flex-col selection:bg-[#0056b3] selection:text-white">
+    <div className="min-h-screen bg-slate-100 font-sans text-slate-900 antialiased flex flex-col selection:bg-[#0056b3] selection:text-white">
       {/* Header */}
       <Header
         currentRole={currentRole}
         onRoleChange={setCurrentRole}
-        onOpenAiAssistant={() => setIsAiModalOpen(true)}
         onToggleSidebarMobile={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         pendingSuratCount={suratList.filter((s) => s.status === 'PENDING').length}
         pendingAduanCount={aduanList.filter((a) => a.status === 'OPEN').length}
@@ -252,131 +250,118 @@ export default function App() {
         />
 
         {/* Main Content View Container */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6">
-          {(normalizedTab === 'dashboard' || normalizedTab === 'dashboard_utama') && (
-            <DashboardView
-              wargaList={wargaList}
-              kkList={kkList}
-              rumahList={rumahList}
-              suratList={suratList}
-              kasList={kasList}
-              tagihanList={tagihanList}
-              eventsList={eventsList}
-              aduanList={aduanList}
-              pengumumanList={pengumumanList}
-              currentRole={currentRole}
-              onNavigateTab={(t: any) => setActiveTab(t)}
-              onApproveSurat={handleApproveSurat}
-              onOpenAiAssistant={() => setIsAiModalOpen(true)}
-            />
-          )}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 flex flex-col justify-between">
+          <div className="space-y-6 flex-1">
+            {(normalizedTab === 'dashboard' || normalizedTab === 'dashboard_utama') && (
+              <DashboardView
+                wargaList={wargaList}
+                kkList={kkList}
+                rumahList={rumahList}
+                suratList={suratList}
+                kasList={kasList}
+                tagihanList={tagihanList}
+                eventsList={eventsList}
+                aduanList={aduanList}
+                pengumumanList={pengumumanList}
+                currentRole={currentRole}
+                onNavigateTab={(t: any) => setActiveTab(t)}
+                onApproveSurat={handleApproveSurat}
+              />
+            )}
 
-          {(normalizedTab === 'master-data' || normalizedTab === 'master_data') && (
-            <MasterDataView
-              wargaList={wargaList}
-              kkList={kkList}
-              rumahList={rumahList}
-              onAddWarga={handleAddWarga}
-              onUpdateWarga={handleUpdateWarga}
-              onDeleteWarga={handleDeleteWarga}
-              onAddKK={handleAddKK}
-              onAddRumah={handleAddRumah}
-            />
-          )}
+            {(normalizedTab === 'master-data' || normalizedTab === 'master_data') && (
+              <MasterDataView
+                wargaList={wargaList}
+                kkList={kkList}
+                rumahList={rumahList}
+                onAddWarga={handleAddWarga}
+                onUpdateWarga={handleUpdateWarga}
+                onDeleteWarga={handleDeleteWarga}
+                onAddKK={handleAddKK}
+                onAddRumah={handleAddRumah}
+              />
+            )}
 
-          {normalizedTab === 'administrasi' && (
-            <AdministrasiView
-              suratList={suratList}
-              wargaList={wargaList}
-              onAddSurat={handleAddSurat}
-              onApproveSurat={handleApproveSurat}
-              onRejectSurat={handleRejectSurat}
-            />
-          )}
+            {normalizedTab === 'administrasi' && (
+              <AdministrasiView
+                suratList={suratList}
+                wargaList={wargaList}
+                onAddSurat={handleAddSurat}
+                onApproveSurat={handleApproveSurat}
+                onRejectSurat={handleRejectSurat}
+              />
+            )}
 
-          {normalizedTab === 'keuangan' && (
-            <KeuanganView
-              kasList={kasList}
-              onAddKas={handleAddKas}
-              onApproveKas={handleApproveKas}
-            />
-          )}
+            {normalizedTab === 'keuangan' && (
+              <KeuanganView
+                kasList={kasList}
+                onAddKas={handleAddKas}
+                onApproveKas={handleApproveKas}
+              />
+            )}
 
-          {normalizedTab === 'iuran' && (
-            <IuranView
-              tagihanList={tagihanList}
-              onToggleStatusIuran={handleToggleStatusIuran}
-              onAddTagihan={handleAddTagihan}
-            />
-          )}
+            {normalizedTab === 'iuran' && (
+              <IuranView
+                tagihanList={tagihanList}
+                onToggleStatusIuran={handleToggleStatusIuran}
+                onAddTagihan={handleAddTagihan}
+              />
+            )}
 
-          {(normalizedTab === 'aduan-warga' || normalizedTab === 'sosial-aduan') && (
-            <AduanWargaView
-              aduanList={aduanList}
-              onAddAduan={handleAddAduan}
-              onUpdateStatusAduan={handleUpdateStatusAduan}
-              currentRole={currentRole}
-            />
-          )}
+            {(normalizedTab === 'aduan-warga' || normalizedTab === 'sosial-aduan') && (
+              <AduanWargaView
+                aduanList={aduanList}
+                onAddAduan={handleAddAduan}
+                onUpdateStatusAduan={handleUpdateStatusAduan}
+                currentRole={currentRole}
+              />
+            )}
 
-          {normalizedTab === 'pengumuman' && (
-            <PengumumanView
-              pengumumanList={pengumumanList}
-              onAddPengumuman={handleAddPengumuman}
-              currentRole={currentRole}
-            />
-          )}
+            {normalizedTab === 'pengumuman' && (
+              <PengumumanView
+                pengumumanList={pengumumanList}
+                onAddPengumuman={handleAddPengumuman}
+                currentRole={currentRole}
+              />
+            )}
 
-          {normalizedTab === 'voting' && (
-            <VotingView
-              votingList={votingList}
-              onAddVoting={handleAddVoting}
-              onCastVote={handleCastVote}
-              currentRole={currentRole}
-            />
-          )}
+            {normalizedTab === 'voting' && (
+              <VotingView
+                votingList={votingList}
+                onAddVoting={handleAddVoting}
+                onCastVote={handleCastVote}
+                currentRole={currentRole}
+              />
+            )}
 
-          {normalizedTab === 'kegiatan' && (
-            <KegiatanView
-              eventsList={eventsList}
-              notulenList={notulenList}
-              onAddEvent={handleAddEvent}
-              onAddNotulen={handleAddNotulen}
-            />
-          )}
+            {normalizedTab === 'kegiatan' && (
+              <KegiatanView
+                eventsList={eventsList}
+                notulenList={notulenList}
+                onAddEvent={handleAddEvent}
+                onAddNotulen={handleAddNotulen}
+              />
+            )}
 
-          {(normalizedTab === 'sub_organisasi' || normalizedTab === 'bank-sampah' || normalizedTab === 'inventaris') && (
-            <SubOrganisasiView
-              setoranSampahList={setoranSampahList}
-              onAddSetoranSampah={handleAddSetoranSampah}
-            />
-          )}
+            {(normalizedTab === 'sub_organisasi' || normalizedTab === 'bank-sampah' || normalizedTab === 'inventaris') && (
+              <SubOrganisasiView
+                setoranSampahList={setoranSampahList}
+                onAddSetoranSampah={handleAddSetoranSampah}
+              />
+            )}
 
-          {(normalizedTab === 'arsip_proposal' || normalizedTab === 'dokumen-proposal') && (
-            <ArsipProposalView
-              arsipList={arsipList}
-              onAddArsip={handleAddArsip}
-            />
-          )}
+            {(normalizedTab === 'arsip_proposal' || normalizedTab === 'dokumen-proposal') && (
+              <ArsipProposalView
+                arsipList={arsipList}
+                onAddArsip={handleAddArsip}
+              />
+            )}
+          </div>
+
+          {/* Footer inside content section */}
+          <Footer />
         </main>
       </div>
-
-      {/* AI Assistant Modal */}
-      {isAiModalOpen && (
-        <AIAssistantModal
-          currentRole={currentRole}
-          onClose={() => setIsAiModalOpen(false)}
-        />
-      )}
-
-      {/* Footer */}
-      <footer className="bg-[#343a40] text-slate-300 text-xs py-3.5 border-t border-slate-700 text-center font-sans flex items-center justify-center gap-2">
-        <span className="font-bold text-white">Satu<span className="text-[#17a2b8]">Warga.id</span></span>
-        <span>•</span>
-        <span>Community Operating System RT/RW</span>
-        <span>•</span>
-        <span className="text-emerald-400 font-mono text-[11px]">E2E Encrypted</span>
-      </footer>
     </div>
   );
 }

@@ -177,6 +177,15 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
+              {filteredSurat.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="p-8 text-center text-slate-500">
+                    <FileCheck className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                    <p className="font-semibold text-slate-700 text-sm">Belum ada pengajuan surat</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Klik "+ Buat Pengajuan Surat" untuk membuat pengajuan baru.</p>
+                  </td>
+                </tr>
+              )}
               {filteredSurat.map((surat) => {
                 let statusBadge = (
                   <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 w-fit">

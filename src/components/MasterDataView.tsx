@@ -186,7 +186,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             <Users className="w-5 h-5 text-emerald-600" /> Modul Master Data Kependudukan
           </h2>
           <p className="text-xs text-slate-500">
-            Database Terpusat Warga, Kartu Keluarga (KK), dan Bangunan Rumah RT 01-05 / RW 05.
+            Database Terpusat Warga, Kartu Keluarga (KK), dan Bangunan Rumah RT 01-10 / RW 01-30 Sukamaju.
           </p>
         </div>
 
@@ -248,9 +248,10 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                 className="bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-emerald-500"
               >
                 <option value="ALL">Semua RT</option>
-                <option value="01">RT 01</option>
-                <option value="02">RT 02</option>
-                <option value="03">RT 03</option>
+                {Array.from({ length: 10 }, (_, i) => {
+                  const val = String(i + 1).padStart(2, '0');
+                  return <option key={val} value={val}>RT {val}</option>;
+                })}
               </select>
             </div>
 
@@ -303,6 +304,15 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
+                  {filteredWarga.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="p-8 text-center text-slate-500">
+                        <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                        <p className="font-semibold text-slate-700 text-sm">Belum ada data warga</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Klik tombol "+ Tambah Warga" untuk memasukkan data warga Sukamaju.</p>
+                      </td>
+                    </tr>
+                  )}
                   {filteredWarga.map((warga) => {
                     const maskedNik = showEncryptedNik
                       ? warga.nik
@@ -403,6 +413,13 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {kkList.length === 0 && (
+              <div className="col-span-full p-8 text-center text-slate-500 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                <FileText className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                <p className="font-semibold text-slate-700 text-sm">Belum ada data Kartu Keluarga (KK)</p>
+                <p className="text-xs text-slate-500 mt-0.5">Klik tombol "+ Tambah KK" untuk mendaftarkan KK baru.</p>
+              </div>
+            )}
             {kkList.map((kk) => (
               <div key={kk.id} className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
                 <div className="flex items-center justify-between">
@@ -458,6 +475,13 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {rumahList.length === 0 && (
+              <div className="col-span-full p-8 text-center text-slate-500 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                <Home className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                <p className="font-semibold text-slate-700 text-sm">Belum ada data register bangunan rumah</p>
+                <p className="text-xs text-slate-500 mt-0.5">Klik tombol "+ Reg. Rumah" untuk mendaftarkan bangunan rumah.</p>
+              </div>
+            )}
             {rumahList.map((rmh) => (
               <div key={rmh.id} className="p-3.5 bg-slate-50 border border-slate-200 rounded space-y-1.5">
                 <div className="flex items-center justify-between">
@@ -600,16 +624,20 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                       onChange={(e) => setFormData({ ...formData, rt: e.target.value })}
                       className="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1.5"
                     >
-                      <option value="01">RT 01</option>
-                      <option value="02">RT 02</option>
-                      <option value="03">RT 03</option>
+                      {Array.from({ length: 10 }, (_, i) => {
+                        const val = String(i + 1).padStart(2, '0');
+                        return <option key={val} value={val}>RT {val}</option>;
+                      })}
                     </select>
                     <select
-                      value={formData.rw || '05'}
+                      value={formData.rw || '01'}
                       onChange={(e) => setFormData({ ...formData, rw: e.target.value })}
                       className="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1.5"
                     >
-                      <option value="05">RW 05</option>
+                      {Array.from({ length: 30 }, (_, i) => {
+                        const val = String(i + 1).padStart(2, '0');
+                        return <option key={val} value={val}>RW {val}</option>;
+                      })}
                     </select>
                   </div>
                 </div>

@@ -55,7 +55,7 @@ interface DashboardViewProps {
   currentRole: UserRole;
   onNavigateTab: (tab: ActiveTab) => void;
   onApproveSurat: (id: string) => void;
-  onOpenAiAssistant: () => void;
+  onOpenAiAssistant?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
