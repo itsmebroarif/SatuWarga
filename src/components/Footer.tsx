@@ -8,10 +8,10 @@ export const Footer: React.FC = () => {
         <div className="space-y-1 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2">
             <div className="w-6 h-6 bg-[#0056b3] text-white flex items-center justify-center font-black text-xs rounded-lg border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
-              SW
+              SK
             </div>
             <span className="font-extrabold text-slate-900 text-sm">
-              Satu<span className="text-[#0056b3]">Warga.id</span> — Community ERP
+              Sukamaju <span className="text-[#0056b3]">ERP</span> — Community Operating System
             </span>
             <span className="text-[10px] bg-emerald-300 text-slate-900 font-extrabold px-2 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
               Versi 1.0
@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-semibold text-slate-500">
-        <p>© {new Date().getFullYear()} Sukamaju ERP. Dikembangkan oleh <b>Kafeinarts Studio</b> untuk Pengelolaan Mandiri Pengurus RT/RW.</p>
+        <p>© {new Date().getFullYear()} Sukamaju ERP. Pengelolaan Mandiri Pengurus RT/RW Sukamaju.</p>
         <div className="flex items-center gap-4">
           <span className="hover:text-slate-900 cursor-pointer">Panduan Pengguna</span>
           <span className="hover:text-slate-900 cursor-pointer">Pernyataan Privasi</span>

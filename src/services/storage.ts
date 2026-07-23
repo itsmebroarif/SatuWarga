@@ -45,10 +45,10 @@ const STORAGE_VERSION = 'v3_sukamaju_empty';
 // Auto-reset local storage cache once to guarantee blank state
 try {
   if (typeof localStorage !== 'undefined') {
-    const curVer = localStorage.getItem('sukamaju_version');
+    const curVer = localStorage.getItem('satuwarga_version');
     if (curVer !== STORAGE_VERSION) {
       localStorage.clear();
-      localStorage.setItem('sukamaju_version', STORAGE_VERSION);
+      localStorage.setItem('satuwarga_version', STORAGE_VERSION);
     }
   }
 } catch (e) {
@@ -56,24 +56,24 @@ try {
 }
 
 const STORAGE_KEYS = {
-  WARGA: 'sukamaju_db_warga',
-  KK: 'sukamaju_db_kk',
-  RUMAH: 'sukamaju_db_rumah',
-  SURAT: 'sukamaju_db_surat',
-  KAS: 'sukamaju_db_kas',
-  TAGIHAN: 'sukamaju_db_tagihan',
-  EVENTS: 'sukamaju_db_events',
-  NOTULEN: 'sukamaju_db_notulen',
-  BARANG: 'sukamaju_db_barang',
-  PEMINJAMAN: 'sukamaju_db_peminjaman',
-  NASABAH: 'sukamaju_db_nasabah',
-  TRX_SAMPAH: 'sukamaju_db_trx_sampah',
-  ADUAN: 'sukamaju_db_aduan',
-  PENGUMUMAN: 'sukamaju_db_pengumuman',
-  PROPOSAL: 'sukamaju_db_proposal',
-  LPJ: 'sukamaju_db_lpj',
-  VOTING: 'sukamaju_db_voting',
-  ENCRYPTION_KEY: 'sukamaju_sec_key',
+  WARGA: 'satuwarga_db_warga',
+  KK: 'satuwarga_db_kk',
+  RUMAH: 'satuwarga_db_rumah',
+  SURAT: 'satuwarga_db_surat',
+  KAS: 'satuwarga_db_kas',
+  TAGIHAN: 'satuwarga_db_tagihan',
+  EVENTS: 'satuwarga_db_events',
+  NOTULEN: 'satuwarga_db_notulen',
+  BARANG: 'satuwarga_db_barang',
+  PEMINJAMAN: 'satuwarga_db_peminjaman',
+  NASABAH: 'satuwarga_db_nasabah',
+  TRX_SAMPAH: 'satuwarga_db_trx_sampah',
+  ADUAN: 'satuwarga_db_aduan',
+  PENGUMUMAN: 'satuwarga_db_pengumuman',
+  PROPOSAL: 'satuwarga_db_proposal',
+  LPJ: 'satuwarga_db_lpj',
+  VOTING: 'satuwarga_db_voting',
+  ENCRYPTION_KEY: 'satuwarga_sec_key',
 };
 
 // Simple AES / Base64 E2E Encryption Simulation for local privacy
@@ -198,17 +198,17 @@ export class LocalStoreService {
   }
 
   static getSetoranSampah(): SetoranSampah[] {
-    return this.getStorage<SetoranSampah[]>('sukamaju_db_setoran_sampah', []);
+    return this.getStorage<SetoranSampah[]>('satuwarga_db_setoran_sampah', []);
   }
   static saveSetoranSampah(data: SetoranSampah[]): void {
-    this.setStorage('sukamaju_db_setoran_sampah', data);
+    this.setStorage('satuwarga_db_setoran_sampah', data);
   }
 
   static getArsip(): any[] {
-    return this.getStorage<any[]>('sukamaju_db_arsip_docs', []);
+    return this.getStorage<any[]>('satuwarga_db_arsip_docs', []);
   }
   static saveArsip(data: any[]): void {
-    this.setStorage('sukamaju_db_arsip_docs', data);
+    this.setStorage('satuwarga_db_arsip_docs', data);
   }
 
   static loadBarang(): BarangInventaris[] {
@@ -277,7 +277,7 @@ export class LocalStoreService {
   // Backup entire database to JSON blob
   static exportBackupJSON(): string {
     const backupObj = {
-      appName: 'Sukamaju.id',
+      appName: 'Sukamaju ERP',
       version: '1.0.0',
       exportedAt: new Date().toISOString(),
       data: {

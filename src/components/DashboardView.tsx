@@ -16,6 +16,12 @@ import {
   Plus,
   ShieldCheck,
   Eye,
+  BarChart3,
+  PieChart as PieChartIcon,
+  UserCheck,
+  Briefcase,
+  HeartHandshake,
+  Activity,
 } from 'lucide-react';
 import {
   Warga,
@@ -40,6 +46,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from 'recharts';
 
 interface DashboardViewProps {
@@ -114,6 +121,67 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     { name: 'Perempuan', value: femaleCount, color: '#ec4899' },
   ];
 
+  // Age Calculation Helper
+  const calculateAge = (tanggalLahirStr: string): number => {
+    if (!tanggalLahirStr) return 32;
+    const birthDate = new Date(tanggalLahirStr);
+    if (isNaN(birthDate.getTime())) return 32;
+    const ageDifMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
+
+  // 1. Age Distribution Statistics
+  const ageStats = { anak: 0, pemuda: 0, dewasa: 0, lansia: 0 };
+  wargaList.forEach((w) => {
+    const age = calculateAge(w.tanggalLahir);
+    if (age < 18) ageStats.anak++;
+    else if (age <= 35) ageStats.pemuda++;
+    else if (age <= 59) ageStats.dewasa++;
+    else ageStats.lansia++;
+  });
+
+  const ageChartData = [
+    { range: 'Anak (<18th)', jumlah: ageStats.anak, color: '#0284c7' },
+    { range: 'Pemuda (18-35th)', jumlah: ageStats.pemuda, color: '#10b981' },
+    { range: 'Dewasa (36-59th)', jumlah: ageStats.dewasa, color: '#f59e0b' },
+    { range: 'Lansia (60+th)', jumlah: ageStats.lansia, color: '#8b5cf6' },
+  ];
+
+  // 2. Employment Status Statistics
+  const jobMap: Record<string, number> = {};
+  wargaList.forEach((w) => {
+    const job = w.pekerjaan || 'Lainnya';
+    jobMap[job] = (jobMap[job] || 0) + 1;
+  });
+
+  const employmentChartData = Object.entries(jobMap)
+    .map(([job, total]) => ({ name: job, jumlah: total }))
+    .sort((a, b) => b.jumlah - a.jumlah);
+
+  // 3. Religion Distribution Statistics
+  const agamaMap: Record<string, number> = {};
+  wargaList.forEach((w) => {
+    const ag = w.agama || 'Lainnya';
+    agamaMap[ag] = (agamaMap[ag] || 0) + 1;
+  });
+
+  const AGAMA_COLORS: Record<string, string> = {
+    Islam: '#10b981',
+    Kristen: '#0284c7',
+    Katolik: '#6366f1',
+    Hindu: '#f59e0b',
+    Buddha: '#ef4444',
+    Khonghucu: '#64748b',
+    Lainnya: '#94a3b8',
+  };
+
+  const religionChartData = Object.entries(agamaMap).map(([religion, total]) => ({
+    name: religion,
+    value: total,
+    color: AGAMA_COLORS[religion] || '#0056b3',
+  }));
+
   return (
     <div className="space-y-5">
       {/* Top Banner & Quick Actions */}
@@ -126,8 +194,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="text-[#17a2b8] text-xs font-mono font-medium">RT 01-05 / RW 05 Graha Warga</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-white">
-            Selamat Datang di Sukamaju ERP 
-            </h1>
+            Selamat Datang di Sukamaju ERP
+          </h1>
           <p className="text-xs text-slate-300">
             Sistem Operasi Lingkungan Terpadu. Seluruh data warga tersimpan secara aman dan terenkripsi.
           </p>
@@ -262,6 +330,127 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="text-[10px] font-bold text-slate-500 uppercase">Bank Sampah</span>
             <div className="text-sm font-bold text-[#333] font-mono mt-1">
               Rp {kasBankSampah.toLocaleString('id-ID')}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* STATISTIK WARGA MODULE (Age Distribution, Employment, Religion, Gender) */}
+      <div className="bg-white rounded border border-[#dee2e6] p-5 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#dee2e6] pb-3 gap-2">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-[#0056b3]/10 text-[#0056b3] rounded-lg">
+              <BarChart3 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-[#333] text-base flex items-center gap-2">
+                Statistik Warga Sukamaju
+                <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                  {totalWarga} Jiwa Live
+                </span>
+              </h3>
+              <p className="text-xs text-slate-500">
+                Visualisasi interaktif Distribusi Usia, Status Pekerjaan, Agama, dan Jenis Kelamin.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => onNavigateTab('master-data')}
+            className="text-xs font-bold text-[#0056b3] bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded flex items-center gap-1 self-start sm:self-center cursor-pointer"
+          >
+            Data Lengkap Warga <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* 3 Interactive Chart Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Chart 1: Distribusi Usia */}
+          <div className="bg-[#f8f9fa] rounded p-4 border border-[#dee2e6] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#333] flex items-center gap-1.5">
+                <UserCheck className="w-4 h-4 text-[#0056b3]" /> Distribusi Usia
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                Lansia: {ageStats.lansia} • Anak: {ageStats.anak}
+              </span>
+            </div>
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={ageChartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                  <XAxis dataKey="range" tick={{ fontSize: 9 }} />
+                  <YAxis tick={{ fontSize: 9 }} allowDecimals={false} />
+                  <Tooltip
+                    formatter={(val: number) => [`${val} Orang`, 'Jumlah Warga']}
+                    contentStyle={{ fontSize: '11px', borderRadius: '6px', borderColor: '#cbd5e1' }}
+                  />
+                  <Bar dataKey="jumlah" radius={[4, 4, 0, 0]}>
+                    {ageChartData.map((entry, index) => (
+                      <Cell key={`age-cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Chart 2: Status Pekerjaan */}
+          <div className="bg-[#f8f9fa] rounded p-4 border border-[#dee2e6] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#333] flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4 text-emerald-600" /> Status Pekerjaan Warga
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                {employmentChartData.length} Kategori
+              </span>
+            </div>
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={employmentChartData.slice(0, 5)} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                  <XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} />
+                  <YAxis tick={{ fontSize: 9 }} allowDecimals={false} />
+                  <Tooltip
+                    formatter={(val: number) => [`${val} Jiwa`, 'Pekerjaan']}
+                    contentStyle={{ fontSize: '11px', borderRadius: '6px', borderColor: '#cbd5e1' }}
+                  />
+                  <Bar dataKey="jumlah" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Chart 3: Distribusi Agama & Gender */}
+          <div className="bg-[#f8f9fa] rounded p-4 border border-[#dee2e6] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#333] flex items-center gap-1.5">
+                <HeartHandshake className="w-4 h-4 text-purple-600" /> Distribusi Agama
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                Pria: {maleCount} | Wanita: {femaleCount}
+              </span>
+            </div>
+            <div className="h-48 w-full flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={religionChartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={32}
+                    outerRadius={60}
+                    paddingAngle={3}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {religionChartData.map((entry, index) => (
+                      <Cell key={`rel-cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(val: number) => [`${val} Jiwa`, 'Jumlah Pemeluk']}
+                    contentStyle={{ fontSize: '11px', borderRadius: '6px', borderColor: '#cbd5e1' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

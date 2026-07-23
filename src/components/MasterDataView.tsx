@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { Warga, KartuKeluarga, Rumah } from '../types';
 
+import { exportToCSV } from '../utils/csvExport';
+
 interface MasterDataViewProps {
   wargaList: Warga[];
   kkList: KartuKeluarga[];
@@ -162,19 +164,45 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   };
 
   const exportWargaCsv = () => {
-    const headers = 'ID,NIK,Nama,TempatLahir,TanggalLahir,Gender,Agama,NoHP,RT,RW,Rumah\n';
-    const rows = wargaList
-      .map(
-        (w) =>
-          `"${w.id}","${w.nik}","${w.nama}","${w.tempatLahir}","${w.tanggalLahir}","${w.jenisKelamin}","${w.agama}","${w.noHp}","${w.rt}","${w.rw}","${w.nomorRumah}"`
-      )
-      .join('\n');
-    const blob = new Blob([headers + rows], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Data_Warga_Sukamaju_RT01-05_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
+    const headers = [
+      'ID Warga',
+      'NIK',
+      'Nama Lengkap',
+      'Tempat Lahir',
+      'Tanggal Lahir',
+      'Jenis Kelamin',
+      'Agama',
+      'Pendidikan',
+      'Pekerjaan',
+      'Status Perkawinan',
+      'No HP',
+      'Alamat',
+      'RT',
+      'RW',
+      'Nomor Rumah',
+      'Status Tinggal',
+      'Status Warga',
+    ];
+    const rows = filteredWarga.map((w) => [
+      w.id,
+      w.nik,
+      w.nama,
+      w.tempatLahir,
+      w.tanggalLahir,
+      w.jenisKelamin,
+      w.agama,
+      w.pendidikan,
+      w.pekerjaan,
+      w.statusPerkawinan,
+      w.noHp,
+      w.alamat,
+      w.rt,
+      w.rw,
+      w.nomorRumah,
+      w.statusTinggal,
+      w.statusWarga,
+    ]);
+    exportToCSV('Data_Warga_Sukamaju', headers, rows);
   };
 
   return (

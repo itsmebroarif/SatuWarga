@@ -1,6 +1,6 @@
 {
-  "name": "Sukamaju.id",
-  "description": "Community Operating System untuk digitalisasi RT/RW, PKK, Karang Taruna, Posyandu, DKM, Linmas, dan Bank Sampah dengan Enkripsi Data Warga.",
+  "name": "Sukamaju ERP",
+  "description": "Enterprise Resource Planning & Operating System Pengelolaan Warga Sukamaju (RT/RW, PKK, Karang Taruna, Posyandu, DKM, Linmas) dengan Enkripsi Data & Statistik Interaktif.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

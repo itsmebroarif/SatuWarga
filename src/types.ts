@@ -1,18 +1,34 @@
 export type UserRole =
   | 'SUPER_ADMIN'
   | 'KETUA_RW'
+  | 'WAKIL_KETUA_RW'
   | 'SEKRETARIS_RW'
+  | 'WAKIL_SEKRETARIS_RW'
   | 'BENDAHARA_RW'
+  | 'WAKIL_BENDAHARA_RW'
   | 'KETUA_RT'
+  | 'WAKIL_KETUA_RT'
   | 'SEKRETARIS_RT'
+  | 'WAKIL_SEKRETARIS_RT'
   | 'BENDAHARA_RT'
-  | 'PKK'
-  | 'KARANG_TARUNA'
+  | 'WAKIL_BENDAHARA_RT'
+  | 'KETUA_PKK'
+  | 'PENGURUS_PKK'
+  | 'KETUA_KARANG_TARUNA'
+  | 'PENGURUS_KARANG_TARUNA'
   | 'POSYANDU'
   | 'BANK_SAMPAH'
   | 'LINMAS'
-  | 'DKM'
+  | 'KETUA_DKM'
+  | 'PENGURUS_DKM'
   | 'WARGA';
+
+export interface ToastMessage {
+  id: string;
+  type: 'success' | 'error' | 'info' | 'warning';
+  title: string;
+  message?: string;
+}
 
 export type UnitCategory = 'RT' | 'RW' | 'PKK' | 'KARANG_TARUNA' | 'POSYANDU' | 'BANK_SAMPAH' | 'LINMAS' | 'DKM';
 

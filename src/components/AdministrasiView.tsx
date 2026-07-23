@@ -72,7 +72,7 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
       keperluan: keperluan || 'Persyaratan Administrasi Resmi',
       tanggalPengajuan: new Date().toISOString().slice(0, 10),
       status: 'MENUNGGU_RT',
-      qrCodeHash: `SUKAMAJU-${jenisSurat.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-4)}-VERIFIED`,
+      qrCodeHash: `SUKAMAJU-ERP-${jenisSurat.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-4)}-VERIFIED`,
     };
 
     onAddSurat(newSurat);

@@ -11,8 +11,10 @@ import {
   Printer,
   X,
   Upload,
+  Download,
 } from 'lucide-react';
 import { TransaksiKas, UnitCategory } from '../types';
+import { exportToCSV } from '../utils/csvExport';
 
 interface KeuanganViewProps {
   kasList: TransaksiKas[];
@@ -70,6 +72,32 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
     setKeterangan('');
   };
 
+  const exportKasCsv = () => {
+    const headers = [
+      'ID Transaksi',
+      'Unit Kas',
+      'Jenis',
+      'Kategori',
+      'Jumlah (Rp)',
+      'Tanggal',
+      'Keterangan',
+      'Status Approval',
+      'Dicatat Oleh',
+    ];
+    const rows = filteredKas.map((k) => [
+      k.id,
+      k.unitKas,
+      k.jenis,
+      k.kategori,
+      k.jumlah,
+      k.tanggal,
+      k.keterangan,
+      k.statusApproval,
+      k.createdBy,
+    ]);
+    exportToCSV(`Laporan_Kas_${activeUnit}_Sukamaju`, headers, rows);
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Title & Unit Selector */}
@@ -84,16 +112,22 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={exportKasCsv}
+              className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 dark:border-slate-700 shadow-[2px_2px_0px_0px_#0f172a] dark:shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+            >
+              <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Export CSV
+            </button>
             <button
               onClick={() => window.print()}
-              className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer border border-slate-700"
+              className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 dark:border-slate-700 shadow-[2px_2px_0px_0px_#0f172a] dark:shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
-              <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan Kas (Print)
+              <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan Kas
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 dark:border-slate-700 shadow-[2px_2px_0px_0px_#0f172a] dark:shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" /> Catat Transaksi Kas
             </button>

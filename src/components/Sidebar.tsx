@@ -16,6 +16,8 @@ import {
   Bell,
   X,
   ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 export type ActiveTab =
@@ -40,6 +42,8 @@ interface SidebarProps {
   onTabChange: (tab: ActiveTab) => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
+  isCollapsedDesktop?: boolean;
+  onToggleCollapseDesktop?: () => void;
   pendingSuratCount: number;
   pendingAduanCount: number;
   unpaidIuranCount: number;
@@ -50,6 +54,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onTabChange,
   isOpenMobile,
   onCloseMobile,
+  isCollapsedDesktop = false,
+  onToggleCollapseDesktop = () => {},
   pendingSuratCount,
   pendingAduanCount,
   unpaidIuranCount,
@@ -64,7 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       group: 'MASTER DATA',
       items: [
-        { id: 'master-data' as ActiveTab, label: 'Data Warga, KK & Rumah', icon: Users },
+        { id: 'master-data' as ActiveTab, label: 'Data Warga & KK', icon: Users },
       ],
     },
     {
@@ -72,15 +78,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         {
           id: 'administrasi' as ActiveTab,
-          label: 'Surat Menyurat Warga',
+          label: 'Surat Menyurat',
           icon: FileCheck,
           badge: pendingSuratCount > 0 ? pendingSuratCount : undefined,
           badgeColor: 'bg-amber-400 text-slate-900 border-2 border-slate-900',
         },
-        { id: 'keuangan' as ActiveTab, label: 'Kas & Keuangan Multi-Unit', icon: Wallet },
+        { id: 'keuangan' as ActiveTab, label: 'Kas & Keuangan', icon: Wallet },
         {
           id: 'iuran' as ActiveTab,
-          label: 'Iuran Warga & Payment QRIS',
+          label: 'Iuran Warga & QRIS',
           icon: Receipt,
           badge: unpaidIuranCount > 0 ? unpaidIuranCount : undefined,
           badgeColor: 'bg-rose-400 text-slate-900 border-2 border-slate-900',
@@ -92,34 +98,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         {
           id: 'aduan-warga' as ActiveTab,
-          label: 'Aduan & Keluhan Warga',
+          label: 'Aduan Warga',
           icon: AlertTriangle,
           badge: pendingAduanCount > 0 ? pendingAduanCount : undefined,
           badgeColor: 'bg-red-500 text-white border-2 border-slate-900',
         },
-        { id: 'pengumuman' as ActiveTab, label: 'Pengumuman Lingkungan', icon: Bell },
-        { id: 'voting' as ActiveTab, label: 'E-Voting & Musyawarah', icon: Vote },
+        { id: 'pengumuman' as ActiveTab, label: 'Pengumuman', icon: Bell },
+        { id: 'voting' as ActiveTab, label: 'E-Voting', icon: Vote },
       ],
     },
     {
       group: 'KEGIATAN & ORGANISASI',
       items: [
-        { id: 'kegiatan' as ActiveTab, label: 'Kegiatan & Notulensi', icon: Calendar },
-        { id: 'inventaris' as ActiveTab, label: 'Inventaris & Peminjaman', icon: Package },
-        { id: 'bank-sampah' as ActiveTab, label: 'Bank Sampah Lingkungan', icon: Recycle },
+        { id: 'kegiatan' as ActiveTab, label: 'Kegiatan & Notulen', icon: Calendar },
+        { id: 'inventaris' as ActiveTab, label: 'Inventarisasi', icon: Package },
       ],
     },
     {
       group: 'DOKUMEN & PRODUKTIVITAS',
       items: [
-        { id: 'dokumen-proposal' as ActiveTab, label: 'Arsip & Proposal Kegiatan', icon: FolderOpen },
+        { id: 'dokumen-proposal' as ActiveTab, label: 'Arsip & Proposal', icon: FolderOpen },
         { id: 'statistik' as ActiveTab, label: 'Statistik Demografi', icon: BarChart3 },
       ],
     },
     {
       group: 'SISTEM',
       items: [
-        { id: 'pengaturan' as ActiveTab, label: 'Pengaturan & Enkripsi', icon: Settings },
+        { id: 'pengaturan' as ActiveTab, label: 'Pengaturan', icon: Settings },
       ],
     },
   ];
@@ -139,34 +144,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Container - Pinned Flush Left */}
+      {/* Sidebar Container */}
       <aside
-        className={`fixed lg:sticky top-16 left-0 z-40 h-[calc(100vh-4rem)] w-64 bg-slate-900 text-slate-100 border-r-2 border-slate-900 flex flex-col transition-transform duration-200 ease-in-out shrink-0 ${
-          isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`fixed lg:sticky top-16 left-0 z-40 h-[calc(100vh-4rem)] bg-slate-900 text-slate-100 border-r-2 border-slate-900 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out shrink-0 ${
+          isCollapsedDesktop ? 'lg:w-20' : 'lg:w-64'
+        } ${
+          isOpenMobile
+            ? 'translate-x-0 w-64'
+            : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        {/* Mobile Header Close */}
-        <div className="flex items-center justify-between p-4 border-b-2 border-slate-800 lg:hidden bg-slate-950">
-          <div className="flex items-center gap-2">
+        {/* Top Header Controls: Mobile Close & Desktop Collapse Button */}
+        <div className="flex items-center justify-between p-3 border-b-2 border-slate-800 bg-slate-950">
+          <div className={`flex items-center gap-2 ${isCollapsedDesktop ? 'lg:hidden' : ''}`}>
             <span className="font-extrabold text-sm uppercase tracking-wider text-white">
               Satu<span className="text-[#0056b3]">Warga.id</span>
             </span>
           </div>
+
+          {/* Desktop Toggle Button */}
+          <button
+            onClick={onToggleCollapseDesktop}
+            className="hidden lg:flex items-center justify-center p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition cursor-pointer mx-auto"
+            title={isCollapsedDesktop ? 'Buka Sidebar' : 'Tutup / Ciutkan Sidebar'}
+          >
+            {isCollapsedDesktop ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
+
+          {/* Mobile Close Button */}
           <button
             onClick={onCloseMobile}
-            className="p-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 cursor-pointer"
+            className="p-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 cursor-pointer lg:hidden"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Menu Navigation Items */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-4">
           {navItems.map((group, idx) => (
             <div key={idx} className="space-y-1">
-              <div className="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest font-mono">
-                {group.group}
-              </div>
+              {!isCollapsedDesktop && (
+                <div className="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest font-mono hidden lg:block">
+                  {group.group}
+                </div>
+              )}
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const Icon = item.icon;
@@ -175,7 +197,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button
                       key={item.id}
                       onClick={() => handleSelect(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      title={item.label}
+                      className={`w-full flex items-center ${
+                        isCollapsedDesktop ? 'lg:justify-center px-2 py-3' : 'justify-between px-3 py-2.5'
+                      } rounded-xl text-xs font-bold transition-all cursor-pointer relative group ${
                         isActive
                           ? 'bg-[#0056b3] text-white border-2 border-white shadow-[3px_3px_0px_0px_#ffffff] -translate-x-0.5'
                           : 'text-slate-300 hover:bg-slate-800 hover:text-white hover:border border-slate-700'
@@ -187,14 +212,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             isActive ? 'text-amber-300' : 'text-slate-400 group-hover:text-amber-300'
                           }`}
                         />
-                        <span className="truncate">{item.label}</span>
+                        <span className={`truncate ${isCollapsedDesktop ? 'lg:hidden' : ''}`}>
+                          {item.label}
+                        </span>
                       </div>
-                      {item.badge !== undefined && (
+
+                      {/* Badge in expanded mode */}
+                      {item.badge !== undefined && !isCollapsedDesktop && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-black shrink-0 ${item.badgeColor}`}
                         >
                           {item.badge}
                         </span>
+                      )}
+
+                      {/* Badge indicator dot in collapsed mode */}
+                      {item.badge !== undefined && isCollapsedDesktop && (
+                        <span className="hidden lg:block absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-500 border border-slate-900 animate-pulse" />
                       )}
                     </button>
                   );
@@ -207,20 +241,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Sidebar Status */}
         <div className="p-3 border-t-2 border-slate-800 bg-slate-950 text-slate-400 text-xs space-y-2 shrink-0">
           <div className="flex items-center justify-between">
-            <span className="font-extrabold text-white text-xs flex items-center gap-1.5">
+            <span className={`font-extrabold text-white text-xs flex items-center gap-1.5 ${isCollapsedDesktop ? 'lg:hidden' : ''}`}>
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-SUKAMAJU ERP
+              Sukamaju ERP
             </span>
-            <span className="text-[9px] bg-amber-300 text-slate-900 font-extrabold font-mono px-1.5 py-0.5 rounded border border-slate-900">
+            <span className="text-[9px] bg-amber-300 text-slate-900 font-extrabold font-mono px-1.5 py-0.5 rounded border border-slate-900 mx-auto lg:mx-0">
               v1.0
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 leading-tight">
-            Sistem Kelola Mandiri RT/RW & Lembaga Warga.
-          </p>
+          {!isCollapsedDesktop && (
+            <p className="text-[10px] text-slate-400 leading-tight hidden lg:block">
+              Sistem Kelola Mandiri RT/RW & Lembaga Warga.
+            </p>
+          )}
         </div>
       </aside>
     </>
   );
 };
+
 
