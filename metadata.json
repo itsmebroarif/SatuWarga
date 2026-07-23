@@ -1,0 +1,6 @@
+{
+  "name": "SatuWarga.id",
+  "description": "Community Operating System untuk digitalisasi RT/RW, PKK, Karang Taruna, Posyandu, DKM, Linmas, dan Bank Sampah dengan Enkripsi Data Warga.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
