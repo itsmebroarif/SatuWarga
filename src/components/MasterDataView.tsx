@@ -173,7 +173,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Data_Warga_SatuWarga_RT01-05_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `Data_Warga_Sukamaju_RT01-05_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
   };
 

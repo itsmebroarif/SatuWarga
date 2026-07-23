@@ -129,7 +129,7 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
           {/* Bottom Security Note */}
           <div className="border-t border-slate-200 pt-3 flex items-center justify-between text-[10px] text-slate-500 font-sans">
             <span className="flex items-center gap-1 font-mono">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Digital Document Validated by SatuWarga.id
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Digital Document Validated by Sukamaju ERP
             </span>
             <span className="font-mono">Hash: {surat.qrCodeHash}</span>
           </div>

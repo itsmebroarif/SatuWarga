@@ -12,7 +12,7 @@ app.use(express.json({ limit: "10mb" }));
 
 // Health Check API
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", appName: "SatuWarga.id", timestamp: new Date().toISOString() });
+  res.json({ status: "ok", appName: "Sukamaju.id", timestamp: new Date().toISOString() });
 });
 
 async function startServer() {
@@ -32,7 +32,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[SatuWarga.id] Server running on http://0.0.0.0:${PORT}`);
+    console.log(`[Sukamaju.id] Server running on http://0.0.0.0:${PORT}`);
   });
 }
 

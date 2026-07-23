@@ -209,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center justify-between">
             <span className="font-extrabold text-white text-xs flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              SatuWarga.id
+SUKAMAJU ERP
             </span>
             <span className="text-[9px] bg-amber-300 text-slate-900 font-extrabold font-mono px-1.5 py-0.5 rounded border border-slate-900">
               v1.0

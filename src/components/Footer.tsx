@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-semibold text-slate-500">
-        <p>© {new Date().getFullYear()} SatuWarga.id. Pengelolaan Mandiri Pengurus RT/RW.</p>
+        <p>© {new Date().getFullYear()} Sukamaju ERP. Dikembangkan oleh <b>Kafeinarts Studio</b> untuk Pengelolaan Mandiri Pengurus RT/RW.</p>
         <div className="flex items-center gap-4">
           <span className="hover:text-slate-900 cursor-pointer">Panduan Pengguna</span>
           <span className="hover:text-slate-900 cursor-pointer">Pernyataan Privasi</span>

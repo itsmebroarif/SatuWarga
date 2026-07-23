@@ -126,8 +126,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="text-[#17a2b8] text-xs font-mono font-medium">RT 01-05 / RW 05 Graha Warga</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-white">
-            Selamat Datang di SatuWarga.id
-          </h1>
+            Selamat Datang di Sukamaju ERP 
+            </h1>
           <p className="text-xs text-slate-300">
             Sistem Operasi Lingkungan Terpadu. Seluruh data warga tersimpan secara aman dan terenkripsi.
           </p>
