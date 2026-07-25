@@ -34,6 +34,8 @@ import { PengaturanView } from './components/PengaturanView';
 import { AduanWargaView } from './components/AduanWargaView';
 import { PengumumanView } from './components/PengumumanView';
 import { VotingView } from './components/VotingView';
+import { ChatbotView } from './components/ChatbotView';
+import { ChatbotWidget } from './components/ChatbotWidget';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
 import { ConfirmationModal } from './components/ConfirmationModal';
@@ -393,6 +395,20 @@ export default function App() {
 
   const normalizedTab = String(activeTab || '').toLowerCase();
 
+  const saldoKas = kasList.reduce((acc, curr) => {
+    return curr.tipe === 'MASUK' ? acc + curr.jumlah : acc - curr.jumlah;
+  }, 0);
+
+  const aiContextData = {
+    totalWarga: wargaList.length,
+    saldoKas,
+    totalAduan: aduanList.length,
+    pendingAduan: aduanList.filter((a) => a.status === 'PENDING' || (a.status as string) === 'OPEN').length,
+    totalPengumuman: pengumumanList.length,
+    totalKegiatan: eventsList.length,
+    totalBarang: barangList.length,
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 font-sans text-slate-900 antialiased flex flex-col selection:bg-[#0056b3] selection:text-white">
       {/* Toast Notifications */}
@@ -506,6 +522,10 @@ export default function App() {
         {/* Main Content View Container */}
         <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 flex flex-col justify-between">
           <div className="space-y-6 flex-1">
+            {(normalizedTab === 'asisten-ai' || normalizedTab === 'asisten_ai') && (
+              <ChatbotView contextData={aiContextData} />
+            )}
+
             {(normalizedTab === 'dashboard' || normalizedTab === 'dashboard_utama') && (
               <DashboardView
                 wargaList={wargaList}
@@ -679,6 +699,9 @@ export default function App() {
           <Footer />
         </main>
       </div>
+
+      {/* Floating AI Chatbot Widget */}
+      <ChatbotWidget contextData={aiContextData} />
     </div>
   );
 }

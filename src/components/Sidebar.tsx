@@ -19,11 +19,14 @@ import {
   ChevronLeft,
   ChevronRight,
   UserCheck,
+  Bot,
+  Sparkles,
 } from 'lucide-react';
 import { UserRole } from '../types';
 
 export type ActiveTab =
   | 'dashboard'
+  | 'asisten-ai'
   | 'master-data'
   | 'administrasi'
   | 'keuangan'
@@ -40,6 +43,7 @@ export type ActiveTab =
   | 'pengaturan';
 
 export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
+  const commonTabs: ActiveTab[] = ['asisten-ai'];
   switch (role) {
     case 'SUPER_ADMIN':
     case 'KETUA_RW':
@@ -48,6 +52,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'WAKIL_SEKRETARIS_RW':
       return [
         'dashboard',
+        ...commonTabs,
         'master-data',
         'administrasi',
         'keuangan',
@@ -65,6 +70,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'WAKIL_BENDAHARA_RW':
       return [
         'dashboard',
+        ...commonTabs,
         'keuangan',
         'iuran',
         'dokumen-proposal',
@@ -79,6 +85,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'WAKIL_SEKRETARIS_RT':
       return [
         'dashboard',
+        ...commonTabs,
         'master-data',
         'administrasi',
         'iuran',
@@ -94,6 +101,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'WAKIL_BENDAHARA_RT':
       return [
         'dashboard',
+        ...commonTabs,
         'keuangan',
         'iuran',
         'dokumen-proposal',
@@ -105,6 +113,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'PENGURUS_PKK':
       return [
         'dashboard',
+        ...commonTabs,
         'kegiatan',
         'inventaris',
         'pengumuman',
@@ -116,6 +125,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'PENGURUS_KARANG_TARUNA':
       return [
         'dashboard',
+        ...commonTabs,
         'kegiatan',
         'inventaris',
         'aduan-warga',
@@ -127,6 +137,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'POSYANDU':
       return [
         'dashboard',
+        ...commonTabs,
         'master-data',
         'kegiatan',
         'pengumuman',
@@ -136,6 +147,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'BANK_SAMPAH':
       return [
         'dashboard',
+        ...commonTabs,
         'inventaris',
         'keuangan',
         'pengumuman',
@@ -145,6 +157,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'LINMAS':
       return [
         'dashboard',
+        ...commonTabs,
         'aduan-warga',
         'pengumuman',
         'kegiatan',
@@ -154,6 +167,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     case 'PENGURUS_DKM':
       return [
         'dashboard',
+        ...commonTabs,
         'kegiatan',
         'keuangan',
         'inventaris',
@@ -164,6 +178,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
     default:
       return [
         'dashboard',
+        ...commonTabs,
         'administrasi',
         'iuran',
         'aduan-warga',
@@ -232,6 +247,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       group: 'UTAMA',
       items: [
         { id: 'dashboard' as ActiveTab, label: 'Dashboard Utama', icon: LayoutDashboard },
+        {
+          id: 'asisten-ai' as ActiveTab,
+          label: 'Asisten AI Warga',
+          icon: Sparkles,
+          badge: 'AI',
+          badgeColor: 'bg-gradient-to-r from-sky-400 to-blue-600 text-white border border-sky-300 font-extrabold',
+        },
       ],
     },
     {
