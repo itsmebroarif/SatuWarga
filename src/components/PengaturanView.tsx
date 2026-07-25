@@ -16,6 +16,9 @@ import {
   Server,
   Layers,
   Sparkles,
+  Trash2,
+  AlertTriangle,
+  RotateCcw,
 } from 'lucide-react';
 import {
   Warga,
@@ -40,6 +43,7 @@ interface PengaturanViewProps {
   arsipList: ArsipDokumen[];
   setoranSampahList: SetoranSampah[];
   onImportFullBackup: (importedData: any) => void;
+  onResetAllData?: () => void;
   addToast: (type: 'success' | 'error' | 'info' | 'warning', title: string, message?: string) => void;
 }
 
@@ -62,12 +66,14 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({
   arsipList,
   setoranSampahList,
   onImportFullBackup,
+  onResetAllData,
   addToast,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'EXPORT_IMPORT' | 'TEMA' | 'MONITORING'>('EXPORT_IMPORT');
   const [selectedTheme, setSelectedTheme] = useState<string>(() => {
     return localStorage.getItem('satuwarga_color_theme') || 'blue';
   });
+  const [showResetModal, setShowResetModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper function to convert JSON objects array to CSV string
@@ -557,6 +563,46 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Card 3: Danger Zone - Reset Data Sistem */}
+          <div className="bg-rose-50 border-2 border-slate-900 rounded-2xl p-5 shadow-[4px_4px_0px_0px_#0f172a] space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-slate-900/20 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-rose-600 text-white rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-rose-950 text-base">
+                    Pembersihan & Reset Total Database Sistem
+                  </h3>
+                  <p className="text-xs text-rose-800">
+                    Kosongkan seluruh rekaman data di penyimpanan lokal dan mulai penggunaan aplikasi dari kondisi bersih/baru.
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold bg-rose-200 text-rose-900 px-2.5 py-1 rounded-lg border border-slate-900">
+                Danger Zone
+              </span>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h4 className="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
+                  <RotateCcw className="w-4 h-4 text-rose-600" /> Reset Aplikasi ke Kondisi Baru
+                </h4>
+                <p className="text-xs text-slate-500">
+                  Tindakan ini akan mengapus seluruh warga, KK, transaksi kas, tagihan iuran, surat, dan aduan. Disarankan melakukan <strong>Export Full JSON</strong> terlebih dahulu.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowResetModal(true)}
+                className="bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs py-2.5 px-4 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0"
+              >
+                <Trash2 className="w-4 h-4" /> Reset Total Data System
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -710,6 +756,64 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Reset Data */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border-2 border-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_#0f172a] max-w-md w-full overflow-hidden space-y-0">
+            {/* Header */}
+            <div className="p-4 bg-rose-600 text-white border-b-2 border-slate-900 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-6 h-6" />
+                <h3 className="font-extrabold text-base">Konfirmasi Reset System</h3>
+              </div>
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="text-white hover:bg-rose-700 p-1 rounded-lg transition-colors cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-3">
+              <p className="text-sm font-bold text-slate-900">
+                Apakah Anda benar-benar yakin ingin menghapus SELURUH data sistem?
+              </p>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Tindakan ini akan mengosongkan basis data lokal warga, KK, mutasi kas, iuran, surat, dan aduan. Seluruh pengaturan akan di-reset dan aplikasi akan dimulai kembali dari kondisi bersih.
+              </p>
+              <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs font-semibold">
+                ⚠️ Pastikan Anda sudah mengunduh berkas <strong>Backup JSON</strong> jika data masih akan digunakan di kemudian hari.
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="p-4 bg-slate-50 border-t-2 border-slate-900 flex items-center justify-end gap-3">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-700 hover:bg-slate-200 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] transition-all cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  setShowResetModal(false);
+                  if (onResetAllData) {
+                    onResetAllData();
+                  } else {
+                    localStorage.clear();
+                    window.location.reload();
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-700 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <Trash2 className="w-4 h-4" /> Ya, Reset & Start Baru
+              </button>
             </div>
           </div>
         </div>

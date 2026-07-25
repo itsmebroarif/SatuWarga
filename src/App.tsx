@@ -620,6 +620,22 @@ export default function App() {
                   }
                 }}
                 addToast={addToast}
+                onResetAllData={() => {
+                  localStorage.clear();
+                  setWargaList([]);
+                  setKkList([]);
+                  setKasList([]);
+                  setTagihanList([]);
+                  setSuratList([]);
+                  setAduanList([]);
+                  setArsipList([]);
+                  setEventsList([]);
+                  setSetoranSampahList([]);
+                  addToast('success', 'Reset Total Berhasil', 'Seluruh data aplikasi telah dibersihkan dan siap digunakan dari awal.');
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 800);
+                }}
               />
             )}
           </div>
