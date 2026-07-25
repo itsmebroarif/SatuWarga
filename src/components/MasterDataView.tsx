@@ -28,7 +28,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { Warga, KartuKeluarga, Rumah } from '../types';
-import { exportToCSV } from '../utils/csvExport';
+import { exportWargaCSV, exportWargaPDF } from '../utils/exportUtils';
 
 interface MasterDataViewProps {
   wargaList: Warga[];
@@ -62,6 +62,11 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   const [activeSubTab, setActiveSubTab] = useState<'WARGA' | 'KK' | 'RUMAH'>('WARGA');
   const [searchTerm, setSearchTerm] = useState('');
   const [rtFilter, setRtFilter] = useState('ALL');
+  const [golDarahFilter, setGolDarahFilter] = useState('ALL');
+  const [pekerjaanFilter, setPekerjaanFilter] = useState('ALL');
+  const [agamaFilter, setAgamaFilter] = useState('ALL');
+  const [statusPerkawinanFilter, setStatusPerkawinanFilter] = useState('ALL');
+  const [jenisKelaminFilter, setJenisKelaminFilter] = useState('ALL');
   const [showEncryptedNik, setShowEncryptedNik] = useState(false);
 
   // Modal States for Warga
@@ -147,9 +152,29 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
     const matchesSearch =
       w.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
       w.nik.includes(searchTerm) ||
+      w.pekerjaan.toLowerCase().includes(searchTerm.toLowerCase()) ||
       w.nomorRumah.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRt = rtFilter === 'ALL' || w.rt === rtFilter;
-    return matchesSearch && matchesRt;
+    const matchesGolDarah = golDarahFilter === 'ALL' || (w.golonganDarah || '-') === golDarahFilter;
+    const matchesPekerjaan =
+      pekerjaanFilter === 'ALL' || w.pekerjaan.toLowerCase().includes(pekerjaanFilter.toLowerCase());
+    const matchesAgama = agamaFilter === 'ALL' || w.agama === agamaFilter;
+    const matchesStatusPerkawinan =
+      statusPerkawinanFilter === 'ALL' || w.statusPerkawinan === statusPerkawinanFilter;
+    const matchesJenisKelamin =
+      jenisKelaminFilter === 'ALL' ||
+      (jenisKelaminFilter === 'L' && w.jenisKelamin === 'Laki-laki') ||
+      (jenisKelaminFilter === 'P' && w.jenisKelamin === 'Perempuan');
+
+    return (
+      matchesSearch &&
+      matchesRt &&
+      matchesGolDarah &&
+      matchesPekerjaan &&
+      matchesAgama &&
+      matchesStatusPerkawinan &&
+      matchesJenisKelamin
+    );
   });
 
   const filteredKk = kkList.filter((kk) => {
@@ -513,61 +538,161 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
       {activeSubTab === 'WARGA' && (
         <div className="space-y-4">
           {/* Controls & Action Bar */}
-          <div className="bg-white p-4 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col md:flex-row md:items-center justify-between gap-3">
-            {/* Search Input */}
-            <div className="flex items-center gap-2 flex-1 max-w-md">
-              <div className="relative w-full">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  placeholder="Cari Nama Warga, NIK (16 digit), atau No. Rumah..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-9 pr-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-slate-900"
-                />
+          <div className="bg-white p-4 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] space-y-3">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              {/* Search Input & Primary Filters */}
+              <div className="flex flex-wrap items-center gap-2 flex-1">
+                <div className="relative flex-1 min-w-[220px]">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <input
+                    type="text"
+                    placeholder="Cari Nama Warga, NIK (16 digit), Pekerjaan, atau No. Rumah..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-9 pr-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-slate-900"
+                  />
+                </div>
+
+                {/* RT Filter */}
+                <select
+                  value={rtFilter}
+                  onChange={(e) => setRtFilter(e.target.value)}
+                  className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
+                >
+                  <option value="ALL">Semua RT</option>
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const val = String(i + 1).padStart(2, '0');
+                    return <option key={val} value={val}>RT {val}</option>;
+                  })}
+                </select>
+
+                {/* Golongan Darah Filter */}
+                <select
+                  value={golDarahFilter}
+                  onChange={(e) => setGolDarahFilter(e.target.value)}
+                  className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
+                >
+                  <option value="ALL">Gol. Darah (Semua)</option>
+                  <option value="A">Gol. Darah A</option>
+                  <option value="B">Gol. Darah B</option>
+                  <option value="AB">Gol. Darah AB</option>
+                  <option value="O">Gol. Darah O</option>
+                  <option value="-">Belum Tahu / -</option>
+                </select>
+
+                {/* Agama Filter */}
+                <select
+                  value={agamaFilter}
+                  onChange={(e) => setAgamaFilter(e.target.value)}
+                  className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
+                >
+                  <option value="ALL">Agama (Semua)</option>
+                  <option value="Islam">Islam</option>
+                  <option value="Kristen">Kristen</option>
+                  <option value="Katolik">Katolik</option>
+                  <option value="Hindu">Hindu</option>
+                  <option value="Buddha">Buddha</option>
+                  <option value="Khonghucu">Khonghucu</option>
+                </select>
+
+                {/* Status Perkawinan Filter */}
+                <select
+                  value={statusPerkawinanFilter}
+                  onChange={(e) => setStatusPerkawinanFilter(e.target.value)}
+                  className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
+                >
+                  <option value="ALL">Status Perkawinan (Semua)</option>
+                  <option value="Belum Kawin">Belum Kawin</option>
+                  <option value="Kawin">Kawin</option>
+                  <option value="Cerai Hidup">Cerai Hidup</option>
+                  <option value="Cerai Mati">Cerai Mati</option>
+                </select>
+
+                {/* Jenis Kelamin Filter */}
+                <select
+                  value={jenisKelaminFilter}
+                  onChange={(e) => setJenisKelaminFilter(e.target.value)}
+                  className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
+                >
+                  <option value="ALL">Gender (Semua)</option>
+                  <option value="L">Laki-laki</option>
+                  <option value="P">Perempuan</option>
+                </select>
               </div>
 
-              <select
-                value={rtFilter}
-                onChange={(e) => setRtFilter(e.target.value)}
-                className="bg-slate-50 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-slate-900"
-              >
-                <option value="ALL">Semua RT</option>
-                {Array.from({ length: 10 }, (_, i) => {
-                  const val = String(i + 1).padStart(2, '0');
-                  return <option key={val} value={val}>RT {val}</option>;
-                })}
-              </select>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setShowEncryptedNik(!showEncryptedNik)}
+                  className={`text-xs px-3 py-1.5 rounded-xl border-2 font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    showEncryptedNik
+                      ? 'bg-amber-100 border-slate-900 text-amber-900'
+                      : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {showEncryptedNik ? <Unlock className="w-3.5 h-3.5 text-amber-700" /> : <Lock className="w-3.5 h-3.5 text-emerald-600" />}
+                  <span>{showEncryptedNik ? 'Sembunyikan NIK' : 'Lihat Dekripsi NIK'}</span>
+                </button>
+
+                <button
+                  onClick={() => exportWargaCSV(filteredWarga)}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-900 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer"
+                  title="Unduh format Excel / CSV"
+                >
+                  <Download className="w-3.5 h-3.5" /> CSV
+                </button>
+
+                <button
+                  onClick={() => exportWargaPDF(filteredWarga)}
+                  className="bg-red-50 hover:bg-red-100 text-red-800 border-2 border-slate-900 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer"
+                  title="Cetak Laporan PDF Resmi"
+                >
+                  <FileText className="w-3.5 h-3.5 text-red-600" /> PDF
+                </button>
+
+                <button
+                  onClick={handleOpenAddWargaModal}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-1.5 rounded-xl font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" /> Tambah Warga
+                </button>
+              </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => setShowEncryptedNik(!showEncryptedNik)}
-                className={`text-xs px-3 py-1.5 rounded-xl border-2 font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  showEncryptedNik
-                    ? 'bg-amber-100 border-slate-900 text-amber-900'
-                    : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                {showEncryptedNik ? <Unlock className="w-3.5 h-3.5 text-amber-700" /> : <Lock className="w-3.5 h-3.5 text-emerald-600" />}
-                <span>{showEncryptedNik ? 'Sembunyikan NIK' : 'Lihat Dekripsi NIK'}</span>
-              </button>
+            {/* Active Filter Counter & Reset */}
+            {(rtFilter !== 'ALL' ||
+              golDarahFilter !== 'ALL' ||
+              agamaFilter !== 'ALL' ||
+              statusPerkawinanFilter !== 'ALL' ||
+              jenisKelaminFilter !== 'ALL' ||
+              searchTerm !== '') && (
+              <div className="flex items-center justify-between border-t border-slate-200 pt-2 text-[11px]">
+                <div className="flex items-center gap-2 flex-wrap font-bold text-slate-700">
+                  <span className="text-slate-500 font-mono">Filter Aktif:</span>
+                  {rtFilter !== 'ALL' && <span className="bg-slate-100 px-2 py-0.5 rounded border border-slate-300">RT {rtFilter}</span>}
+                  {golDarahFilter !== 'ALL' && <span className="bg-rose-50 text-rose-800 px-2 py-0.5 rounded border border-rose-200">Gol. Darah {golDarahFilter}</span>}
+                  {agamaFilter !== 'ALL' && <span className="bg-blue-50 text-blue-800 px-2 py-0.5 rounded border border-blue-200">Agama {agamaFilter}</span>}
+                  {statusPerkawinanFilter !== 'ALL' && <span className="bg-purple-50 text-purple-800 px-2 py-0.5 rounded border border-purple-200">{statusPerkawinanFilter}</span>}
+                  {jenisKelaminFilter !== 'ALL' && <span className="bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">{jenisKelaminFilter === 'L' ? 'Laki-laki' : 'Perempuan'}</span>}
+                  <span className="text-emerald-700 font-extrabold font-mono">({filteredWarga.length} Hasil Ditampilkan)</span>
+                </div>
 
-              <button
-                onClick={exportWargaCsv}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-900 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5" /> Export CSV
-              </button>
-
-              <button
-                onClick={handleOpenAddWargaModal}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-1.5 rounded-xl font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] flex items-center gap-1.5 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Tambah Warga Baru (KTP)
-              </button>
-            </div>
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setRtFilter('ALL');
+                    setGolDarahFilter('ALL');
+                    setPekerjaanFilter('ALL');
+                    setAgamaFilter('ALL');
+                    setStatusPerkawinanFilter('ALL');
+                    setJenisKelaminFilter('ALL');
+                  }}
+                  className="text-rose-600 hover:text-rose-800 font-bold underline cursor-pointer"
+                >
+                  Reset Semua Filter
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Table Data Warga */}

@@ -38,6 +38,10 @@ export interface ToastMessage {
   type: 'success' | 'error' | 'info' | 'warning';
   title: string;
   message?: string;
+  category?: string;
+  actionLabel?: string;
+  onAction?: () => void;
+  timestamp?: string;
 }
 
 export type UnitCategory = 'RT' | 'RW' | 'PKK' | 'KARANG_TARUNA' | 'POSYANDU' | 'BANK_SAMPAH' | 'LINMAS' | 'DKM';

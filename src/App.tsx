@@ -749,9 +749,6 @@ export default function App() {
           <Footer />
         </main>
       </div>
-
-      {/* Floating AI Chatbot Widget */}
-      <ChatbotWidget contextData={aiContextData} />
     </div>
   );
 }

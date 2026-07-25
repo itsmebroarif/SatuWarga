@@ -12,9 +12,10 @@ import {
   X,
   Upload,
   Download,
+  FileText,
 } from 'lucide-react';
 import { TransaksiKas, UnitCategory } from '../types';
-import { exportToCSV } from '../utils/csvExport';
+import { exportKasCSV, exportKasPDF } from '../utils/exportUtils';
 import { PrintReportHeader } from './PrintReportHeader';
 
 interface KeuanganViewProps {
@@ -122,16 +123,16 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
 
           <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={exportKasCsv}
+              onClick={() => exportKasCSV(filteredKas)}
               className="bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
               <Download className="w-4 h-4 text-emerald-600" /> Export CSV
             </button>
             <button
-              onClick={() => window.print()}
-              className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+              onClick={() => exportKasPDF(filteredKas, totalPemasukan, totalPengeluaran, saldoNetto)}
+              className="bg-red-50 hover:bg-red-100 text-red-900 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
-              <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan PDF
+              <FileText className="w-4 h-4 text-red-600" /> Export PDF
             </button>
             <button
               onClick={() => setIsModalOpen(true)}

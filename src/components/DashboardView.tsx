@@ -248,7 +248,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-2xl font-bold text-[#333] font-mono">{totalWarga}</div>
             <p className="text-[10px] text-slate-500 mt-0.5">Jiwa Terdaftar</p>
           </div>
-          <ProgressRing progress={Math.min(100, Math.round((totalWarga / 250) * 100))} size={44} strokeWidth={4} color="#0056b3" />
+          <ProgressRing progress={totalWarga > 0 ? 100 : 0} size={44} strokeWidth={4} color="#0056b3" />
         </div>
 
         <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition flex items-center justify-between">
@@ -257,7 +257,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-2xl font-bold text-[#333] font-mono">{totalKk}</div>
             <p className="text-[10px] text-slate-500 mt-0.5">KK Aktif</p>
           </div>
-          <ProgressRing progress={Math.min(100, Math.round((totalKk / 75) * 100))} size={44} strokeWidth={4} color="#fd7e14" />
+          <ProgressRing progress={totalKk > 0 ? 100 : 0} size={44} strokeWidth={4} color="#fd7e14" />
         </div>
 
         <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#28a745] shadow-xs hover:shadow-sm transition flex items-center justify-between">
@@ -266,7 +266,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-xl font-bold text-[#333] font-mono">Rp {(kasRt / 1000).toLocaleString('id-ID')}rb</div>
             <p className="text-[10px] text-[#28a745] font-semibold mt-0.5">Saldo Aktif</p>
           </div>
-          <ProgressRing progress={Math.min(100, Math.round((kasRt / 15000000) * 100))} size={44} strokeWidth={4} color="#28a745" />
+          <ProgressRing progress={kasRt > 0 ? 100 : 0} size={44} strokeWidth={4} color="#28a745" />
         </div>
 
         <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#17a2b8] shadow-xs hover:shadow-sm transition flex items-center justify-between">
@@ -275,7 +275,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-2xl font-bold text-[#333] font-mono">{pendingSurat.length}</div>
             <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Perlu Approval</p>
           </div>
-          <ProgressRing progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 100} size={44} strokeWidth={4} color="#17a2b8" />
+          <ProgressRing progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 0} size={44} strokeWidth={4} color="#17a2b8" />
         </div>
 
         <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition flex items-center justify-between">
@@ -284,7 +284,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-2xl font-bold text-[#333] font-mono">{unpaidTagihan.length}</div>
             <p className="text-[10px] text-rose-600 font-semibold mt-0.5">Tunggakan</p>
           </div>
-          <ProgressRing progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 85} size={44} strokeWidth={4} color="#fd7e14" />
+          <ProgressRing progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 0} size={44} strokeWidth={4} color="#fd7e14" />
         </div>
 
         <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-red-600 shadow-xs hover:shadow-sm transition flex items-center justify-between">
@@ -293,7 +293,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="text-2xl font-bold text-[#333] font-mono">{pendingAduan.length}</div>
             <p className="text-[10px] text-red-600 font-semibold mt-0.5">Perlu Tindakan</p>
           </div>
-          <ProgressRing progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 75} size={44} strokeWidth={4} color="#dc3545" />
+          <ProgressRing progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 0} size={44} strokeWidth={4} color="#dc3545" />
         </div>
       </div>
 
@@ -316,17 +316,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
-            <ProgressRing progress={Math.min(100, Math.round((totalWarga / 250) * 100))} size={58} strokeWidth={6} color="#0056b3" />
+            <ProgressRing progress={totalWarga > 0 ? 100 : 0} size={58} strokeWidth={6} color="#0056b3" />
             <div>
               <h4 className="text-xs font-bold text-slate-900">Sensus Pendataan Warga</h4>
-              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">{totalWarga} / 250 Jiwa Target</p>
+              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">{totalWarga} Jiwa Terdaftar</p>
               <span className="text-[10px] text-emerald-600 font-bold">Terdaftar Sesuai DPT</span>
             </div>
           </div>
 
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
             <ProgressRing
-              progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 85}
+              progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 0}
               size={58}
               strokeWidth={6}
               color="#10b981"
@@ -334,7 +334,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <h4 className="text-xs font-bold text-slate-900">Realisasi Iuran Rutin</h4>
               <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
-                {tagihanList.length - unpaidTagihan.length} / {tagihanList.length || 20} Rumah Lunas
+                {tagihanList.length - unpaidTagihan.length} / {tagihanList.length} Rumah Lunas
               </p>
               <span className="text-[10px] text-slate-500 font-bold">Kolektibilitas Kas</span>
             </div>
@@ -342,7 +342,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
             <ProgressRing
-              progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 90}
+              progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 0}
               size={58}
               strokeWidth={6}
               color="#f59e0b"
@@ -350,7 +350,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <h4 className="text-xs font-bold text-slate-900">Respons Layanan Surat</h4>
               <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
-                {suratList.length - pendingSurat.length} / {suratList.length || 10} Surat Disetujui
+                {suratList.length - pendingSurat.length} / {suratList.length} Surat Disetujui
               </p>
               <span className="text-[10px] text-amber-600 font-bold">Selesai Tanda Tangan</span>
             </div>
@@ -358,7 +358,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
             <ProgressRing
-              progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 80}
+              progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 0}
               size={58}
               strokeWidth={6}
               color="#8b5cf6"
@@ -366,7 +366,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <h4 className="text-xs font-bold text-slate-900">Penyelesaian Aduan Warga</h4>
               <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
-                {aduanList.length - pendingAduan.length} / {aduanList.length || 5} Aduan Selesai
+                {aduanList.length - pendingAduan.length} / {aduanList.length} Aduan Selesai
               </p>
               <span className="text-[10px] text-purple-600 font-bold">Tindak Lanjut Cepat</span>
             </div>
