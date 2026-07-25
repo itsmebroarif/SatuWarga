@@ -117,8 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       group: 'DOKUMEN & PRODUKTIVITAS',
       items: [
-        { id: 'dokumen-proposal' as ActiveTab, label: 'Arsip & Proposal', icon: FolderOpen },
-        { id: 'statistik' as ActiveTab, label: 'Statistik Demografi', icon: BarChart3 },
+        { id: 'dokumen-proposal' as ActiveTab, label: 'Dokumen, Proposal & Statistik', icon: FolderOpen },
       ],
     },
     {

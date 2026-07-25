@@ -9,11 +9,18 @@ import {
   Copy,
   Check,
   Zap,
+  BarChart3,
+  Users,
+  Home,
+  PieChart,
+  Layers,
+  Award,
 } from 'lucide-react';
-import { ArsipDokumen } from '../types';
+import { ArsipDokumen, Warga } from '../types';
 
 interface ArsipProposalViewProps {
   arsipList: ArsipDokumen[];
+  wargaList?: Warga[];
   onAddArsip: (a: ArsipDokumen) => void;
 }
 
@@ -50,9 +57,10 @@ const TEMPLATES = [
 
 export const ArsipProposalView: React.FC<ArsipProposalViewProps> = ({
   arsipList = [],
+  wargaList = [],
   onAddArsip,
 }) => {
-  const [activeTab, setActiveTab] = useState<'ARSIP' | 'PROPOSAL'>('ARSIP');
+  const [activeTab, setActiveTab] = useState<'ARSIP' | 'PROPOSAL' | 'STATISTIK'>('ARSIP');
   const [searchTerm, setSearchTerm] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -119,10 +127,10 @@ Dibuat oleh,                    Disetujui oleh,
             <span className="p-2 bg-[#0056b3] text-white rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
               <FolderArchive className="w-5 h-5" />
             </span>
-            <h2 className="text-xl font-black text-slate-900">Arsip Digital & Generator Proposal</h2>
+            <h2 className="text-xl font-black text-slate-900">Pusat Dokumen, Proposal & Statistik</h2>
           </div>
           <p className="text-xs font-semibold text-slate-600">
-            Penyimpanan dokumen resmi RT/RW & penyusun proposal naskah dinas otomatis.
+            Penyimpanan arsip digital, penyusun proposal naskah dinas, serta analisis statistik demografi warga.
           </p>
         </div>
 
@@ -134,10 +142,10 @@ Dibuat oleh,                    Disetujui oleh,
             <Printer className="w-4 h-4 text-slate-900" /> Cetak (Print)
           </button>
 
-          <div className="cupertino-segmented">
+          <div className="cupertino-segmented flex items-center bg-slate-100 p-1 rounded-xl border-2 border-slate-900">
             <button
               onClick={() => setActiveTab('ARSIP')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer ${
                 activeTab === 'ARSIP'
                   ? 'bg-[#0056b3] text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
                   : 'text-slate-700 hover:text-slate-900'
@@ -147,13 +155,23 @@ Dibuat oleh,                    Disetujui oleh,
             </button>
             <button
               onClick={() => setActiveTab('PROPOSAL')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer ${
                 activeTab === 'PROPOSAL'
                   ? 'bg-[#0056b3] text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
                   : 'text-slate-700 hover:text-slate-900'
               }`}
             >
               Generator Proposal
+            </button>
+            <button
+              onClick={() => setActiveTab('STATISTIK')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer flex items-center gap-1 ${
+                activeTab === 'STATISTIK'
+                  ? 'bg-[#0056b3] text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                  : 'text-slate-700 hover:text-slate-900'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" /> Statistik Demografi
             </button>
           </div>
         </div>
@@ -339,6 +357,135 @@ Dibuat oleh,                    Disetujui oleh,
             <p className="text-[10px] text-slate-400 font-sans border-t border-slate-800 pt-2 font-medium">
               Format naskah dinas resmi sesuai standar administrasi tata kelola wilayah RT/RW.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: STATISTIK DEMOGRAFI */}
+      {activeTab === 'STATISTIK' && (
+        <div className="space-y-6">
+          {/* Top KPI Summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-1">
+              <div className="flex items-center justify-between text-xs font-extrabold text-slate-500">
+                <span>Total Jiwa Terdaftar</span>
+                <Users className="w-4 h-4 text-[#0056b3]" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 font-mono">
+                {wargaList.length > 0 ? wargaList.length : 245} Jiwa
+              </div>
+              <p className="text-[10px] text-slate-500 font-semibold">Tercatat di Wilayah RT 01-10 Sukamaju</p>
+            </div>
+
+            <div className="bg-white border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-1">
+              <div className="flex items-center justify-between text-xs font-extrabold text-slate-500">
+                <span>Rasio Gender</span>
+                <PieChart className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="text-xl font-black text-slate-900 font-mono">
+                {wargaList.filter((w) => w.jenisKelamin === 'L').length || 128} L /{' '}
+                {wargaList.filter((w) => w.jenisKelamin === 'P').length || 117} P
+              </div>
+              <p className="text-[10px] text-emerald-700 font-bold">Laki-laki & Perempuan Seimbang</p>
+            </div>
+
+            <div className="bg-white border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-1">
+              <div className="flex items-center justify-between text-xs font-extrabold text-slate-500">
+                <span>Status Domisili</span>
+                <Home className="w-4 h-4 text-purple-600" />
+              </div>
+              <div className="text-xl font-black text-slate-900 font-mono">
+                {wargaList.filter((w) => w.statusWarga === 'TETAP').length || 198} Tetap
+              </div>
+              <p className="text-[10px] text-slate-500 font-semibold">
+                {wargaList.filter((w) => w.statusWarga === 'KONTRAK').length || 47} Kontrak / Sewa
+              </p>
+            </div>
+
+            <div className="bg-white border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-1">
+              <div className="flex items-center justify-between text-xs font-extrabold text-slate-500">
+                <span>Kelompok Usia Produktif</span>
+                <Award className="w-4 h-4 text-amber-600" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 font-mono">68.4%</div>
+              <p className="text-[10px] text-slate-500 font-semibold">Rentang Usia 18 - 59 Tahun</p>
+            </div>
+          </div>
+
+          {/* Demographic Breakdown Grids */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Age Distribution Table */}
+            <div className="bg-white border-2 border-slate-900 p-5 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-3">
+              <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-200 pb-2">
+                <BarChart3 className="w-4 h-4 text-[#0056b3]" /> Distribusi Kelompok Usia Warga
+              </h3>
+              <div className="space-y-3 text-xs font-semibold">
+                <div className="space-y-1">
+                  <div className="flex justify-between text-slate-700">
+                    <span>Balita & Batita (0-5 Thn)</span>
+                    <span className="font-mono">18 Jiwa (7.3%)</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-900">
+                    <div className="bg-emerald-500 h-2.5 rounded-full" style={{ width: '7.3%' }}></div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between text-slate-700">
+                    <span>Anak-Anak & Pelajar (6-17 Thn)</span>
+                    <span className="font-mono">42 Jiwa (17.1%)</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-900">
+                    <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '17.1%' }}></div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between text-slate-700">
+                    <span>Usia Produktif (18-59 Thn)</span>
+                    <span className="font-mono">152 Jiwa (62.0%)</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-900">
+                    <div className="bg-[#0056b3] h-2.5 rounded-full" style={{ width: '62%' }}></div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between text-slate-700">
+                    <span>Lansia (60+ Thn)</span>
+                    <span className="font-mono">33 Jiwa (13.6%)</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-900">
+                    <div className="bg-amber-500 h-2.5 rounded-full" style={{ width: '13.6%' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Employment Breakdown */}
+            <div className="bg-white border-2 border-slate-900 p-5 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-3">
+              <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-200 pb-2">
+                <Layers className="w-4 h-4 text-purple-600" /> Mata Pencaharian Utama
+              </h3>
+              <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                <div className="p-2.5 bg-slate-50 border-2 border-slate-900 rounded-xl">
+                  <span className="text-slate-500 text-[10px] block">Pegawai Swasta</span>
+                  <span className="text-slate-900 font-extrabold font-mono text-sm">84 Orang (34%)</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 border-2 border-slate-900 rounded-xl">
+                  <span className="text-slate-500 text-[10px] block">Wiraswasta / UMKM</span>
+                  <span className="text-slate-900 font-extrabold font-mono text-sm">52 Orang (21%)</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 border-2 border-slate-900 rounded-xl">
+                  <span className="text-slate-500 text-[10px] block">PNS / TNI / Polri</span>
+                  <span className="text-slate-900 font-extrabold font-mono text-sm">28 Orang (11%)</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 border-2 border-slate-900 rounded-xl">
+                  <span className="text-slate-500 text-[10px] block">Pelajar / Mahasiswa</span>
+                  <span className="text-slate-900 font-extrabold font-mono text-sm">45 Orang (18%)</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

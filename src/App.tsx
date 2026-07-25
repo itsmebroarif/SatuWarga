@@ -28,6 +28,7 @@ import { IuranView } from './components/IuranView';
 import { KegiatanView } from './components/KegiatanView';
 import { SubOrganisasiView } from './components/SubOrganisasiView';
 import { ArsipProposalView } from './components/ArsipProposalView';
+import { PengaturanView } from './components/PengaturanView';
 import { AduanWargaView } from './components/AduanWargaView';
 import { PengumumanView } from './components/PengumumanView';
 import { VotingView } from './components/VotingView';
@@ -576,30 +577,50 @@ export default function App() {
             {(normalizedTab === 'arsip_proposal' || normalizedTab === 'dokumen-proposal' || normalizedTab === 'statistik') && (
               <ArsipProposalView
                 arsipList={arsipList}
+                wargaList={wargaList}
                 onAddArsip={handleAddArsip}
               />
             )}
 
             {normalizedTab === 'pengaturan' && (
-              <div className="bg-white border-2 border-slate-900 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] space-y-4">
-                <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-[#0056b3]" /> Pengaturan & Keamanan Sistem Sukamaju
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 bg-slate-50 rounded-2xl border-2 border-slate-900 space-y-2">
-                    <h3 className="font-extrabold text-slate-900">Wilayah & Struktur Administrasi</h3>
-                    <p className="text-slate-600">
-                      Sistem Informasi Pengelolaan Warga Sukamaju meliputi total 10 RT (RT 01 - RT 10) dan 30 RW (RW 01 - RW 30).
-                    </p>
-                  </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border-2 border-slate-900 space-y-2">
-                    <h3 className="font-extrabold text-slate-900">Mode Tampilan & Notifikasi</h3>
-                    <p className="text-slate-600">
-                      Menggunakan standar Mode Terang (Light Mode) berakuisisi tinggi, Toast Notification real-time, dan Popup Modal Konfirmasi keamanan.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <PengaturanView
+                wargaList={wargaList}
+                kkList={kkList}
+                kasList={kasList}
+                tagihanList={tagihanList}
+                suratList={suratList}
+                aduanList={aduanList}
+                eventsList={eventsList}
+                arsipList={arsipList}
+                setoranSampahList={setoranSampahList}
+                onImportFullBackup={(importedData: any) => {
+                  if (importedData.wargaList && Array.isArray(importedData.wargaList)) {
+                    setWargaList(importedData.wargaList);
+                    localStore.saveWarga(importedData.wargaList);
+                  }
+                  if (importedData.kkList && Array.isArray(importedData.kkList)) {
+                    setKkList(importedData.kkList);
+                    localStore.saveKK(importedData.kkList);
+                  }
+                  if (importedData.kasList && Array.isArray(importedData.kasList)) {
+                    setKasList(importedData.kasList);
+                    localStore.saveKas(importedData.kasList);
+                  }
+                  if (importedData.tagihanList && Array.isArray(importedData.tagihanList)) {
+                    setTagihanList(importedData.tagihanList);
+                    localStore.saveTagihan(importedData.tagihanList);
+                  }
+                  if (importedData.suratList && Array.isArray(importedData.suratList)) {
+                    setSuratList(importedData.suratList);
+                    localStore.saveSurat(importedData.suratList);
+                  }
+                  if (importedData.aduanList && Array.isArray(importedData.aduanList)) {
+                    setAduanList(importedData.aduanList);
+                    localStore.saveAduan(importedData.aduanList);
+                  }
+                }}
+                addToast={addToast}
+              />
             )}
           </div>
 
