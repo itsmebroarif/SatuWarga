@@ -44,7 +44,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 dark:text-slate-100 border-2 border-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_#0f172a] dark:shadow-[6px_6px_0px_0px_#000000] max-w-md w-full overflow-hidden space-y-0">
+      <div className="bg-white border-2 border-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_#0f172a] max-w-md w-full overflow-hidden space-y-0">
         {/* Header */}
         <div className={`p-4 border-b-2 border-slate-900 flex items-center justify-between ${headerBg}`}>
           <div className="flex items-center gap-3">
@@ -60,15 +60,15 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-5 text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
+        <div className="p-5 text-sm text-slate-700 font-medium leading-relaxed">
           {message}
         </div>
 
         {/* Footer actions */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-800 border-t-2 border-slate-900 flex items-center justify-end gap-3">
+        <div className="p-4 bg-slate-50 border-t-2 border-slate-900 flex items-center justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-900 dark:text-white border-2 border-slate-900 rounded-xl text-xs font-extrabold shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+            className="px-4 py-2 bg-white hover:bg-slate-100 text-slate-900 border-2 border-slate-900 rounded-xl text-xs font-extrabold shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
           >
             {cancelLabel}
           </button>

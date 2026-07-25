@@ -48,8 +48,11 @@ export default function App() {
   const [selectedRw, setSelectedRw] = useState<string>('ALL');
   const [selectedRt, setSelectedRt] = useState<string>('ALL');
 
-  // Dark Mode state (default to Light mode)
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  // Force Light Mode permanently
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('satuwarga_theme', 'light');
+  }, []);
 
   // UI Toast & Confirmation States
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -83,17 +86,6 @@ export default function App() {
   const [aduanList, setAduanList] = useState<AduanWarga[]>([]);
   const [pengumumanList, setPengumumanList] = useState<PengumumanItem[]>([]);
   const [votingList, setVotingList] = useState<VotingItem[]>([]);
-
-  // Dark Mode HTML Effect
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('satuwarga_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('satuwarga_theme', 'light');
-    }
-  }, [isDarkMode]);
 
   // Toast Helper
   const addToast = (type: 'success' | 'error' | 'info' | 'warning', title: string, message?: string) => {
@@ -372,7 +364,7 @@ export default function App() {
   const normalizedTab = String(activeTab || '').toLowerCase();
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased flex flex-col selection:bg-[#0056b3] selection:text-white transition-colors">
+    <div className="min-h-screen bg-slate-100 font-sans text-slate-900 antialiased flex flex-col selection:bg-[#0056b3] selection:text-white">
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onDismiss={handleDismissToast} />
 
@@ -389,37 +381,37 @@ export default function App() {
 
       {/* Encryption Details Modal */}
       {encryptionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-3xl shadow-[8px_8px_0px_0px_#0f172a] dark:shadow-[8px_8px_0px_0px_#000000] max-w-lg w-full p-6 space-y-4">
-            <div className="flex items-center justify-between border-b-2 border-slate-200 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-extrabold text-base">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border-2 border-slate-900 rounded-3xl shadow-[8px_8px_0px_0px_#0f172a] max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+              <div className="flex items-center gap-2 text-emerald-600 font-extrabold text-base">
                 <ShieldCheck className="w-6 h-6" />
                 <span>E2E Data Encryption Sukamaju</span>
               </div>
               <button
                 onClick={() => setEncryptionModalOpen(false)}
-                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 cursor-pointer"
+                className="p-1 hover:bg-slate-100 rounded-lg text-slate-500 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-3 text-xs text-slate-600">
               <p className="leading-relaxed">
                 Seluruh data sensitif kependudukan Sukamaju (seperti Nomor Induk Kependudukan / NIK) diproteksi menggunakan standar enkripsi simetris <strong>AES-256 GCM</strong>.
               </p>
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/50 rounded-2xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 font-mono text-[11px] text-emerald-900 dark:text-emerald-200">
+              <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5 font-mono text-[11px] text-emerald-900">
                 <div className="flex items-center gap-1.5 font-bold">
-                  <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <Lock className="w-4 h-4 text-emerald-600" />
                   <span>Key Hash Status: Active</span>
                 </div>
                 <p className="opacity-90 break-all">
                   SHA256: 8f9b2d01e4a5c67890abcdef1234567890abcdef1234567890
                 </p>
               </div>
-              <ul className="space-y-1.5 list-disc pl-4 font-medium text-slate-700 dark:text-slate-300">
+              <ul className="space-y-1.5 list-disc pl-4 font-medium text-slate-700">
                 <li>Melindungi data privasi NIK warga dari akses ilegal.</li>
-                <li>Hanya pengurus resmi terverifikasi (Ketua/Sekretaris RT/RW) yang dapat melakukan peretasan / deskripsi tampilan.</li>
+                <li>Hanya pengurus resmi terverifikasi (Ketua/Sekretaris RT/RW) yang dapat melakukan dekripsi tampilan.</li>
                 <li>Sesuai dengan UU Perlindungan Data Pribadi (PDP) Indonesia.</li>
               </ul>
             </div>
@@ -445,11 +437,6 @@ export default function App() {
         onRwChange={setSelectedRw}
         selectedRt={selectedRt}
         onRtChange={setSelectedRt}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => {
-          setIsDarkMode(!isDarkMode);
-          addToast('info', 'Tampilan Diperbarui', `Mode ${!isDarkMode ? 'Dark' : 'Light'} diaktifkan.`);
-        }}
         isSidebarCollapsedDesktop={isSidebarCollapsedDesktop}
         onToggleSidebar={() => {
           // Toggle desktop collapse or mobile open
@@ -594,21 +581,21 @@ export default function App() {
             )}
 
             {normalizedTab === 'pengaturan' && (
-              <div className="bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] dark:shadow-[5px_5px_0px_0px_#000000] space-y-4">
-                <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <div className="bg-white border-2 border-slate-900 rounded-3xl p-6 shadow-[5px_5px_0px_0px_#0f172a] space-y-4">
+                <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-[#0056b3]" /> Pengaturan & Keamanan Sistem Sukamaju
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-slate-900 dark:border-slate-700 space-y-2">
-                    <h3 className="font-extrabold text-slate-900 dark:text-white">Wilayah & Struktur Administrasi</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
+                  <div className="p-4 bg-slate-50 rounded-2xl border-2 border-slate-900 space-y-2">
+                    <h3 className="font-extrabold text-slate-900">Wilayah & Struktur Administrasi</h3>
+                    <p className="text-slate-600">
                       Sistem Informasi Pengelolaan Warga Sukamaju meliputi total 10 RT (RT 01 - RT 10) dan 30 RW (RW 01 - RW 30).
                     </p>
                   </div>
-                  <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-slate-900 dark:border-slate-700 space-y-2">
-                    <h3 className="font-extrabold text-slate-900 dark:text-white">Mode Tampilan & Notifikasi</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
-                      Mendukung Mode Terang (Light Mode) & Mode Gelap (Dark Mode), Toast Notification real-time, dan Popup Modal Konfirmasi keamanan.
+                  <div className="p-4 bg-slate-50 rounded-2xl border-2 border-slate-900 space-y-2">
+                    <h3 className="font-extrabold text-slate-900">Mode Tampilan & Notifikasi</h3>
+                    <p className="text-slate-600">
+                      Menggunakan standar Mode Terang (Light Mode) berakuisisi tinggi, Toast Notification real-time, dan Popup Modal Konfirmasi keamanan.
                     </p>
                   </div>
                 </div>

@@ -30,7 +30,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismis
         return (
           <div
             key={toast.id}
-            className={`pointer-events-auto p-4 rounded-2xl border-2 shadow-[4px_4px_0px_0px_#0f172a] dark:shadow-[4px_4px_0px_0px_#000000] flex items-start justify-between gap-3 transition-all transform translate-y-0 animate-in fade-in slide-in-from-bottom-2 ${bgColor}`}
+            className={`pointer-events-auto p-4 rounded-2xl border-2 shadow-[4px_4px_0px_0px_#0f172a] flex items-start justify-between gap-3 transition-all transform translate-y-0 animate-in fade-in slide-in-from-bottom-2 ${bgColor}`}
           >
             <div className="flex items-start gap-3">
               {icon}

@@ -146,7 +146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed lg:sticky top-16 left-0 z-40 h-[calc(100vh-4rem)] bg-slate-900 text-slate-100 border-r-2 border-slate-900 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out shrink-0 ${
+        className={`fixed lg:sticky top-16 left-0 z-40 h-[calc(100vh-4rem)] bg-slate-900 text-slate-100 border-r-2 border-slate-900 flex flex-col transition-all duration-300 ease-in-out shrink-0 ${
           isCollapsedDesktop ? 'lg:w-20' : 'lg:w-64'
         } ${
           isOpenMobile
