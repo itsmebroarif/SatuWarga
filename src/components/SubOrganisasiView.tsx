@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { SubOrgUnit, SetoranSampah, BarangInventaris, PeminjamanBarang } from '../types';
 import { PrintReportHeader } from './PrintReportHeader';
+import { KarangTarunaTown3D } from './KarangTarunaTown3D';
 
 interface SubOrganisasiViewProps {
   setoranSampahList: SetoranSampah[];
@@ -498,16 +499,7 @@ export const SubOrganisasiView: React.FC<SubOrganisasiViewProps> = ({
       )}
 
       {/* 4. KARANG TARUNA */}
-      {activeUnit === 'KARANG_TARUNA' && (
-        <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs space-y-4">
-          <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
-            <Award className="w-4 h-4 text-purple-600" /> Unit Karang Taruna
-          </h3>
-          <p className="text-xs text-slate-600">
-            Wadah kegiatan kepemudaan, seni, olahraga, serta relawan kegiatan kemasyarakatan.
-          </p>
-        </div>
-      )}
+      {activeUnit === 'KARANG_TARUNA' && <KarangTarunaTown3D />}
 
       {/* 5. POSYANDU */}
       {activeUnit === 'POSYANDU' && (

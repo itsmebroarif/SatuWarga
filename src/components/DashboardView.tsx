@@ -374,6 +374,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
+      {/* Neo-Brutalist Karang Taruna Town 3D Simulation Banner */}
+      <div className="bg-[#facc15] border-3 border-slate-900 rounded-2xl p-5 shadow-[6px_6px_0px_0px_#0f172a] relative overflow-hidden transition-all flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="space-y-1.5 z-10 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 bg-slate-900 text-amber-300 font-mono font-black text-[10px] uppercase rounded border border-slate-900">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" /> Karang Taruna 3D Village Map
+          </div>
+          <h3 className="text-lg font-black text-slate-950 uppercase tracking-tight">
+            PETA 3D LINGKUNGAN DESA SUKAMAJU (15 PEMUDA • 7 COWO / 8 CEWE)
+          </h3>
+          <p className="text-xs font-bold text-slate-900">
+            Simulasi visual interaktif wilayah desa lengkap dengan gunung, danau, sungai, perumahan warga, dan radar aktivitas pemuda real-time.
+          </p>
+        </div>
+
+        <button
+          onClick={() => onNavigateTab('sub-organisasi')}
+          className="z-10 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs px-5 py-3 rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
+        >
+          <Eye className="w-4 h-4 text-amber-300" /> Buka Simulasi Peta 3D
+        </button>
+      </div>
+
       {/* Multi-Kas Financial Balances Strip */}
       <div className="bg-white rounded border border-[#dee2e6] p-4 shadow-xs">
         <div className="flex items-center justify-between border-b border-[#dee2e6] pb-2.5 mb-3">
