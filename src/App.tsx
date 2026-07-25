@@ -199,11 +199,57 @@ export default function App() {
     addToast('success', 'KK Berhasil Didaftarkan', `Nomor KK ${kk.nomorKk} tersimpan.`);
   };
 
+  const handleUpdateKK = (kk: KartuKeluarga) => {
+    const updated = kkList.map((k) => (k.id === kk.id ? kk : k));
+    setKkList(updated);
+    localStore.saveKK(updated);
+    addToast('success', 'KK Diperbarui', `Data KK ${kk.nomorKk} berhasil diperbarui.`);
+  };
+
+  const handleDeleteKK = (id: string) => {
+    const target = kkList.find((k) => k.id === id);
+    askConfirmation({
+      title: 'Hapus Kartu Keluarga',
+      message: `Hapus data KK No. ${target?.nomorKk || ''} (${target?.kepalaKeluargaNama || ''})?`,
+      confirmLabel: 'Hapus KK',
+      variant: 'danger',
+      onConfirm: () => {
+        const updated = kkList.filter((k) => k.id !== id);
+        setKkList(updated);
+        localStore.saveKK(updated);
+        addToast('warning', 'Data KK Dihapus', `Data KK ${target?.nomorKk || ''} telah dihapus.`);
+      },
+    });
+  };
+
   const handleAddRumah = (r: Rumah) => {
     const updated = [r, ...rumahList];
     setRumahList(updated);
     localStore.saveRumah(updated);
     addToast('success', 'Bangunan Terdaftar', `Rumah ${r.nomorRumah} tersimpan.`);
+  };
+
+  const handleUpdateRumah = (r: Rumah) => {
+    const updated = rumahList.map((rmh) => (rmh.id === r.id ? r : rmh));
+    setRumahList(updated);
+    localStore.saveRumah(updated);
+    addToast('success', 'Data Rumah Diperbarui', `Data rumah ${r.nomorRumah} berhasil diperbarui.`);
+  };
+
+  const handleDeleteRumah = (id: string) => {
+    const target = rumahList.find((r) => r.id === id);
+    askConfirmation({
+      title: 'Hapus Data Rumah',
+      message: `Hapus register rumah ${target?.nomorRumah || ''}?`,
+      confirmLabel: 'Hapus Rumah',
+      variant: 'danger',
+      onConfirm: () => {
+        const updated = rumahList.filter((r) => r.id !== id);
+        setRumahList(updated);
+        localStore.saveRumah(updated);
+        addToast('warning', 'Data Rumah Dihapus', `Data rumah ${target?.nomorRumah || ''} telah dihapus.`);
+      },
+    });
   };
 
   const handleAddSurat = (s: Surat) => {
@@ -552,7 +598,11 @@ export default function App() {
                 onUpdateWarga={handleUpdateWarga}
                 onDeleteWarga={handleDeleteWarga}
                 onAddKK={handleAddKK}
+                onUpdateKK={handleUpdateKK}
+                onDeleteKK={handleDeleteKK}
                 onAddRumah={handleAddRumah}
+                onUpdateRumah={handleUpdateRumah}
+                onDeleteRumah={handleDeleteRumah}
               />
             )}
 

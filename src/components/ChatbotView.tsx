@@ -16,7 +16,14 @@ import {
   RefreshCw,
   MessageSquare,
   ShieldCheck,
+  Key,
+  Settings,
+  X,
+  ExternalLink,
+  CheckCircle2,
+  Server,
 } from 'lucide-react';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 
 export interface ChatMessage {
   id: string;
@@ -39,6 +46,8 @@ interface ChatbotViewProps {
   };
 }
 
+const STORAGE_KEY_API_CODE = 'satuwarga_custom_gemini_api_key';
+
 export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -57,6 +66,15 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Custom API Key / Code State
+  const [customApiKey, setCustomApiKey] = useState<string>(() => {
+    return localStorage.getItem(STORAGE_KEY_API_CODE) || '';
+  });
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+  const [tempApiKeyInput, setTempApiKeyInput] = useState('');
+  const [showKeySecret, setShowKeySecret] = useState(false);
+  const [savedKeyNotification, setSavedKeyNotification] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -66,6 +84,87 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  const handleSaveApiKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanKey = tempApiKeyInput.trim();
+    setCustomApiKey(cleanKey);
+    if (cleanKey) {
+      localStorage.setItem(STORAGE_KEY_API_CODE, cleanKey);
+    } else {
+      localStorage.removeItem(STORAGE_KEY_API_CODE);
+    }
+    setSavedKeyNotification(true);
+    setTimeout(() => setSavedKeyNotification(false), 3000);
+    setIsApiKeyModalOpen(false);
+  };
+
+  const handleClearApiKey = () => {
+    setCustomApiKey('');
+    setTempApiKeyInput('');
+    localStorage.removeItem(STORAGE_KEY_API_CODE);
+    setIsApiKeyModalOpen(false);
+  };
+
+  // Direct Client-Side Gemini Execution Helper
+  const executeClientSideGemini = async (
+    apiKey: string,
+    historyPayload: { role: 'user' | 'model'; text: string }[]
+  ) => {
+    const ai = new GoogleGenAI({
+      apiKey: apiKey,
+    });
+
+    const modelName = enableThinking ? 'gemini-3.1-pro-preview' : 'gemini-3.6-flash';
+
+    let roleInstruction =
+      "Anda adalah Asisten Digital Cerdas AI Sukamaju ('SatuWarga Assistant'). Tugas Anda membantu warga dan pengurus RT/RW dalam memberikan informasi administrasi, layanan warga, kegiatan, kas keuangan, dan aturan kemasyarakatan di Indonesia secara ramah, sopan, ringkas, dan akurat.";
+
+    if (systemRole === 'LEGAL') {
+      roleInstruction =
+        'Anda adalah Asisten Legal & Draf Administrasi RT/RW Sukamaju. Anda ahli dalam membimbing warga serta menyusun draf pengumuman resmi, surat keputusan RT/RW, proposal kegiatan warga, dan regulasi ketertiban lingkungan sesuai aturan di Indonesia.';
+    } else if (systemRole === 'CREATIVE') {
+      roleInstruction =
+        'Anda adalah Inovator & Perencana Acara Warga Sukamaju. Anda bertugas memberikan ide-ide kreatif kegiatan warga (PKK, Karang Taruna, Posyandu, 17 Agustus), lomba warga, ide pengelolaan Bank Sampah, dan konsep kerja bakti lingkungan yang menyenangkan.';
+    }
+
+    let fullSystemInstruction = roleInstruction;
+    if (contextData) {
+      fullSystemInstruction += `\n\n--- KONTEKS DATA REAL LINGKUNGAN SUKAMAJU SAAT INI ---
+(Gunakan data ini jika warga/pengurus menanyakan statistik atau kondisi wilayah):
+- Total Warga Terdaftar: ${contextData.totalWarga ?? 0} Jiwa
+- Saldo Kas RW: Rp ${(contextData.saldoKas ?? 0).toLocaleString('id-ID')}
+- Total Aduan Warga: ${contextData.totalAduan ?? 0} (Belum Selesai / Pending: ${contextData.pendingAduan ?? 0})
+- Total Pengumuman Aktif: ${contextData.totalPengumuman ?? 0}
+- Total Kegiatan Terjadwal: ${contextData.totalKegiatan ?? 0}
+- Total Barang Inventaris: ${contextData.totalBarang ?? 0} Unit`;
+    }
+
+    const formattedContents = historyPayload.map((m) => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }],
+    }));
+
+    const config: any = {
+      systemInstruction: fullSystemInstruction,
+    };
+
+    if (enableThinking && modelName === 'gemini-3.1-pro-preview') {
+      config.thinkingConfig = { thinkingLevel: ThinkingLevel.HIGH };
+    }
+
+    const response = await ai.models.generateContent({
+      model: modelName,
+      contents: formattedContents,
+      config,
+    });
+
+    return {
+      text: response.text || 'Maaf, AI tidak dapat menghasilkan tanggapan.',
+      modelUsed: modelName,
+      isThinking: Boolean(enableThinking),
+    };
+  };
 
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputMessage).trim();
@@ -84,28 +183,62 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
     setInputMessage('');
     setIsLoading(true);
 
-    try {
-      // Prepare payload for server API
-      const historyPayload = newMessages.map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
+    const historyPayload = newMessages.map((m) => ({
+      role: m.role,
+      text: m.text,
+    }));
 
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: historyPayload,
-          enableThinking,
-          systemRole,
-          contextData,
-        }),
-      });
+    try {
+      // 1. Prioritize User's Personal API Code if provided
+      if (customApiKey.trim().length > 0) {
+        const result = await executeClientSideGemini(customApiKey.trim(), historyPayload);
+        const botMsg: ChatMessage = {
+          id: 'bot-' + Date.now(),
+          role: 'model',
+          text: result.text,
+          timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+          isThinking: result.isThinking,
+          modelUsed: `${result.modelUsed} (Client Key)`,
+        };
+        setMessages((prev) => [...prev, botMsg]);
+        return;
+      }
+
+      // 2. Otherwise call backend API (/api/chat)
+      let response: Response;
+      try {
+        response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: historyPayload,
+            enableThinking,
+            systemRole,
+            contextData,
+          }),
+        });
+      } catch (networkErr: any) {
+        throw new Error(
+          'Tidak dapat terhubung ke server backend (/api/chat). Jika menggunakan Vercel Hosting Statis, silakan masukkan API Code / GEMINI_API_KEY pribadi Anda di tombol "Set API Code".'
+        );
+      }
+
+      // Safe check content-type before calling response.json() to prevent SyntaxError: Unexpected token 'T'
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.warn('Backend returned non-JSON response:', textResponse.slice(0, 200));
+
+        // If hosted on Vercel static without server function, prompt user clearly to input API Code
+        throw new Error(
+          'Endpoint server (/api/chat) mengembalikan format HTML (misal Vercel 404 / Hosting Statis). Silakan klik tombol "Set API Code" di pojok kanan atas untuk memasukkan Gemini API Key pribadi Anda agar chatbot dapat berjalan langsung di Vercel.'
+        );
+      }
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Terjadi kesalahan saat memproses pesan.');
+        throw new Error(data.error || 'Terjadi kesalahan pada layanan AI.');
       }
 
       const botMsg: ChatMessage = {
@@ -120,7 +253,10 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
       setMessages((prev) => [...prev, botMsg]);
     } catch (err: any) {
       console.error('Chat error:', err);
-      setErrorMsg(err.message || 'Gagal terhubung ke layanan Gemini AI Server.');
+      setErrorMsg(
+        err.message ||
+          'Gagal terhubung ke layanan Gemini AI. Silakan masukkan API Code pribadi Anda di menu pengaturan.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +287,6 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
   const renderFormattedText = (content: string) => {
     const lines = content.split('\n');
     return lines.map((line, idx) => {
-      // Bold replacement regex
       const parts = line.split(/(\*\*.*?\*\*)/g);
       const lineContent = parts.map((part, pIdx) => {
         if (part.startsWith('**') && part.endsWith('**')) {
@@ -219,25 +354,50 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
               <Sparkles className="w-6 h-6 animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-xl font-black tracking-tight">Asisten AI Integrated Sukamaju</h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-400 text-slate-900 uppercase font-mono">
                   Gemini AI
                 </span>
+                {customApiKey ? (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-slate-950 flex items-center gap-1 font-mono">
+                    <Key className="w-3 h-3" /> API Code Personal
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-700 text-slate-200 flex items-center gap-1 font-mono">
+                    <Server className="w-3 h-3 text-sky-300" /> Server Mode
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-slate-300 font-medium">
+              <p className="text-xs text-slate-300 font-medium mt-0.5">
                 Pusat Bantuan Cerdas RT/RW: Layanan Administrasi, Draf Legal, Regulasi, & Inovasi Acara Warga.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+            <button
+              onClick={() => {
+                setTempApiKeyInput(customApiKey);
+                setIsApiKeyModalOpen(true);
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition cursor-pointer ${
+                customApiKey
+                  ? 'bg-emerald-500 text-slate-950 border-emerald-400 font-black shadow-xs'
+                  : 'bg-sky-600/80 hover:bg-sky-500 text-white border-sky-400'
+              }`}
+              title="Atur GEMINI API Key / Code Pribadi"
+            >
+              <Key className="w-3.5 h-3.5" />
+              <span>{customApiKey ? 'API Code Aktif' : 'Set API Code'}</span>
+            </button>
+
             <button
               onClick={handleClearHistory}
               className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-600/90 text-slate-200 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
               title="Bersihkan riwayat percakapan"
             >
-              <Trash2 className="w-3.5 h-3.5" /> Bersihkan Chat
+              <Trash2 className="w-3.5 h-3.5" /> Bersihkan
             </button>
           </div>
         </div>
@@ -286,6 +446,14 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
           </div>
         </div>
       </div>
+
+      {/* Saved Notification */}
+      {savedKeyNotification && (
+        <div className="bg-emerald-100 border-2 border-emerald-500 text-emerald-900 p-3 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>Pengaturan Kunci API Code berhasil disimpan di memori browser Anda! Chatbot siap digunakan secara mandiri.</span>
+        </div>
+      )}
 
       {/* Main Chat Thread Window */}
       <div className="bg-white rounded-2xl border-2 border-slate-900 shadow-[6px_6px_0px_0px_#0f172a] overflow-hidden flex flex-col h-[580px]">
@@ -379,17 +547,33 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
 
           {/* Error Card */}
           {errorMsg && (
-            <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl text-rose-800 text-xs flex items-center justify-between gap-3 shadow-xs">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                <span>{errorMsg}</span>
+            <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl text-rose-800 text-xs space-y-2 shadow-xs">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p className="font-bold">{errorMsg}</p>
+                  <p className="text-[11px] text-rose-700 font-medium">
+                    Solusi: Jika Anda meletakkan web di Vercel atau hosting statis, klik tombol <strong>"Set API Code"</strong> di atas untuk memasukkan Kunci Gemini API Anda sendiri secara gratis.
+                  </p>
+                </div>
               </div>
-              <button
-                onClick={() => handleSendMessage()}
-                className="px-2.5 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700 transition cursor-pointer shrink-0 flex items-center gap-1 text-[11px]"
-              >
-                <RefreshCw className="w-3 h-3" /> Coba Lagi
-              </button>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    setTempApiKeyInput(customApiKey);
+                    setIsApiKeyModalOpen(true);
+                  }}
+                  className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-lg border border-amber-600 text-[11px] flex items-center gap-1 cursor-pointer"
+                >
+                  <Key className="w-3 h-3" /> Input API Code Sekarang
+                </button>
+                <button
+                  onClick={() => handleSendMessage()}
+                  className="px-3 py-1 bg-rose-600 text-white rounded-lg font-bold hover:bg-rose-700 transition cursor-pointer text-[11px] flex items-center gap-1"
+                >
+                  <RefreshCw className="w-3 h-3" /> Coba Lagi
+                </button>
+              </div>
             </div>
           )}
 
@@ -447,7 +631,10 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
           </form>
           <div className="flex items-center justify-between mt-2 text-[10px] text-slate-400 font-mono">
             <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-600" /> Data terenkripsi & diproses server terisolasi.
+              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              {customApiKey
+                ? 'Mode Direct Client: API Code Anda tersimpan lokal & aman.'
+                : 'Mode Server Fullstack (Cloud Run).'}
             </span>
             <span>
               Model: <strong className="text-slate-700">{enableThinking ? 'gemini-3.1-pro-preview' : 'gemini-3.6-flash'}</strong>
@@ -455,6 +642,106 @@ export const ChatbotView: React.FC<ChatbotViewProps> = ({ contextData }) => {
           </div>
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* MODAL: CONFIGURATION SET API CODE (GEMINI API KEY PRIBADI)                */}
+      {/* ========================================================================= */}
+      {isApiKeyModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl border-2 border-slate-900 max-w-lg w-full shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold border-2 border-slate-900">
+                  <Key className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 text-sm">Pengaturan API Code (Gemini API Key)</h3>
+                  <p className="text-xs text-slate-500 font-medium">Penggunaan Kunci API Pribadi untuk Hosting Statis / Vercel</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsApiKeyModalOpen(false)}
+                className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl border border-slate-300 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveApiKey} className="space-y-4 text-xs">
+              <div className="p-3.5 bg-amber-50 border-2 border-amber-300 rounded-xl space-y-2 text-amber-900 font-medium">
+                <p className="font-bold flex items-center gap-1.5 text-xs text-amber-950">
+                  <Lightbulb className="w-4 h-4 text-amber-600 shrink-0" /> Mengapa Membutuhkan API Code Pribadi?
+                </p>
+                <p className="text-[11px] leading-relaxed">
+                  Jika aplikasi ini di-deploy di platform statis seperti <strong>Vercel / GitHub Pages</strong>, server backend tidak berjalan. Dengan memasukkan API Code sendiri, Chatbot Gemini AI akan berjalan 100% langsung dari browser Anda secara gratis tanpa batasan server!
+                </p>
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-black text-amber-950 hover:underline pt-1"
+                >
+                  Dapatkan Gemini API Key Gratis di Google AI Studio <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+
+              <div>
+                <label className="block text-slate-800 font-extrabold mb-1">Kunci API Code (GEMINI_API_KEY)</label>
+                <div className="relative">
+                  <input
+                    type={showKeySecret ? 'text' : 'password'}
+                    value={tempApiKeyInput}
+                    onChange={(e) => setTempApiKeyInput(e.target.value)}
+                    placeholder="Contoh: AIzaSyD..."
+                    className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-3 pr-20 py-2.5 font-mono text-xs font-bold text-slate-900 focus:outline-none focus:border-slate-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKeySecret(!showKeySecret)}
+                    className="absolute right-2 top-2 px-2 py-1 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-lg text-[10px] font-bold cursor-pointer"
+                  >
+                    {showKeySecret ? 'Sembunyikan' : 'Tampilkan'}
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Kunci ini disimpan hanya di LocalStorage browser Anda dan tidak pernah dikirim ke server pihak ketiga manapun.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200">
+                {customApiKey ? (
+                  <button
+                    type="button"
+                    onClick={handleClearApiKey}
+                    className="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-xl font-bold text-xs cursor-pointer"
+                  >
+                    Hapus API Code
+                  </button>
+                ) : (
+                  <div />
+                )}
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsApiKeyModalOpen(false)}
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-xl font-bold text-xs cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-extrabold text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] cursor-pointer"
+                  >
+                    Simpan API Code
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
