@@ -18,7 +18,9 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
+  UserCheck,
 } from 'lucide-react';
+import { UserRole } from '../types';
 
 export type ActiveTab =
   | 'dashboard'
@@ -37,6 +39,167 @@ export type ActiveTab =
   | 'statistik'
   | 'pengaturan';
 
+export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
+  switch (role) {
+    case 'SUPER_ADMIN':
+    case 'KETUA_RW':
+    case 'WAKIL_KETUA_RW':
+    case 'SEKRETARIS_RW':
+    case 'WAKIL_SEKRETARIS_RW':
+      return [
+        'dashboard',
+        'master-data',
+        'administrasi',
+        'keuangan',
+        'iuran',
+        'aduan-warga',
+        'pengumuman',
+        'voting',
+        'kegiatan',
+        'inventaris',
+        'dokumen-proposal',
+        'pengaturan',
+      ];
+
+    case 'BENDAHARA_RW':
+    case 'WAKIL_BENDAHARA_RW':
+      return [
+        'dashboard',
+        'keuangan',
+        'iuran',
+        'dokumen-proposal',
+        'pengumuman',
+        'kegiatan',
+        'pengaturan',
+      ];
+
+    case 'KETUA_RT':
+    case 'WAKIL_KETUA_RT':
+    case 'SEKRETARIS_RT':
+    case 'WAKIL_SEKRETARIS_RT':
+      return [
+        'dashboard',
+        'master-data',
+        'administrasi',
+        'iuran',
+        'aduan-warga',
+        'pengumuman',
+        'voting',
+        'kegiatan',
+        'dokumen-proposal',
+        'pengaturan',
+      ];
+
+    case 'BENDAHARA_RT':
+    case 'WAKIL_BENDAHARA_RT':
+      return [
+        'dashboard',
+        'keuangan',
+        'iuran',
+        'dokumen-proposal',
+        'pengumuman',
+        'pengaturan',
+      ];
+
+    case 'KETUA_PKK':
+    case 'PENGURUS_PKK':
+      return [
+        'dashboard',
+        'kegiatan',
+        'inventaris',
+        'pengumuman',
+        'voting',
+        'dokumen-proposal',
+      ];
+
+    case 'KETUA_KARANG_TARUNA':
+    case 'PENGURUS_KARANG_TARUNA':
+      return [
+        'dashboard',
+        'kegiatan',
+        'inventaris',
+        'aduan-warga',
+        'pengumuman',
+        'voting',
+        'dokumen-proposal',
+      ];
+
+    case 'POSYANDU':
+      return [
+        'dashboard',
+        'master-data',
+        'kegiatan',
+        'pengumuman',
+        'dokumen-proposal',
+      ];
+
+    case 'BANK_SAMPAH':
+      return [
+        'dashboard',
+        'inventaris',
+        'keuangan',
+        'pengumuman',
+        'dokumen-proposal',
+      ];
+
+    case 'LINMAS':
+      return [
+        'dashboard',
+        'aduan-warga',
+        'pengumuman',
+        'kegiatan',
+      ];
+
+    case 'KETUA_DKM':
+    case 'PENGURUS_DKM':
+      return [
+        'dashboard',
+        'kegiatan',
+        'keuangan',
+        'inventaris',
+        'pengumuman',
+      ];
+
+    case 'WARGA':
+    default:
+      return [
+        'dashboard',
+        'administrasi',
+        'iuran',
+        'aduan-warga',
+        'pengumuman',
+        'voting',
+        'kegiatan',
+      ];
+  }
+}
+
+const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
+  SUPER_ADMIN: 'Super Admin',
+  KETUA_RW: 'Ketua RW',
+  WAKIL_KETUA_RW: 'Wakil Ketua RW',
+  SEKRETARIS_RW: 'Sekretaris RW',
+  WAKIL_SEKRETARIS_RW: 'Wakil Sek. RW',
+  BENDAHARA_RW: 'Bendahara RW',
+  WAKIL_BENDAHARA_RW: 'Wakil Ben. RW',
+  KETUA_RT: 'Ketua RT',
+  WAKIL_KETUA_RT: 'Wakil Ketua RT',
+  SEKRETARIS_RT: 'Sekretaris RT',
+  WAKIL_SEKRETARIS_RT: 'Wakil Sek. RT',
+  BENDAHARA_RT: 'Bendahara RT',
+  WAKIL_BENDAHARA_RT: 'Wakil Ben. RT',
+  KETUA_PKK: 'Ketua PKK',
+  PENGURUS_PKK: 'Pengurus PKK',
+  KETUA_KARANG_TARUNA: 'Ketua Karang Taruna',
+  PENGURUS_KARANG_TARUNA: 'Pengurus Karang Taruna',
+  POSYANDU: 'Kader Posyandu',
+  BANK_SAMPAH: 'Bank Sampah',
+  LINMAS: 'Tim Linmas',
+  KETUA_DKM: 'Ketua DKM',
+  PENGURUS_DKM: 'Pengurus DKM',
+  WARGA: 'Warga / Penduduk',
+};
+
 interface SidebarProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
@@ -47,6 +210,7 @@ interface SidebarProps {
   pendingSuratCount: number;
   pendingAduanCount: number;
   unpaidIuranCount: number;
+  currentRole?: UserRole;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -59,8 +223,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   pendingSuratCount,
   pendingAduanCount,
   unpaidIuranCount,
+  currentRole = 'KETUA_RW',
 }) => {
-  const navItems = [
+  const allowedTabs = getAllowedTabsForRole(currentRole as UserRole);
+
+  const rawNavItems = [
     {
       group: 'UTAMA',
       items: [
@@ -117,7 +284,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       group: 'DOKUMEN & PRODUKTIVITAS',
       items: [
-        { id: 'dokumen-proposal' as ActiveTab, label: 'Dokumen, Proposal & Statistik', icon: FolderOpen },
+        { id: 'dokumen-proposal' as ActiveTab, label: 'Dokumen & Proposal', icon: FolderOpen },
       ],
     },
     {
@@ -127,6 +294,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ],
     },
   ];
+
+  // Auto-filter menus based on the currentRole
+  const filteredNavItems = rawNavItems
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => allowedTabs.includes(item.id)),
+    }))
+    .filter((group) => group.items.length > 0);
 
   const handleSelect = (id: ActiveTab) => {
     onTabChange(id);
@@ -155,10 +330,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Top Header Controls: Mobile Close & Desktop Collapse Button */}
         <div className="flex items-center justify-between p-3 border-b-2 border-slate-800 bg-slate-950">
-          <div className={`flex items-center gap-2 ${isCollapsedDesktop ? 'lg:hidden' : ''}`}>
-            <span className="font-extrabold text-sm uppercase tracking-wider text-white">
-              Satu<span className="text-[#0056b3]">Warga.id</span>
+          <div className={`flex flex-col gap-0.5 ${isCollapsedDesktop ? 'lg:hidden' : ''}`}>
+            <span className="font-extrabold text-sm uppercase tracking-wider text-white flex items-center gap-1.5">
+              E-<span className="text-[#0056b3]">REKAP</span>
             </span>
+            <div className="flex items-center gap-1 text-[10px] text-amber-300 font-mono font-bold">
+              <UserCheck className="w-3 h-3 text-amber-300" />
+              <span>Akses: {ROLE_DISPLAY_NAMES[currentRole as UserRole] || currentRole}</span>
+            </div>
           </div>
 
           {/* Desktop Toggle Button */}
@@ -181,7 +360,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Menu Navigation Items */}
         <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-4">
-          {navItems.map((group, idx) => (
+          {filteredNavItems.map((group, idx) => (
             <div key={idx} className="space-y-1">
               {!isCollapsedDesktop && (
                 <div className="px-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest font-mono hidden lg:block">

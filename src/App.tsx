@@ -19,7 +19,7 @@ import {
 } from './types';
 import { localStore } from './services/storage';
 import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
+import { Sidebar, getAllowedTabsForRole } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
 import { MasterDataView } from './components/MasterDataView';
 import { AdministrasiView } from './components/AdministrasiView';
@@ -138,10 +138,19 @@ export default function App() {
     setVotingList(localStore.loadVoting());
   }, []);
 
-  // Role Change Toast
+  // Auto-adjust active tab when currentRole changes
+  useEffect(() => {
+    const allowed = getAllowedTabsForRole(currentRole);
+    if (!allowed.includes(activeTab as any)) {
+      setActiveTab('dashboard');
+    }
+  }, [currentRole]);
+
+  // Role Change Toast & Auto Settings
   const handleRoleChange = (role: UserRole) => {
     setCurrentRole(role);
-    addToast('info', 'Hak Akses Diperbarui', `Beralih peran menjadi: ${role.replace(/_/g, ' ')}`);
+    const roleFormatted = role.replace(/_/g, ' ');
+    addToast('info', 'Konfigurasi Otomatis', `Menu & fungsi disesuaikan untuk peran ${roleFormatted} (Tanpa Password).`);
   };
 
   // Handlers with Toast & Confirmation Modals
@@ -471,6 +480,7 @@ export default function App() {
           pendingSuratCount={suratList.filter((s) => s.status === 'MENUNGGU_RT' || s.status === 'MENUNGGU_RW' || (s.status as string) === 'PENDING').length}
           pendingAduanCount={aduanList.filter((a) => a.status === 'OPEN').length}
           unpaidIuranCount={tagihanList.filter((t) => t.status === 'BELUM_BAYAR').length}
+          currentRole={currentRole}
         />
 
         {/* Main Content View Container */}

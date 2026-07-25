@@ -163,19 +163,19 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-9 h-9 bg-[#0056b3] text-white flex items-center justify-center font-black text-sm rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
-              SW
+              ER
             </div>
             <div>
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900">
-                  Satu<span className="text-[#0056b3]">Warga.id</span>
+                  E-<span className="text-[#0056b3]">REKAP</span>
                 </span>
                 <span className="text-[9px] sm:text-[10px] bg-amber-300 text-slate-900 border-2 border-slate-900 px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full font-extrabold uppercase shadow-[1px_1px_0px_0px_#0f172a]">
                   Sukamaju
                 </span>
               </div>
               <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 hidden lg:block">
-                Sistem Informasi Pengelolaan Warga Sukamaju
+                Sistem E-REKAP Pengelolaan Warga Sukamaju
               </p>
             </div>
           </div>
