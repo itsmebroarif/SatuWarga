@@ -42,7 +42,7 @@ import { ConfirmationModal } from './components/ConfirmationModal';
 import { ShieldCheck, Lock, X, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
-  const [currentRole, setCurrentRole] = useState<UserRole>('KETUA_RW');
+  const [currentRole, setCurrentRole] = useState<UserRole>('KETUA');
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   
   // Sidebar states (mobile drawer & desktop collapse/close)

@@ -46,8 +46,11 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
   const commonTabs: ActiveTab[] = ['asisten-ai'];
   switch (role) {
     case 'SUPER_ADMIN':
+    case 'KETUA':
+    case 'KETUA_KARANG_TARUNA':
     case 'KETUA_RW':
     case 'WAKIL_KETUA_RW':
+    case 'SEKRETARIS':
     case 'SEKRETARIS_RW':
     case 'WAKIL_SEKRETARIS_RW':
       return [
@@ -66,6 +69,7 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
         'pengaturan',
       ];
 
+    case 'BENDAHARA':
     case 'BENDAHARA_RW':
     case 'WAKIL_BENDAHARA_RW':
       return [
@@ -121,7 +125,45 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
         'dokumen-proposal',
       ];
 
+    // KARANG TARUNA ERP SUB-MENU ROLES
     case 'KETUA_KARANG_TARUNA':
+    case 'WAKIL_KETUA_KARANG_TARUNA':
+      return [
+        'dashboard',
+        ...commonTabs,
+        'kegiatan',
+        'keuangan',
+        'inventaris',
+        'aduan-warga',
+        'pengumuman',
+        'voting',
+        'dokumen-proposal',
+        'pengaturan',
+      ];
+
+    case 'SEKRETARIS_KARANG_TARUNA':
+    case 'WAKIL_SEKRETARIS_KARANG_TARUNA':
+      return [
+        'dashboard',
+        ...commonTabs,
+        'administrasi',
+        'dokumen-proposal',
+        'pengumuman',
+        'kegiatan',
+        'master-data',
+      ];
+
+    case 'BENDAHARA_KARANG_TARUNA':
+    case 'WAKIL_BENDAHARA_KARANG_TARUNA':
+      return [
+        'dashboard',
+        ...commonTabs,
+        'keuangan',
+        'iuran',
+        'dokumen-proposal',
+        'kegiatan',
+      ];
+
     case 'PENGURUS_KARANG_TARUNA':
       return [
         'dashboard',
@@ -191,6 +233,9 @@ export function getAllowedTabsForRole(role: UserRole): ActiveTab[] {
 
 const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
   SUPER_ADMIN: 'Super Admin',
+  KETUA: 'Ketua Organisasi',
+  SEKRETARIS: 'Sekretaris Inti',
+  BENDAHARA: 'Bendahara Inti',
   KETUA_RW: 'Ketua RW',
   WAKIL_KETUA_RW: 'Wakil Ketua RW',
   SEKRETARIS_RW: 'Sekretaris RW',
@@ -206,6 +251,11 @@ const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
   KETUA_PKK: 'Ketua PKK',
   PENGURUS_PKK: 'Pengurus PKK',
   KETUA_KARANG_TARUNA: 'Ketua Karang Taruna',
+  WAKIL_KETUA_KARANG_TARUNA: 'Wakil Ketua Karang Taruna',
+  SEKRETARIS_KARANG_TARUNA: 'Sekretaris Karang Taruna',
+  WAKIL_SEKRETARIS_KARANG_TARUNA: 'Wakil Sekretaris Karang Taruna',
+  BENDAHARA_KARANG_TARUNA: 'Bendahara Karang Taruna',
+  WAKIL_BENDAHARA_KARANG_TARUNA: 'Wakil Bendahara Karang Taruna',
   PENGURUS_KARANG_TARUNA: 'Pengurus Karang Taruna',
   POSYANDU: 'Kader Posyandu',
   BANK_SAMPAH: 'Bank Sampah',

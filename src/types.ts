@@ -1,5 +1,10 @@
+export type OrgScope = 'LINGKUNGAN' | 'KARANG_TARUNA';
+
 export type UserRole =
   | 'SUPER_ADMIN'
+  | 'KETUA'
+  | 'SEKRETARIS'
+  | 'BENDAHARA'
   | 'KETUA_RW'
   | 'WAKIL_KETUA_RW'
   | 'SEKRETARIS_RW'
@@ -15,6 +20,11 @@ export type UserRole =
   | 'KETUA_PKK'
   | 'PENGURUS_PKK'
   | 'KETUA_KARANG_TARUNA'
+  | 'WAKIL_KETUA_KARANG_TARUNA'
+  | 'SEKRETARIS_KARANG_TARUNA'
+  | 'WAKIL_SEKRETARIS_KARANG_TARUNA'
+  | 'BENDAHARA_KARANG_TARUNA'
+  | 'WAKIL_BENDAHARA_KARANG_TARUNA'
   | 'PENGURUS_KARANG_TARUNA'
   | 'POSYANDU'
   | 'BANK_SAMPAH'
@@ -64,6 +74,7 @@ export interface Warga {
   lng: number;
   kkId?: string;
   isEncrypted?: boolean;
+  peranAkses?: UserRole;
 }
 
 export interface KartuKeluarga {

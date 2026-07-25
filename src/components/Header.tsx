@@ -39,38 +39,30 @@ interface HeaderProps {
   onSelectSearchResult?: (tab: ActiveTab, searchKey?: string) => void;
 }
 
-const ROLES_LIST: { role: UserRole; label: string; badge: string; group: string }[] = [
-  { role: 'SUPER_ADMIN', label: 'Super Administrator', badge: 'bg-red-700 text-white', group: 'Sistem Admin' },
-  
-  // Pengurus RW
-  { role: 'KETUA_RW', label: 'Ketua RW', badge: 'bg-[#0056b3] text-white', group: 'Pengurus RW' },
-  { role: 'WAKIL_KETUA_RW', label: 'Wakil Ketua RW', badge: 'bg-blue-800 text-white', group: 'Pengurus RW' },
-  { role: 'SEKRETARIS_RW', label: 'Sekretaris RW', badge: 'bg-blue-700 text-white', group: 'Pengurus RW' },
-  { role: 'WAKIL_SEKRETARIS_RW', label: 'Wakil Sekretaris RW', badge: 'bg-blue-600 text-white', group: 'Pengurus RW' },
-  { role: 'BENDAHARA_RW', label: 'Bendahara RW', badge: 'bg-blue-600 text-white', group: 'Pengurus RW' },
-  { role: 'WAKIL_BENDAHARA_RW', label: 'Wakil Bendahara RW', badge: 'bg-blue-500 text-white', group: 'Pengurus RW' },
+const ROLES_LIST: { role: UserRole; label: string; badge: string; group: string; scope: 'LINGKUNGAN' | 'KARANG_TARUNA' }[] = [
+  // LINGKUNGAN ROLES
+  { role: 'KETUA', label: 'Ketua', badge: 'bg-[#0056b3] text-white', group: 'Pengurus Inti Lingkungan', scope: 'LINGKUNGAN' },
+  { role: 'SEKRETARIS', label: 'Sekretaris', badge: 'bg-emerald-700 text-white', group: 'Pengurus Inti Lingkungan', scope: 'LINGKUNGAN' },
+  { role: 'BENDAHARA', label: 'Bendahara', badge: 'bg-amber-600 text-white', group: 'Pengurus Inti Lingkungan', scope: 'LINGKUNGAN' },
+  { role: 'WARGA', label: 'Warga / Penduduk', badge: 'bg-gray-700 text-white', group: 'Akses Warga', scope: 'LINGKUNGAN' },
+  { role: 'SUPER_ADMIN', label: 'Super Administrator', badge: 'bg-red-700 text-white', group: 'Sistem Admin', scope: 'LINGKUNGAN' },
 
-  // Pengurus RT
-  { role: 'KETUA_RT', label: 'Ketua RT', badge: 'bg-emerald-800 text-white', group: 'Pengurus RT' },
-  { role: 'WAKIL_KETUA_RT', label: 'Wakil Ketua RT', badge: 'bg-emerald-700 text-white', group: 'Pengurus RT' },
-  { role: 'SEKRETARIS_RT', label: 'Sekretaris RT', badge: 'bg-emerald-700 text-white', group: 'Pengurus RT' },
-  { role: 'WAKIL_SEKRETARIS_RT', label: 'Wakil Sekretaris RT', badge: 'bg-emerald-600 text-white', group: 'Pengurus RT' },
-  { role: 'BENDAHARA_RT', label: 'Bendahara RT', badge: 'bg-emerald-600 text-white', group: 'Pengurus RT' },
-  { role: 'WAKIL_BENDAHARA_RT', label: 'Wakil Bendahara RT', badge: 'bg-emerald-500 text-white', group: 'Pengurus RT' },
+  // LEGACY RT/RW ROLES
+  { role: 'KETUA_RW', label: 'Ketua RW', badge: 'bg-[#0056b3] text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
+  { role: 'SEKRETARIS_RW', label: 'Sekretaris RW', badge: 'bg-blue-700 text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
+  { role: 'BENDAHARA_RW', label: 'Bendahara RW', badge: 'bg-blue-600 text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
+  { role: 'KETUA_RT', label: 'Ketua RT', badge: 'bg-emerald-800 text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
+  { role: 'SEKRETARIS_RT', label: 'Sekretaris RT', badge: 'bg-emerald-700 text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
+  { role: 'BENDAHARA_RT', label: 'Bendahara RT', badge: 'bg-emerald-600 text-white', group: 'Pengurus RW/RT', scope: 'LINGKUNGAN' },
 
-  // Lembaga & Sub-Organisasi
-  { role: 'KETUA_PKK', label: 'Ketua PKK', badge: 'bg-pink-700 text-white', group: 'Lembaga Warga' },
-  { role: 'PENGURUS_PKK', label: 'Pengurus PKK', badge: 'bg-pink-600 text-white', group: 'Lembaga Warga' },
-  { role: 'KETUA_KARANG_TARUNA', label: 'Ketua Karang Taruna', badge: 'bg-amber-700 text-white', group: 'Lembaga Warga' },
-  { role: 'PENGURUS_KARANG_TARUNA', label: 'Pengurus Karang Taruna', badge: 'bg-amber-600 text-white', group: 'Lembaga Warga' },
-  { role: 'POSYANDU', label: 'Kader Posyandu', badge: 'bg-teal-700 text-white', group: 'Lembaga Warga' },
-  { role: 'BANK_SAMPAH', label: 'Pengelola Bank Sampah', badge: 'bg-green-700 text-white', group: 'Lembaga Warga' },
-  { role: 'LINMAS', label: 'Tim Linmas / Keamanan', badge: 'bg-slate-700 text-white', group: 'Lembaga Warga' },
-  { role: 'KETUA_DKM', label: 'Ketua DKM Masjid/Musholla', badge: 'bg-indigo-800 text-white', group: 'Lembaga Warga' },
-  { role: 'PENGURUS_DKM', label: 'Pengurus DKM', badge: 'bg-indigo-700 text-white', group: 'Lembaga Warga' },
-
-  // Warga
-  { role: 'WARGA', label: 'Warga / Penduduk', badge: 'bg-gray-700 text-white', group: 'Warga' },
+  // KARANG TARUNA ERP SUB-MENU ROLES
+  { role: 'KETUA_KARANG_TARUNA', label: 'Ketua Karang Taruna', badge: 'bg-amber-700 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'WAKIL_KETUA_KARANG_TARUNA', label: 'Wakil Ketua Karang Taruna', badge: 'bg-amber-600 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'SEKRETARIS_KARANG_TARUNA', label: 'Sekretaris Karang Taruna', badge: 'bg-sky-700 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'WAKIL_SEKRETARIS_KARANG_TARUNA', label: 'Wakil Sekretaris Karang Taruna', badge: 'bg-sky-600 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'BENDAHARA_KARANG_TARUNA', label: 'Bendahara Karang Taruna', badge: 'bg-emerald-700 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'WAKIL_BENDAHARA_KARANG_TARUNA', label: 'Wakil Bendahara Karang Taruna', badge: 'bg-emerald-600 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
+  { role: 'PENGURUS_KARANG_TARUNA', label: 'Pengurus / Anggota Karang Taruna', badge: 'bg-slate-700 text-white', group: 'Sub-Menu Karang Taruna', scope: 'KARANG_TARUNA' },
 ];
 
 export const Header: React.FC<HeaderProps> = ({
@@ -89,6 +81,9 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectSearchResult = (_tab?: ActiveTab, _key?: string) => {},
 }) => {
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
+  const [activeScope, setActiveScope] = useState<'LINGKUNGAN' | 'KARANG_TARUNA'>(
+    currentRole.includes('KARANG_TARUNA') ? 'KARANG_TARUNA' : 'LINGKUNGAN'
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -335,16 +330,45 @@ export const Header: React.FC<HeaderProps> = ({
 
             {roleDropdownOpen && (
               <div className="absolute right-0 mt-2 w-80 bg-white border-2 border-slate-900 rounded-2xl shadow-[6px_6px_0px_0px_#0f172a] py-2 z-50 text-xs">
+                {/* Header Title */}
                 <div className="px-3 py-2 border-b-2 border-slate-900 font-extrabold text-slate-900 uppercase tracking-wider text-[10px] bg-amber-100 rounded-t-xl flex items-center justify-between">
-                  <span>Pilih Hak Akses Pengurus & Warga</span>
+                  <span>Pilih Hak Akses & Scope ERP</span>
                   <span className="text-[9px] font-mono bg-white px-1.5 py-0.5 rounded border border-slate-900">
-                    23 Peran Lengkap
+                    23 Peran Modul
                   </span>
                 </div>
 
+                {/* Scope Switcher Tabs */}
+                <div className="px-2 pt-2 pb-1 border-b border-slate-200 grid grid-cols-2 gap-1 bg-slate-50">
+                  <button
+                    onClick={() => setActiveScope('LINGKUNGAN')}
+                    className={`py-1.5 px-2 rounded-lg text-[11px] font-black text-center border transition cursor-pointer ${
+                      activeScope === 'LINGKUNGAN'
+                        ? 'bg-[#0056b3] text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                        : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    🏢 Lingkungan RT/RW
+                  </button>
+                  <button
+                    onClick={() => setActiveScope('KARANG_TARUNA')}
+                    className={`py-1.5 px-2 rounded-lg text-[11px] font-black text-center border transition cursor-pointer ${
+                      activeScope === 'KARANG_TARUNA'
+                        ? 'bg-amber-600 text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                        : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    ⚡ Karang Taruna (ERP)
+                  </button>
+                </div>
+
                 <div className="max-h-80 overflow-y-auto p-1.5 space-y-3">
-                  {['Sistem Admin', 'Pengurus RW', 'Pengurus RT', 'Lembaga Warga', 'Warga'].map((groupName) => {
-                    const groupRoles = ROLES_LIST.filter((r) => r.group === groupName);
+                  {Array.from(
+                    new Set(ROLES_LIST.filter((r) => r.scope === activeScope).map((r) => r.group))
+                  ).map((groupName) => {
+                    const groupRoles = ROLES_LIST.filter(
+                      (r) => r.scope === activeScope && r.group === groupName
+                    );
                     if (groupRoles.length === 0) return null;
 
                     return (

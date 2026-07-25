@@ -17,6 +17,7 @@ import {
   Award,
 } from 'lucide-react';
 import { ArsipDokumen, Warga } from '../types';
+import { PrintReportHeader } from './PrintReportHeader';
 
 interface ArsipProposalViewProps {
   arsipList: ArsipDokumen[];
@@ -120,6 +121,13 @@ Dibuat oleh,                    Disetujui oleh,
 
   return (
     <div className="space-y-6">
+      {/* Print Header for Browser PDF / Printing */}
+      <PrintReportHeader
+        title="LAPORAN ARSIP DOKUMEN & PROPOSAL RESMI ORGANISASI"
+        unitName="SatuWarga ERP - Sekretariat Dokumentasi & Arsip Sukamaju"
+        subtitle="Inventarisasi Arsip Digital, Proposal Kegiatan, & Laporan Statistik"
+      />
+
       {/* Header Panel */}
       <div className="neo-card p-5 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -137,9 +145,9 @@ Dibuat oleh,                    Disetujui oleh,
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => window.print()}
-            className="neo-btn-secondary text-xs px-3.5 py-2"
+            className="neo-btn-secondary text-xs px-3.5 py-2 cursor-pointer"
           >
-            <Printer className="w-4 h-4 text-slate-900" /> Cetak (Print)
+            <Printer className="w-4 h-4 text-slate-900" /> Cetak Laporan PDF
           </button>
 
           <div className="cupertino-segmented flex items-center bg-slate-100 p-1 rounded-xl border-2 border-slate-900">

@@ -36,6 +36,7 @@ import {
   UserRole,
 } from '../types';
 import { ActiveTab } from './Sidebar';
+import { ProgressRing } from './ProgressRing';
 import {
   ResponsiveContainer,
   BarChart,
@@ -239,60 +240,137 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Sleek Stat Grid Cards with Border-Left Accents */}
+      {/* Sleek Stat Grid Cards with Progress Rings */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-[#0056b3] shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Total Warga</span>
-            <Users className="w-4 h-4 text-[#0056b3]" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#0056b3] shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Total Warga</span>
+            <div className="text-2xl font-bold text-[#333] font-mono">{totalWarga}</div>
+            <p className="text-[10px] text-slate-500 mt-0.5">Jiwa Terdaftar</p>
           </div>
-          <div className="text-2xl font-bold text-[#333] font-mono">{totalWarga}</div>
-          <p className="text-[10px] text-slate-500 mt-0.5">Jiwa Terdaftar</p>
+          <ProgressRing progress={Math.min(100, Math.round((totalWarga / 250) * 100))} size={44} strokeWidth={4} color="#0056b3" />
         </div>
 
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Kepala Keluarga</span>
-            <FileText className="w-4 h-4 text-[#fd7e14]" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Kepala Keluarga</span>
+            <div className="text-2xl font-bold text-[#333] font-mono">{totalKk}</div>
+            <p className="text-[10px] text-slate-500 mt-0.5">KK Aktif</p>
           </div>
-          <div className="text-2xl font-bold text-[#333] font-mono">{totalKk}</div>
-          <p className="text-[10px] text-slate-500 mt-0.5">KK Aktif</p>
+          <ProgressRing progress={Math.min(100, Math.round((totalKk / 75) * 100))} size={44} strokeWidth={4} color="#fd7e14" />
         </div>
 
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-[#28a745] shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Kas RT 04</span>
-            <Wallet className="w-4 h-4 text-[#28a745]" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#28a745] shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Kas RT 04</span>
+            <div className="text-xl font-bold text-[#333] font-mono">Rp {(kasRt / 1000).toLocaleString('id-ID')}rb</div>
+            <p className="text-[10px] text-[#28a745] font-semibold mt-0.5">Saldo Aktif</p>
           </div>
-          <div className="text-xl font-bold text-[#333] font-mono">Rp {(kasRt / 1000).toLocaleString('id-ID')}rb</div>
-          <p className="text-[10px] text-[#28a745] font-semibold mt-0.5">Saldo Aktif</p>
+          <ProgressRing progress={Math.min(100, Math.round((kasRt / 15000000) * 100))} size={44} strokeWidth={4} color="#28a745" />
         </div>
 
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-[#17a2b8] shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Surat Pending</span>
-            <FileCheck className="w-4 h-4 text-[#17a2b8]" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#17a2b8] shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Surat Pending</span>
+            <div className="text-2xl font-bold text-[#333] font-mono">{pendingSurat.length}</div>
+            <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Perlu Approval</p>
           </div>
-          <div className="text-2xl font-bold text-[#333] font-mono">{pendingSurat.length}</div>
-          <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Perlu Approval</p>
+          <ProgressRing progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 100} size={44} strokeWidth={4} color="#17a2b8" />
         </div>
 
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Iuran Menunggak</span>
-            <CreditCard className="w-4 h-4 text-[#fd7e14]" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-[#fd7e14] shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Iuran Warga</span>
+            <div className="text-2xl font-bold text-[#333] font-mono">{unpaidTagihan.length}</div>
+            <p className="text-[10px] text-rose-600 font-semibold mt-0.5">Tunggakan</p>
           </div>
-          <div className="text-2xl font-bold text-[#333] font-mono">{unpaidTagihan.length}</div>
-          <p className="text-[10px] text-rose-600 font-semibold mt-0.5">Tagihan Rumah</p>
+          <ProgressRing progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 85} size={44} strokeWidth={4} color="#fd7e14" />
         </div>
 
-        <div className="bg-white p-4 rounded border border-[#dee2e6] border-l-4 border-l-red-600 shadow-xs hover:shadow-sm transition">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[12px] font-bold text-[#888] uppercase tracking-wider">Aduan Aktif</span>
-            <AlertTriangle className="w-4 h-4 text-red-600" />
+        <div className="bg-white p-3.5 rounded border border-[#dee2e6] border-l-4 border-l-red-600 shadow-xs hover:shadow-sm transition flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider block mb-1">Aduan Aktif</span>
+            <div className="text-2xl font-bold text-[#333] font-mono">{pendingAduan.length}</div>
+            <p className="text-[10px] text-red-600 font-semibold mt-0.5">Perlu Tindakan</p>
           </div>
-          <div className="text-2xl font-bold text-[#333] font-mono">{pendingAduan.length}</div>
-          <p className="text-[10px] text-red-600 font-semibold mt-0.5">Perlu Tindakan</p>
+          <ProgressRing progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 75} size={44} strokeWidth={4} color="#dc3545" />
+        </div>
+      </div>
+
+      {/* Visually Impressive Capaian Target Ring Dashboard Widget */}
+      <div className="bg-white rounded border-2 border-slate-900 p-4 shadow-[4px_4px_0px_0px_#0f172a]">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center font-bold border border-sky-300">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-slate-900 text-sm">Visualisasi Capaian Target & Realisasi ERP</h3>
+              <p className="text-[11px] text-slate-500 font-medium">Monitoring Prosentase Capaian Program Kerja & Keuangan Lingkungan / Karang Taruna</p>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-full flex items-center gap-1">
+            <Activity className="w-3 h-3 text-emerald-600 animate-pulse" /> Realtime Target Meter
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
+            <ProgressRing progress={Math.min(100, Math.round((totalWarga / 250) * 100))} size={58} strokeWidth={6} color="#0056b3" />
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Sensus Pendataan Warga</h4>
+              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">{totalWarga} / 250 Jiwa Target</p>
+              <span className="text-[10px] text-emerald-600 font-bold">Terdaftar Sesuai DPT</span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
+            <ProgressRing
+              progress={tagihanList.length > 0 ? Math.round(((tagihanList.length - unpaidTagihan.length) / tagihanList.length) * 100) : 85}
+              size={58}
+              strokeWidth={6}
+              color="#10b981"
+            />
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Realisasi Iuran Rutin</h4>
+              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
+                {tagihanList.length - unpaidTagihan.length} / {tagihanList.length || 20} Rumah Lunas
+              </p>
+              <span className="text-[10px] text-slate-500 font-bold">Kolektibilitas Kas</span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
+            <ProgressRing
+              progress={suratList.length > 0 ? Math.round(((suratList.length - pendingSurat.length) / suratList.length) * 100) : 90}
+              size={58}
+              strokeWidth={6}
+              color="#f59e0b"
+            />
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Respons Layanan Surat</h4>
+              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
+                {suratList.length - pendingSurat.length} / {suratList.length || 10} Surat Disetujui
+              </p>
+              <span className="text-[10px] text-amber-600 font-bold">Selesai Tanda Tangan</span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
+            <ProgressRing
+              progress={aduanList.length > 0 ? Math.round(((aduanList.length - pendingAduan.length) / aduanList.length) * 100) : 80}
+              size={58}
+              strokeWidth={6}
+              color="#8b5cf6"
+            />
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Penyelesaian Aduan Warga</h4>
+              <p className="text-[11px] font-mono text-slate-600 font-semibold mt-0.5">
+                {aduanList.length - pendingAduan.length} / {aduanList.length || 5} Aduan Selesai
+              </p>
+              <span className="text-[10px] text-purple-600 font-bold">Tindak Lanjut Cepat</span>
+            </div>
+          </div>
         </div>
       </div>
 

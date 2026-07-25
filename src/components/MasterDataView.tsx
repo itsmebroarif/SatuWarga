@@ -616,7 +616,14 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                           </div>
                         </td>
                         <td className="p-3">
-                          <div className="font-extrabold text-slate-900 text-xs">{warga.nama}</div>
+                          <div className="font-extrabold text-slate-900 text-xs flex items-center gap-1.5 flex-wrap">
+                            <span>{warga.nama}</span>
+                            {warga.peranAkses && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-100 text-amber-900 border border-amber-400">
+                                {warga.peranAkses}
+                              </span>
+                            )}
+                          </div>
                           <div className="text-[10px] text-slate-500 font-mono">
                             {warga.noHp ? `WA: ${warga.noHp}` : 'Tanpa No. HP'}
                           </div>
@@ -1254,6 +1261,62 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                   >
                     <MapPin className="w-3.5 h-3.5 text-rose-400" /> Atur Pin Peta
                   </button>
+                </div>
+              </div>
+
+              {/* BAGIAN 5: HAK AKSES SISTEM & HAK AKSES PERAN (USER ROLE) */}
+              <div className="p-4 bg-amber-50/80 rounded-2xl border-2 border-amber-300 space-y-3">
+                <h4 className="font-extrabold text-amber-950 text-xs flex items-center gap-1.5 uppercase tracking-wider">
+                  <ShieldCheck className="w-4 h-4 text-amber-600" /> 5. Hak Akses Sistem & Penugasan Peran Pengurus (Role Based Access)
+                </h4>
+                <p className="text-[11px] text-amber-900 font-medium leading-relaxed">
+                  Ketua Karang Taruna & Super Admin dapat menetapkan atau mengubah hak akses peran pengurus (Karang Taruna, RT/RW, Inti) untuk warga ini.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-800 font-extrabold mb-1">Peran Akses (User Role)</label>
+                    <select
+                      value={formData.peranAkses || 'WARGA'}
+                      onChange={(e) => setFormData({ ...formData, peranAkses: e.target.value as any })}
+                      className="w-full bg-white border-2 border-slate-900 rounded-xl px-3 py-2 font-bold text-slate-900 focus:outline-none focus:border-amber-600 shadow-xs"
+                    >
+                      <option value="WARGA">Warga / Penduduk biasa (Default)</option>
+                      <optgroup label="⚡ Sub-Menu Karang Taruna ERP">
+                        <option value="KETUA_KARANG_TARUNA">Ketua Karang Taruna (Full Admin Access)</option>
+                        <option value="WAKIL_KETUA_KARANG_TARUNA">Wakil Ketua Karang Taruna</option>
+                        <option value="SEKRETARIS_KARANG_TARUNA">Sekretaris Karang Taruna</option>
+                        <option value="WAKIL_SEKRETARIS_KARANG_TARUNA">Wakil Sekretaris Karang Taruna</option>
+                        <option value="BENDAHARA_KARANG_TARUNA">Bendahara Karang Taruna</option>
+                        <option value="WAKIL_BENDAHARA_KARANG_TARUNA">Wakil Bendahara Karang Taruna</option>
+                        <option value="PENGURUS_KARANG_TARUNA">Pengurus / Anggota Karang Taruna</option>
+                      </optgroup>
+                      <optgroup label="🏢 Pengurus Inti Lingkungan">
+                        <option value="KETUA">Ketua Organisasi Lingkungan</option>
+                        <option value="SEKRETARIS">Sekretaris Inti</option>
+                        <option value="BENDAHARA">Bendahara Inti</option>
+                      </optgroup>
+                      <optgroup label="🏛️ Pengurus RW & RT">
+                        <option value="KETUA_RW">Ketua RW</option>
+                        <option value="SEKRETARIS_RW">Sekretaris RW</option>
+                        <option value="BENDAHARA_RW">Bendahara RW</option>
+                        <option value="KETUA_RT">Ketua RT</option>
+                        <option value="SEKRETARIS_RT">Sekretaris RT</option>
+                        <option value="BENDAHARA_RT">Bendahara RT</option>
+                      </optgroup>
+                      <optgroup label="🌱 Lembaga & Kader Warga">
+                        <option value="KETUA_PKK">Ketua PKK</option>
+                        <option value="PENGURUS_PKK">Pengurus PKK</option>
+                        <option value="POSYANDU">Kader Posyandu</option>
+                        <option value="BANK_SAMPAH">Pengelola Bank Sampah</option>
+                        <option value="LINMAS">Tim Linmas / Keamanan</option>
+                        <option value="KETUA_DKM">Ketua DKM</option>
+                      </optgroup>
+                      <optgroup label="🛡️ Sistem Administrator">
+                        <option value="SUPER_ADMIN">Super Administrator</option>
+                      </optgroup>
+                    </select>
+                  </div>
                 </div>
               </div>
 

@@ -14,8 +14,10 @@ import {
   X,
   PlusCircle,
   FileText,
+  Printer,
 } from 'lucide-react';
 import { SubOrgUnit, SetoranSampah, BarangInventaris, PeminjamanBarang } from '../types';
+import { PrintReportHeader } from './PrintReportHeader';
 
 interface SubOrganisasiViewProps {
   setoranSampahList: SetoranSampah[];
@@ -170,6 +172,12 @@ export const SubOrganisasiView: React.FC<SubOrganisasiViewProps> = ({
       {/* 1. TAB INVENTARISASI BARANG */}
       {activeUnit === 'INVENTARIS' && (
         <div className="space-y-6">
+          <PrintReportHeader
+            title="LAPORAN INVENTARISASI ASET BARANG & LOGISTIK ORGANISASI"
+            unitName="SatuWarga ERP - Departemen Aset & Inventaris Sukamaju"
+            subtitle="Pencatatan Resmi Aset Barang, Kondisi, Lokasi Penyimpanan, & Riwayat Peminjaman"
+          />
+
           <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -180,7 +188,14 @@ export const SubOrganisasiView: React.FC<SubOrganisasiViewProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => window.print()}
+                className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+              >
+                <Printer className="w-4 h-4 text-sky-400" /> Cetak Laporan PDF
+              </button>
+
               <button
                 onClick={() => setIsAddBarangModalOpen(true)}
                 className="bg-[#0056b3] hover:bg-blue-700 text-white text-xs px-3.5 py-2 rounded font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"

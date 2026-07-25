@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { TransaksiKas, UnitCategory } from '../types';
 import { exportToCSV } from '../utils/csvExport';
+import { PrintReportHeader } from './PrintReportHeader';
 
 interface KeuanganViewProps {
   kasList: TransaksiKas[];
@@ -100,6 +101,13 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
 
   return (
     <div className="space-y-6">
+      {/* Print Header for Browser PDF / Printing */}
+      <PrintReportHeader
+        title={`LAPORAN ARUS KAS & REKAPITULASI KEUANGAN ${activeUnit}`}
+        unitName={`SatuWarga ERP - Unit ${activeUnit} Sukamaju`}
+        subtitle="Laporan Resmi Pemasukan, Pengeluaran, & Saldo Kas Organisasi"
+      />
+
       {/* Top Title & Unit Selector */}
       <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -123,7 +131,7 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
               onClick={() => window.print()}
               className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
-              <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan Kas
+              <Printer className="w-4 h-4 text-emerald-400" /> Cetak Laporan PDF
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
