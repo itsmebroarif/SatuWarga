@@ -372,7 +372,7 @@ Dibuat oleh,                    Disetujui oleh,
                 <Users className="w-4 h-4 text-[#0056b3]" />
               </div>
               <div className="text-2xl font-black text-slate-900 font-mono">
-                {wargaList.length > 0 ? wargaList.length : 245} Jiwa
+                {wargaList.length} Jiwa
               </div>
               <p className="text-[10px] text-slate-500 font-semibold">Tercatat di Wilayah RT 01-10 Sukamaju</p>
             </div>
@@ -383,10 +383,10 @@ Dibuat oleh,                    Disetujui oleh,
                 <PieChart className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="text-xl font-black text-slate-900 font-mono">
-                {wargaList.filter((w) => w.jenisKelamin === 'L').length || 128} L /{' '}
-                {wargaList.filter((w) => w.jenisKelamin === 'P').length || 117} P
+                {wargaList.filter((w) => w.jenisKelamin === 'L').length} L /{' '}
+                {wargaList.filter((w) => w.jenisKelamin === 'P').length} P
               </div>
-              <p className="text-[10px] text-emerald-700 font-bold">Laki-laki & Perempuan Seimbang</p>
+              <p className="text-[10px] text-emerald-700 font-bold">Laki-laki & Perempuan</p>
             </div>
 
             <div className="bg-white border-2 border-slate-900 p-4 rounded-2xl shadow-[4px_4px_0px_0px_#0f172a] space-y-1">
@@ -395,10 +395,10 @@ Dibuat oleh,                    Disetujui oleh,
                 <Home className="w-4 h-4 text-purple-600" />
               </div>
               <div className="text-xl font-black text-slate-900 font-mono">
-                {wargaList.filter((w) => w.statusWarga === 'TETAP').length || 198} Tetap
+                {wargaList.filter((w) => w.statusWarga === 'TETAP' || w.statusTinggal === 'Tetap').length} Tetap
               </div>
               <p className="text-[10px] text-slate-500 font-semibold">
-                {wargaList.filter((w) => w.statusWarga === 'KONTRAK').length || 47} Kontrak / Sewa
+                {wargaList.filter((w) => w.statusWarga === 'KONTRAK' || w.statusTinggal === 'Kontrak').length} Kontrak / Sewa
               </p>
             </div>
 

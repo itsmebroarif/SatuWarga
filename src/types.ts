@@ -314,5 +314,5 @@ export interface ArsipDokumen {
   keterangan?: string;
 }
 
-export type SubOrgUnit = 'PKK' | 'POSYANDU' | 'BANK_SAMPAH' | 'KARANG_TARUNA' | 'KAMPUNG_PANCASILA' | 'JUMANTIK' | 'SISKAMLING';
+export type SubOrgUnit = 'PKK' | 'POSYANDU' | 'BANK_SAMPAH' | 'KARANG_TARUNA' | 'KAMPUNG_PANCASILA' | 'JUMANTIK' | 'SISKAMLING' | 'INVENTARIS' | 'LINMAS' | 'DKM';
 

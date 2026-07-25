@@ -15,6 +15,8 @@ import {
   AduanWarga,
   PengumumanItem,
   VotingItem,
+  BarangInventaris,
+  PeminjamanBarang,
   ToastMessage,
 } from './types';
 import { localStore } from './services/storage';
@@ -87,6 +89,8 @@ export default function App() {
   const [aduanList, setAduanList] = useState<AduanWarga[]>([]);
   const [pengumumanList, setPengumumanList] = useState<PengumumanItem[]>([]);
   const [votingList, setVotingList] = useState<VotingItem[]>([]);
+  const [barangList, setBarangList] = useState<BarangInventaris[]>([]);
+  const [peminjamanList, setPeminjamanList] = useState<PeminjamanBarang[]>([]);
 
   // Toast Helper
   const addToast = (type: 'success' | 'error' | 'info' | 'warning', title: string, message?: string) => {
@@ -136,6 +140,8 @@ export default function App() {
     setAduanList(localStore.loadAduan());
     setPengumumanList(localStore.loadPengumuman());
     setVotingList(localStore.loadVoting());
+    setBarangList(localStore.loadBarang());
+    setPeminjamanList(localStore.loadPeminjaman());
   }, []);
 
   // Auto-adjust active tab when currentRole changes
@@ -371,6 +377,20 @@ export default function App() {
     addToast('success', 'Suara Terrekam', 'Terima kasih atas partisipasi voting Anda.');
   };
 
+  const handleAddBarang = (b: BarangInventaris) => {
+    const updated = [b, ...barangList];
+    setBarangList(updated);
+    localStore.saveBarang(updated);
+    addToast('success', 'Inventaris Ditambahkan', `Barang "${b.namaBarang}" berhasil dicatat.`);
+  };
+
+  const handleAddPeminjaman = (p: PeminjamanBarang) => {
+    const updated = [p, ...peminjamanList];
+    setPeminjamanList(updated);
+    localStore.savePeminjaman(updated);
+    addToast('success', 'Peminjaman Dicatat', `Permohonan peminjaman "${p.namaBarang}" dicatat.`);
+  };
+
   const normalizedTab = String(activeTab || '').toLowerCase();
 
   return (
@@ -581,6 +601,11 @@ export default function App() {
               <SubOrganisasiView
                 setoranSampahList={setoranSampahList}
                 onAddSetoranSampah={handleAddSetoranSampah}
+                barangList={barangList}
+                peminjamanList={peminjamanList}
+                onAddBarang={handleAddBarang}
+                onAddPeminjaman={handleAddPeminjaman}
+                initialUnit={normalizedTab === 'inventaris' ? 'INVENTARIS' : normalizedTab === 'bank-sampah' ? 'BANK_SAMPAH' : 'PKK'}
               />
             )}
 

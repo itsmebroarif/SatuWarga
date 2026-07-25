@@ -40,7 +40,7 @@ import {
   INITIAL_VOTING,
 } from '../data/mockData';
 
-const STORAGE_VERSION = 'v3_sukamaju_empty';
+const STORAGE_VERSION = 'v5_pure_zero_clean_all';
 
 // Auto-reset local storage cache once to guarantee blank state
 try {
