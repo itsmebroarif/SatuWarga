@@ -53,7 +53,7 @@ export const KegiatanView: React.FC<KegiatanViewProps> = ({
   const [selectedCalendarDateStr, setSelectedCalendarDateStr] = useState<string | null>(null);
 
   // E-Sertifikat State
-  const [selectedCertParticipant, setSelectedCertParticipant] = useState('Bambang Supriadi');
+  const [selectedCertParticipant, setSelectedCertParticipant] = useState('Arif Alexander');
   const [certEventName, setCertEventName] = useState('Gotong Royong & Kerja Bakti Masal');
   const [selectedCertRole, setSelectedCertRole] = useState('Peserta Aktif / Panitia Pelaksana');
   const [showCertModal, setShowCertModal] = useState(false);

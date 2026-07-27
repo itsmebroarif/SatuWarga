@@ -108,7 +108,7 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
       jenisSurat: tmpl.title,
       category: tmpl.category,
       wargaId: matchedWarga?.id || 'w-001',
-      namaWarga: matchedWarga?.nama || 'Bambang Supriadi',
+      namaWarga: matchedWarga?.nama || 'Arif Alexander',
       nik: matchedWarga?.nik || '3275011205820001',
       alamatWarga: matchedWarga ? `${matchedWarga.alamat}, RT ${matchedWarga.rt}/RW ${matchedWarga.rw}` : 'Jl. Graha Warga Utama No. 12',
       rt: matchedWarga?.rt || '003',
@@ -155,7 +155,7 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           jenisSurat,
-          namaWarga: wargaObj?.nama || 'Bambang Supriadi',
+          namaWarga: wargaObj?.nama || 'Arif Alexander',
           nik: wargaObj?.nik || '3275011205820001',
           keperluan: keperluan || 'Keperluan Administrasi Perbankan / Kedinasan',
         }),

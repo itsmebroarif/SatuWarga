@@ -58,7 +58,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Bahwa orang tersebut diatas adalah benar warga menetap yang berdomisili di lingkungan kami dan memiliki kelakuan baik. Surat Pengantar ini dibuat khusus untuk keperluan:',
     paragrafPenutup: 'Demikian Surat Pengantar ini dibuat dengan sebenarnya agar dapat dipergunakan sebagaimana mestinya.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', nikNip: 'NIK. 3275011205820001', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', nikNip: 'NIK. 3275011205820001', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', nikNip: 'NIK. 3275010904710003', showStempel: true, stempelLabel: 'STEMPEL RW 012', showQrVerify: true },
     ],
   },
@@ -87,7 +87,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Bahwa nama yang bersangkutan saat ini benar-benar bertempat tinggal dan berdomisili di wilayah RT 003 RW 012 Kelurahan Sukamaju.',
     paragrafPenutup: 'Surat keterangan domisili ini berlaku selama 6 (enam) bulan sejak tanggal diterbitkan.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW 012', showQrVerify: true },
     ],
   },
@@ -117,7 +117,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafPenutup: 'Demikian surat pengantar ini dibuat untuk dapat dipergunakan sebagai syarat permohonan izin ke Polsek setempat.',
     defaultSignatures: [
       { id: 'sig-1', jabatan: 'Pemohon / Penanggung Jawab', nama: 'Pemohon Acara', showStempel: false, showQrVerify: false },
-      { id: 'sig-2', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-2', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-3', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -209,7 +209,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     defaultSignatures: [
       { id: 'sig-1', jabatan: 'Ketua Panitia PHBN', nama: 'Rizky Pratama', showStempel: false, showQrVerify: false },
       { id: 'sig-2', jabatan: 'Ketua Karang Taruna', nama: 'Ahmad Fauzi, S.Kom', showStempel: true, stempelLabel: 'STEMPEL KATAR', showQrVerify: true },
-      { id: 'sig-3', jabatan: 'Mengetahui, Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-3', jabatan: 'Mengetahui, Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
     ],
   },
   {
@@ -415,7 +415,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafPenutup: 'Demikian surat tugas ini dibuat untuk dilaksanakan dengan penuh dedikasi.',
     defaultSignatures: [
       { id: 'sig-1', jabatan: 'Komandan Regu Linmas', nama: 'Suryana (Kang Surya)', showStempel: true, stempelLabel: 'STEMPEL LINMAS', showQrVerify: true },
-      { id: 'sig-2', jabatan: 'Mengetahui, Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-2', jabatan: 'Mengetahui, Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
     ],
   },
   {
@@ -474,7 +474,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Berdasarkan pengamatan dan data sosial di lapangan, warga tersebut di atas adalah benar tergolong Keluarga Tidak Mampu (Prasejahtera).',
     paragrafPenutup: 'Demikian Surat Keterangan Tidak Mampu ini dibuat untuk dipergunakan sebagaimana mestinya.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -503,7 +503,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Benar memiliki dan menjalankan Usaha Mikro / Warung yang berlokasi di lingkungan RT 003 RW 012 sejak beberapa tahun terakhir.',
     paragrafPenutup: 'Demikian surat keterangan usaha ini dibuat untuk dapat dipergunakan sebagaimana mestinya.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -532,7 +532,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Permohonan pindah ini diajukan untuk mengurus pencabutan data KK/KTP lama dan penerbitan dokumen baru di tempat tujuan.',
     paragrafPenutup: 'Demikian surat pengantar pindah ini dibuat untuk dipergunakan di Dinas Dukcapil.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -562,7 +562,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafPenutup: 'Demikian surat keterangan kematian ini dibuat untuk pengurusan administrasi ahli waris.',
     defaultSignatures: [
       { id: 'sig-1', jabatan: 'Pelapor / Ahli Waris', nama: 'Nama Ahli Waris', showStempel: false, showQrVerify: false },
-      { id: 'sig-2', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-2', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-3', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -591,7 +591,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafIsiUtama: 'Hingga saat surat keterangan ini diterbitkan, bersangkutan berstatus Lajang (Belum Pernah Menikah).',
     paragrafPenutup: 'Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.',
     defaultSignatures: [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },
@@ -621,7 +621,7 @@ export const ALL_SURAT_TEMPLATES: SuratTemplate[] = [
     paragrafPenutup: 'Pernyataan ini kami buat dengan penuh kesadaran tanpa paksaan dari pihak manapun.',
     defaultSignatures: [
       { id: 'sig-1', jabatan: 'Penerima Kuasa / Ahli Waris Utama', nama: 'Nama Kuasa Waris', showStempel: false, showQrVerify: false },
-      { id: 'sig-2', jabatan: 'Saksi Ketua RT 003', nama: 'Bambang Supriadi', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
+      { id: 'sig-2', jabatan: 'Saksi Ketua RT 003', nama: 'Arif Alexander', showStempel: true, stempelLabel: 'STEMPEL RT', showQrVerify: true },
       { id: 'sig-3', jabatan: 'Saksi Ketua RW 012', nama: 'H. Suryadi, S.E.', showStempel: true, stempelLabel: 'STEMPEL RW', showQrVerify: true },
     ],
   },

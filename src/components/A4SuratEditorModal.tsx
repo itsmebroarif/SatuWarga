@@ -81,7 +81,7 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
   );
 
   // Pemohon Details
-  const [namaWarga, setNamaWarga] = useState<string>(initialSurat?.namaWarga || 'Bambang Supriadi');
+  const [namaWarga, setNamaWarga] = useState<string>(initialSurat?.namaWarga || 'Arif Alexander');
   const [nikWarga, setNikWarga] = useState<string>(initialSurat?.nik || '3275011205820001');
   const [alamatWarga, setAlamatWarga] = useState<string>(initialSurat?.alamatWarga || 'Jl. Graha Warga Utama No. 12, RT 003/RW 012');
   const [rtWarga, setRtWarga] = useState<string>(initialSurat?.rt || '003');
@@ -123,7 +123,7 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
   // Signatures
   const [signatures, setSignatures] = useState<SignatureSpot[]>(
     initialSurat?.signatures || [
-      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Bambang Supriadi', nikNip: 'NIK. 3275011205820001', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
+      { id: 'sig-1', jabatan: 'Ketua RT 003', nama: 'Arif Alexander', nikNip: 'NIK. 3275011205820001', showStempel: true, stempelLabel: 'STEMPEL RT 003', showQrVerify: true },
       { id: 'sig-2', jabatan: 'Ketua RW 012', nama: 'H. Suryadi, S.E.', nikNip: 'NIK. 3275010904710003', showStempel: true, stempelLabel: 'STEMPEL RW 012', showQrVerify: true },
     ]
   );

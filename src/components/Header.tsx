@@ -16,6 +16,8 @@ import {
   Wallet,
   X,
   ArrowRight,
+  Coffee,
+  Compass,
 } from 'lucide-react';
 import { UserRole, Warga, KartuKeluarga, TransaksiKas, ActiveTab } from '../types';
 
@@ -29,6 +31,8 @@ interface HeaderProps {
   isSidebarCollapsedDesktop?: boolean;
   onToggleSidebar?: () => void;
   onOpenEncryptionModal?: () => void;
+  onOpen3DMap?: () => void;
+  onOpenDonateModal?: () => void;
   pendingSuratCount?: number;
   pendingAduanCount?: number;
 
@@ -75,6 +79,8 @@ export const Header: React.FC<HeaderProps> = ({
   isSidebarCollapsedDesktop = false,
   onToggleSidebar = () => {},
   onOpenEncryptionModal = () => {},
+  onOpen3DMap = () => {},
+  onOpenDonateModal = () => {},
   wargaList = [],
   kkList = [],
   kasList = [],
@@ -303,12 +309,32 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* Right Actions: Encryption & Role Dropdown */}
+        {/* Right Actions: Encryption, 3D Map, Donate & Role Dropdown */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Peta 3D Interactive Map Trigger */}
+          <button
+            onClick={onOpen3DMap}
+            className="flex items-center gap-1.5 bg-sky-100 hover:bg-sky-200 border-2 border-slate-900 text-slate-900 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+            title="Buka Peta 3D Interaktif Lingkungan (Three.js + GSAP)"
+          >
+            <Compass className="w-4 h-4 text-sky-800 shrink-0" />
+            <span className="hidden md:inline font-black text-[11px]">Peta 3D</span>
+          </button>
+
+          {/* Donate Me / Trakteer Coffee Button */}
+          <button
+            onClick={onOpenDonateModal}
+            className="flex items-center gap-1.5 bg-amber-300 hover:bg-amber-400 border-2 border-slate-900 text-slate-950 px-2.5 py-1.5 rounded-xl text-xs font-black shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+            title="Donate me / Traktir Kopi di Trakteer"
+          >
+            <Coffee className="w-4 h-4 text-slate-950 stroke-[2.5] shrink-0" />
+            <span className="inline font-black text-[11px]">Donate me</span>
+          </button>
+
           {/* Encryption Status Badge */}
           <button
             onClick={onOpenEncryptionModal}
-            className="hidden sm:flex items-center gap-1.5 bg-emerald-100 hover:bg-emerald-200 border-2 border-slate-900 text-slate-900 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+            className="hidden lg:flex items-center gap-1.5 bg-emerald-100 hover:bg-emerald-200 border-2 border-slate-900 text-slate-900 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             title="Sistem Enkripsi Data Warga Sukamaju Active"
           >
             <ShieldCheck className="w-4 h-4 text-emerald-800 shrink-0" />

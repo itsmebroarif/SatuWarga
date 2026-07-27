@@ -39,6 +39,9 @@ import { ChatbotWidget } from './components/ChatbotWidget';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
 import { ConfirmationModal } from './components/ConfirmationModal';
+import { DonateModal } from './components/DonateModal';
+import { Peta3DLingkunganModal } from './components/Peta3DLingkunganModal';
+import { ContactManagementModal } from './components/ContactManagementModal';
 import { ShieldCheck, Lock, X, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
@@ -76,6 +79,10 @@ export default function App() {
   });
 
   const [encryptionModalOpen, setEncryptionModalOpen] = useState(false);
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+  const [is3DMapOpen, setIs3DMapOpen] = useState(false);
+  const [isWaModalOpen, setIsWaModalOpen] = useState(false);
+  const [selectedWargaForWa, setSelectedWargaForWa] = useState<Warga | null>(null);
 
   // App Data State
   const [wargaList, setWargaList] = useState<Warga[]>([]);
@@ -539,6 +546,8 @@ export default function App() {
           }
         }}
         onOpenEncryptionModal={() => setEncryptionModalOpen(true)}
+        onOpen3DMap={() => setIs3DMapOpen(true)}
+        onOpenDonateModal={() => setIsDonateModalOpen(true)}
         pendingSuratCount={suratList.filter((s) => s.status === 'MENUNGGU_RT' || s.status === 'MENUNGGU_RW' || (s.status as string) === 'PENDING').length}
         pendingAduanCount={aduanList.filter((a) => a.status === 'OPEN').length}
         wargaList={wargaList}
@@ -746,9 +755,38 @@ export default function App() {
           </div>
 
           {/* Footer inside content section */}
-          <Footer />
+          <Footer onOpenDonateModal={() => setIsDonateModalOpen(true)} />
         </main>
       </div>
+
+      {/* Trakteer Donate Modal */}
+      <DonateModal
+        isOpen={isDonateModalOpen}
+        onClose={() => setIsDonateModalOpen(false)}
+      />
+
+      {/* 3D Neighborhood Interactive Map Modal (Three.js + GSAP) */}
+      <Peta3DLingkunganModal
+        isOpen={is3DMapOpen}
+        onClose={() => setIs3DMapOpen(false)}
+        wargaList={wargaList}
+        rumahList={rumahList}
+        onOpenWhatsAppForWarga={(warga) => {
+          setSelectedWargaForWa(warga);
+          setIsWaModalOpen(true);
+        }}
+      />
+
+      {/* Global WhatsApp Contact Dispatcher Modal */}
+      <ContactManagementModal
+        isOpen={isWaModalOpen}
+        onClose={() => setIsWaModalOpen(false)}
+        wargaList={wargaList}
+        initialSelectedWarga={selectedWargaForWa}
+        onUpdateWarga={(updated) => {
+          handleUpdateWarga(updated);
+        }}
+      />
     </div>
   );
 }

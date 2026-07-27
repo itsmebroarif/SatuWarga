@@ -26,9 +26,11 @@ import {
   Map,
   CheckCircle2,
   UserCheck,
+  MessageSquare,
 } from 'lucide-react';
 import { Warga, KartuKeluarga, Rumah } from '../types';
 import { exportWargaCSV, exportWargaPDF, exportToCSV } from '../utils/exportUtils';
+import { ContactManagementModal } from './ContactManagementModal';
 
 interface MasterDataViewProps {
   wargaList: Warga[];
@@ -59,7 +61,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   onUpdateRumah,
   onDeleteRumah,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'WARGA' | 'KK' | 'RUMAH'>('WARGA');
+  const [activeSubTab, setActiveSubTab] = useState<'WARGA' | 'KK' | 'RUMAH' | 'KONTAK'>('WARGA');
   const [searchTerm, setSearchTerm] = useState('');
   const [rtFilter, setRtFilter] = useState('ALL');
   const [golDarahFilter, setGolDarahFilter] = useState('ALL');
@@ -69,10 +71,13 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
   const [jenisKelaminFilter, setJenisKelaminFilter] = useState('ALL');
   const [showEncryptedNik, setShowEncryptedNik] = useState(false);
 
-  // Modal States for Warga
+  // Modal States for Warga & WhatsApp Contact Management
   const [isWargaModalOpen, setIsWargaModalOpen] = useState(false);
   const [editingWarga, setEditingWarga] = useState<Warga | null>(null);
   const [viewingKtpWarga, setViewingKtpWarga] = useState<Warga | null>(null);
+
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [selectedContactForWa, setSelectedContactForWa] = useState<Warga | null>(null);
 
   // Form State Warga (Full KTP Standar)
   const [formData, setFormData] = useState<Partial<Warga>>({
@@ -529,6 +534,21 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
             <Home className="w-3.5 h-3.5 text-purple-400" />
             Register Rumah ({rumahList.length})
           </button>
+          <button
+            onClick={() => {
+              setActiveSubTab('KONTAK');
+              setSelectedContactForWa(null);
+              setIsContactModalOpen(true);
+            }}
+            className={`px-3.5 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 ${
+              activeSubTab === 'KONTAK'
+                ? 'bg-emerald-600 text-white shadow-xs font-extrabold'
+                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+            Kontak & WA Warga
+          </button>
         </div>
       </div>
 
@@ -789,6 +809,16 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                           </span>
                         </td>
                         <td className="p-3 text-right space-x-1 whitespace-nowrap">
+                          <button
+                            onClick={() => {
+                              setSelectedContactForWa(warga);
+                              setIsContactModalOpen(true);
+                            }}
+                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-300 transition cursor-pointer"
+                            title="Kirim WhatsApp / Contact Dispatcher"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                          </button>
                           <button
                             onClick={() => setViewingKtpWarga(warga)}
                             className="p-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg border border-sky-300 transition cursor-pointer"
@@ -2013,6 +2043,19 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 7: CONTACT MANAGEMENT & WHATSAPP DISPATCHER                        */}
+      {/* ========================================================================= */}
+      <ContactManagementModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        wargaList={wargaList}
+        initialSelectedWarga={selectedContactForWa}
+        onUpdateWarga={(updated) => {
+          onUpdateWarga(updated);
+        }}
+      />
     </div>
   );
 };

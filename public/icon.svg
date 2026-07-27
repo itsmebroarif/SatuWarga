@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0056b3"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Rounded Square Background -->
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="url(#bgGrad)" stroke="#0284c7" stroke-width="12" />
+  
+  <!-- Outer Accent Frame Ring -->
+  <rect x="40" y="40" width="432" height="432" rx="72" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="12 8" opacity="0.4" />
+  
+  <!-- House Base & Roof Shape -->
+  <path d="M 256 100 L 390 200 V 380 H 122 V 200 Z" fill="url(#accentGrad)" stroke="#ffffff" stroke-width="12" stroke-linejoin="round" />
+  
+  <!-- Roof Overhang Accent -->
+  <path d="M 256 80 L 416 200 L 396 216 L 256 112 L 116 216 L 96 200 Z" fill="url(#goldGrad)" stroke="#0f172a" stroke-width="6" />
+  
+  <!-- House Door / Arch -->
+  <path d="M 216 380 V 270 Q 256 240 296 270 V 380 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="8" />
+  
+  <!-- Digital Rekap Bar Chart Graphic inside Roof -->
+  <rect x="166" y="290" width="24" height="60" rx="6" fill="#38bdf8" />
+  <rect x="202" y="260" width="24" height="90" rx="6" fill="#34d399" />
+  <rect x="286" y="240" width="24" height="110" rx="6" fill="url(#goldGrad)" />
+  <rect x="322" y="280" width="24" height="70" rx="6" fill="#60a5fa" />
+  
+  <!-- Checkmark Badge -->
+  <circle cx="380" cy="140" r="44" fill="#10b981" stroke="#ffffff" stroke-width="8" />
+  <path d="M 358 140 L 374 156 L 402 128" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
