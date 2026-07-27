@@ -28,18 +28,23 @@ import { Surat, Warga, KopSuratConfig, SignatureSpot, SuratCategory } from '../t
 import { ALL_SURAT_TEMPLATES, SURAT_CATEGORIES, SuratTemplate } from '../data/suratTemplates';
 
 interface A4SuratEditorModalProps {
+  isOpen?: boolean;
   initialSurat?: Surat | null;
   wargaList: Warga[];
   onClose: () => void;
-  onSaveSurat: (surat: Surat) => void;
+  onSaveSurat?: (surat: Surat) => void;
+  onSave?: (surat: Surat) => void;
 }
 
 export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
+  isOpen = true,
   initialSurat,
   wargaList,
   onClose,
   onSaveSurat,
+  onSave,
 }) => {
+  if (!isOpen) return null;
   // Active Category Filter
   const [activeCategory, setActiveCategory] = useState<SuratCategory | 'ALL'>('ALL');
   
@@ -224,7 +229,12 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
       signatures,
     };
 
-    onSaveSurat(savedSurat);
+    if (onSave) {
+      onSave(savedSurat);
+    } else if (onSaveSurat) {
+      onSaveSurat(savedSurat);
+    }
+    onClose();
   };
 
   // AI Assistant Drafting
