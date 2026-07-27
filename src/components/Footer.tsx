@@ -3,24 +3,25 @@ import { Shield, Heart, FileText, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-auto pt-5 border-2 border-slate-900 bg-white text-slate-900 rounded-2xl p-4 sm:p-5 shadow-[4px_4px_0px_0px_#0f172a] space-y-3">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="space-y-1 text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start gap-2">
-            <div className="w-6 h-6 bg-[#0056b3] text-white flex items-center justify-center font-black text-xs rounded-lg border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
-              SK
+    <footer className="w-full mt-auto border-t-2 border-slate-900 bg-white text-slate-900 px-4 sm:px-8 py-4 space-y-3">
+      <div className="max-w-[1600px] mx-auto space-y-3">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <div className="w-6 h-6 bg-[#0056b3] text-white flex items-center justify-center font-black text-xs rounded-lg border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
+                SK
+              </div>
+              <span className="font-extrabold text-slate-900 text-sm">
+                E-REKAP <span className="text-[#0056b3]">ENTERPRISE MANAGEMENT SYSTEM</span> — Community Operating System
+              </span>
+              <span className="text-[10px] bg-emerald-300 text-slate-900 font-extrabold px-2 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
+                Versi 1.0
+              </span>
             </div>
-            <span className="font-extrabold text-slate-900 text-sm">
-              E-REKAP <span className="text-[#0056b3]">ENTERPRISE MANAGEMENT SYSTEM</span> — Community Operating System
-            </span>
-            <span className="text-[10px] bg-emerald-300 text-slate-900 font-extrabold px-2 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
-              Versi 1.0
-            </span>
+            <p className="text-xs font-semibold text-slate-600">
+              Platform Tata Kelola Warga Digital RT / RW Satu Sukamaju
+            </p>
           </div>
-          <p className="text-xs font-semibold text-slate-600">
-            Platform Tata Kelola Warga Digital RT 01-10 / RW 01-30 Sukamaju
-          </p>
-        </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-900 rounded-full text-xs font-bold text-slate-900 shadow-[2px_2px_0px_0px_#0f172a]">
@@ -32,12 +33,13 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-semibold text-slate-500">
-        <p>© {new Date().getFullYear()} E-REKAP ENTERPRISE MANAGEMENT SYSTEM. Pengelolaan Mandiri Pengurus Lingkungan.</p>
-        <div className="flex items-center gap-4">
-          <span className="hover:text-slate-900 cursor-pointer transition-colors">Panduan Pengguna</span>
-          <span className="hover:text-slate-900 cursor-pointer transition-colors">Pernyataan Privasi</span>
-          <span className="hover:text-slate-900 cursor-pointer transition-colors">Bantuan RT/RW</span>
+        <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-semibold text-slate-500">
+          <p>© {new Date().getFullYear()} E-REKAP ENTERPRISE MANAGEMENT SYSTEM. Pengelolaan Mandiri Pengurus Lingkungan.</p>
+          <div className="flex items-center gap-4">
+            <span className="hover:text-slate-900 cursor-pointer transition-colors">Panduan Pengguna</span>
+            <span className="hover:text-slate-900 cursor-pointer transition-colors">Pernyataan Privasi</span>
+            <span className="hover:text-slate-900 cursor-pointer transition-colors">Bantuan RT/RW</span>
+          </div>
         </div>
       </div>
     </footer>

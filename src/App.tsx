@@ -566,8 +566,8 @@ export default function App() {
         />
 
         {/* Main Content View Container */}
-        <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 flex flex-col justify-between">
-          <div className="space-y-6 flex-1">
+        <main className="flex-1 min-w-0 flex flex-col justify-between">
+          <div className="p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 flex-1">
             {(normalizedTab === 'asisten-ai' || normalizedTab === 'asisten_ai') && (
               <ChatbotView contextData={aiContextData} />
             )}
