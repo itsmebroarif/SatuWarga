@@ -277,7 +277,7 @@ export class LocalStoreService {
   // Backup entire database to JSON blob
   static exportBackupJSON(): string {
     const backupObj = {
-      appName: 'Sukamaju ERP',
+      appName: 'E-REKAP ENTERPRISE MANAGEMENT SYSTEM',
       version: '1.0.0',
       exportedAt: new Date().toISOString(),
       data: {

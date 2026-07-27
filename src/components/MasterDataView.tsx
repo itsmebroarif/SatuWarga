@@ -1407,7 +1407,7 @@ export const MasterDataView: React.FC<MasterDataViewProps> = ({
                       className="w-full bg-white border-2 border-slate-900 rounded-xl px-3 py-2 font-bold text-slate-900 focus:outline-none focus:border-amber-600 shadow-xs"
                     >
                       <option value="WARGA">Warga / Penduduk biasa (Default)</option>
-                      <optgroup label="⚡ Sub-Menu Karang Taruna ERP">
+                      <optgroup label="⚡ Sub-Menu Karang Taruna (E-REKAP EMS)">
                         <option value="KETUA_KARANG_TARUNA">Ketua Karang Taruna (Full Admin Access)</option>
                         <option value="WAKIL_KETUA_KARANG_TARUNA">Wakil Ketua Karang Taruna</option>
                         <option value="SEKRETARIS_KARANG_TARUNA">Sekretaris Karang Taruna</option>

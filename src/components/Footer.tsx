@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
               SK
             </div>
             <span className="font-extrabold text-slate-900 text-sm">
-              Sukamaju <span className="text-[#0056b3]">ERP</span> — Community Operating System
+              E-REKAP <span className="text-[#0056b3]">ENTERPRISE MANAGEMENT SYSTEM</span> — Community Operating System
             </span>
             <span className="text-[10px] bg-emerald-300 text-slate-900 font-extrabold px-2 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_0px_#0f172a]">
               Versi 1.0
@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-semibold text-slate-500">
-        <p>© {new Date().getFullYear()} Sukamaju ERP. Pengelolaan Mandiri Pengurus RT/RW Sukamaju.</p>
+        <p>© {new Date().getFullYear()} E-REKAP ENTERPRISE MANAGEMENT SYSTEM. Pengelolaan Mandiri Pengurus Lingkungan.</p>
         <div className="flex items-center gap-4">
           <span className="hover:text-slate-900 cursor-pointer transition-colors">Panduan Pengguna</span>
           <span className="hover:text-slate-900 cursor-pointer transition-colors">Pernyataan Privasi</span>

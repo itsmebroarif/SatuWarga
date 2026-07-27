@@ -105,7 +105,7 @@ export const KeuanganView: React.FC<KeuanganViewProps> = ({ kasList = [], onAddK
       {/* Print Header for Browser PDF / Printing */}
       <PrintReportHeader
         title={`LAPORAN ARUS KAS & REKAPITULASI KEUANGAN ${activeUnit}`}
-        unitName={`SatuWarga ERP - Unit ${activeUnit} Sukamaju`}
+        unitName={`E-REKAP ENTERPRISE MANAGEMENT SYSTEM - Unit ${activeUnit}`}
         subtitle="Laporan Resmi Pemasukan, Pengeluaran, & Saldo Kas Organisasi"
       />
 

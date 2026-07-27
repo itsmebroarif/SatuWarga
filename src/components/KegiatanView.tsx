@@ -48,11 +48,40 @@ export const KegiatanView: React.FC<KegiatanViewProps> = ({
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
-  // Certificate Modal State
-  const [selectedCertParticipant, setSelectedCertParticipant] = useState('Bambang Supriadi, S.E.');
-  const [selectedCertRole, setSelectedCertRole] = useState('Panitia Pelaksana / Relawan');
-  const [certEventName, setCertEventName] = useState('Kerja Bakti Masal RW 05');
-  const [showCertModal, setShowCertModal] = useState(false);
+  const [viewMode, setViewMode] = useState<'CALENDAR' | 'LIST'>('CALENDAR');
+  const [currentCalendarDate, setCurrentCalendarDate] = useState<Date>(new Date(2026, 6, 1)); // July 2026
+  const [selectedCalendarDateStr, setSelectedCalendarDateStr] = useState<string | null>(null);
+
+  // Helper for Calendar Days calculation
+  const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    const day = new Date(year, month, 1).getDay();
+    return day === 0 ? 6 : day - 1; // Adjust Monday as 0
+  };
+
+  const calendarYear = currentCalendarDate.getFullYear();
+  const calendarMonth = currentCalendarDate.getMonth(); // 0-indexed
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  const daysInMonth = getDaysInMonth(calendarYear, calendarMonth);
+  const startDay = getFirstDayOfMonth(calendarYear, calendarMonth);
+
+  const prevMonth = () => {
+    setCurrentCalendarDate(new Date(calendarYear, calendarMonth - 1, 1));
+  };
+  const nextMonth = () => {
+    setCurrentCalendarDate(new Date(calendarYear, calendarMonth + 1, 1));
+  };
+
+  // Helper to format date key YYYY-MM-DD
+  const formatDateKey = (dayNumber: number) => {
+    const m = String(calendarMonth + 1).padStart(2, '0');
+    const d = String(dayNumber).padStart(2, '0');
+    return `${calendarYear}-${m}-${d}`;
+  };
 
   const handleCreateEvent = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,60 +199,254 @@ export const KegiatanView: React.FC<KegiatanViewProps> = ({
       {/* SUB-TAB 1: AGENDA KEGIATAN */}
       {activeSubTab === 'EVENTS' && (
         <div className="space-y-4">
-          <div className="flex justify-end">
-            <button
-              onClick={() => setIsEventModalOpen(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded font-medium flex items-center gap-1.5 shadow-xs"
-            >
-              <Plus className="w-4 h-4" /> Buat Agenda Baru
-            </button>
+          {/* Controls & View Mode Toggle */}
+          <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('CALENDAR')}
+                className={`px-3 py-1.5 rounded-xl border-2 text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
+                  viewMode === 'CALENDAR'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                    : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                <Calendar className="w-4 h-4 text-emerald-400" />
+                <span>Kalender Bulan</span>
+              </button>
+
+              <button
+                onClick={() => setViewMode('LIST')}
+                className={`px-3 py-1.5 rounded-xl border-2 text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
+                  viewMode === 'LIST'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                    : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                <BookOpen className="w-4 h-4 text-amber-400" />
+                <span>Daftar Teks Agenda</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsEventModalOpen(true)}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-xl font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] flex items-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> Buat Agenda Rapat / Acara
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {eventsList.map((evt) => (
-              <div key={evt.id} className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-mono bg-purple-100 text-purple-800 px-2 py-0.5 rounded uppercase">
-                    {evt.unitOwner}
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                      evt.status === 'SELESAI'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-amber-100 text-amber-800'
-                    }`}
-                  >
-                    {evt.status}
-                  </span>
+          {/* MONTHLY CALENDAR VIEW */}
+          {viewMode === 'CALENDAR' && (
+            <div className="bg-white rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] overflow-hidden p-4 space-y-4">
+              {/* Month Header Navigation */}
+              <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900">
+                     JADWAL KEGIATAN & RAPAT — {monthNames[calendarMonth].toUpperCase()} {calendarYear}
+                  </h3>
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-sm leading-snug">{evt.nama}</h3>
-                <p className="text-xs text-slate-600 line-clamp-2">{evt.deskripsi}</p>
-
-                <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 space-y-1">
-                  <div>📅 <strong>Jadwal:</strong> {evt.tanggal} ({evt.waktu})</div>
-                  <div>📍 <strong>Lokasi:</strong> {evt.lokasi}</div>
-                  <div>👤 <strong>PIC:</strong> {evt.picNama}</div>
-                  <div>💰 <strong>Anggaran:</strong> Rp {evt.anggaran.toLocaleString('id-ID')}</div>
-                </div>
-
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
-                    <Users className="w-3.5 h-3.5 text-blue-600" /> {evt.absensiCount} Warga Hadir
-                  </span>
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      setCertEventName(evt.nama);
-                      setActiveSubTab('SERTIFIKAT');
-                    }}
-                    className="text-xs text-purple-700 font-semibold hover:underline flex items-center gap-1"
+                    onClick={prevMonth}
+                    className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-900 font-black text-xs cursor-pointer"
                   >
-                    <Award className="w-3.5 h-3.5" /> E-Sertifikat
+                    &larr; Bulan Lalu
+                  </button>
+                  <button
+                    onClick={() => setCurrentCalendarDate(new Date(2026, 6, 1))}
+                    className="px-3 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 border-2 border-slate-900 font-bold text-xs cursor-pointer text-amber-950"
+                  >
+                    Bulan Ini
+                  </button>
+                  <button
+                    onClick={nextMonth}
+                    className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-900 font-black text-xs cursor-pointer"
+                  >
+                    Bulan Depan &rarr;
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* 7 Days Grid Header */}
+              <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center font-black text-xs text-slate-700 uppercase bg-slate-100 p-2 rounded-xl border border-slate-300">
+                <span>Senin</span>
+                <span>Selasa</span>
+                <span>Rabu</span>
+                <span>Kamis</span>
+                <span>Jumat</span>
+                <span className="text-rose-600">Sabtu</span>
+                <span className="text-rose-600">Minggu</span>
+              </div>
+
+              {/* Calendar Days Cells Grid */}
+              <div className="grid grid-cols-7 gap-1 sm:gap-2">
+                {/* Empty cells before start of month */}
+                {Array.from({ length: startDay }).map((_, i) => (
+                  <div key={`empty-${i}`} className="min-h-[90px] sm:min-h-[110px] bg-slate-50/50 rounded-xl border border-dashed border-slate-200" />
+                ))}
+
+                {/* Days of month */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const dayNum = i + 1;
+                  const dateKey = formatDateKey(dayNum);
+                  const dayEvents = eventsList.filter((e) => e.tanggal === dateKey);
+
+                  const isSelected = selectedCalendarDateStr === dateKey;
+
+                  return (
+                    <div
+                      key={dayNum}
+                      onClick={() => setSelectedCalendarDateStr(dateKey)}
+                      className={`min-h-[90px] sm:min-h-[110px] p-2 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-emerald-600 bg-emerald-50/50 shadow-md ring-2 ring-emerald-500'
+                          : dayEvents.length > 0
+                          ? 'border-slate-900 bg-white hover:bg-slate-50'
+                          : 'border-slate-200 bg-white hover:border-slate-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className={`text-xs font-black rounded-full w-6 h-6 flex items-center justify-center ${
+                          dayEvents.length > 0 ? 'bg-slate-900 text-white' : 'text-slate-800'
+                        }`}>
+                          {dayNum}
+                        </span>
+                        {dayEvents.length > 0 && (
+                          <span className="text-[9px] font-extrabold bg-amber-400 text-slate-950 px-1.5 py-0.5 rounded-full border border-slate-900">
+                            {dayEvents.length} Event
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Event Badges inside day cell */}
+                      <div className="space-y-1 my-1 overflow-y-auto max-h-[60px]">
+                        {dayEvents.map((evt) => (
+                          <div
+                            key={evt.id}
+                            className="bg-emerald-100 hover:bg-emerald-200 text-emerald-950 p-1 rounded-md text-[10px] font-bold truncate border border-emerald-300 flex items-center gap-1"
+                            title={`${evt.nama} (${evt.waktu}) - ${evt.lokasi}`}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
+                            <span className="truncate">{evt.nama}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="text-[9px] text-slate-400 font-mono text-right">
+                        {dayEvents.length === 0 && <span className="hover:text-emerald-600">+ Tambah</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Selected Day Event Drawer / Detail Panel */}
+              {selectedCalendarDateStr && (
+                <div className="p-4 bg-slate-900 text-white rounded-xl space-y-3 mt-4 border-2 border-slate-900">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-sm text-emerald-400 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-emerald-400" />
+                      Agenda Kegiatan Tanggal: {selectedCalendarDateStr}
+                    </h4>
+                    <button
+                      onClick={() => setSelectedCalendarDateStr(null)}
+                      className="text-slate-400 hover:text-white p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {eventsList.filter((e) => e.tanggal === selectedCalendarDateStr).length === 0 ? (
+                    <div className="text-xs text-slate-300 py-2 flex items-center justify-between">
+                      <span>Tidak ada kegiatan atau rapat yang terjadwal pada tanggal ini.</span>
+                      <button
+                        onClick={() => {
+                          setTanggal(selectedCalendarDateStr);
+                          setIsEventModalOpen(true);
+                        }}
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1 rounded-lg font-bold"
+                      >
+                        + Tambah Kegiatan Tanggal Ini
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {eventsList
+                        .filter((e) => e.tanggal === selectedCalendarDateStr)
+                        .map((evt) => (
+                          <div key={evt.id} className="bg-slate-800 p-3 rounded-xl border border-slate-700 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-900 text-purple-200">
+                                {evt.unitOwner}
+                              </span>
+                              <span className="text-[10px] font-bold text-emerald-400">{evt.waktu}</span>
+                            </div>
+                            <h5 className="font-bold text-xs text-white">{evt.nama}</h5>
+                            <p className="text-[11px] text-slate-300 line-clamp-2">{evt.deskripsi}</p>
+                            <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-700 flex justify-between">
+                              <span>📍 {evt.lokasi}</span>
+                              <span>👤 {evt.picNama}</span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* LIST TEXT VIEW */}
+          {viewMode === 'LIST' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {eventsList.map((evt) => (
+                <div key={evt.id} className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold font-mono bg-purple-100 text-purple-800 px-2 py-0.5 rounded uppercase">
+                      {evt.unitOwner}
+                    </span>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        evt.status === 'SELESAI'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {evt.status}
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-slate-900 text-sm leading-snug">{evt.nama}</h3>
+                  <p className="text-xs text-slate-600 line-clamp-2">{evt.deskripsi}</p>
+
+                  <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-100 space-y-1">
+                    <div>📅 <strong>Jadwal:</strong> {evt.tanggal} ({evt.waktu})</div>
+                    <div>📍 <strong>Lokasi:</strong> {evt.lokasi}</div>
+                    <div>👤 <strong>PIC:</strong> {evt.picNama}</div>
+                    <div>💰 <strong>Anggaran:</strong> Rp {evt.anggaran.toLocaleString('id-ID')}</div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
+                      <Users className="w-3.5 h-3.5 text-blue-600" /> {evt.absensiCount} Warga Hadir
+                    </span>
+                    <button
+                      onClick={() => {
+                        setCertEventName(evt.nama);
+                        setActiveSubTab('SERTIFIKAT');
+                      }}
+                      className="text-xs text-purple-700 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      E-Sertifikat
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

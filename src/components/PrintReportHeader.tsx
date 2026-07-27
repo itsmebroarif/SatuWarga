@@ -8,7 +8,7 @@ interface PrintReportHeaderProps {
 
 export const PrintReportHeader: React.FC<PrintReportHeaderProps> = ({
   title,
-  unitName = 'SatuWarga ERP - Organisasi Sukamaju',
+  unitName = 'E-REKAP ENTERPRISE MANAGEMENT SYSTEM',
   subtitle = 'Sistem Terpadu Manajemen Administrasi, Keuangan, & Inventaris',
 }) => {
   const currentDate = new Date().toLocaleDateString('id-ID', {

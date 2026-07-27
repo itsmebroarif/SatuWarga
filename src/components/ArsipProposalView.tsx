@@ -124,7 +124,7 @@ Dibuat oleh,                    Disetujui oleh,
       {/* Print Header for Browser PDF / Printing */}
       <PrintReportHeader
         title="LAPORAN ARSIP DOKUMEN & PROPOSAL RESMI ORGANISASI"
-        unitName="SatuWarga ERP - Sekretariat Dokumentasi & Arsip Sukamaju"
+        unitName="E-REKAP ENTERPRISE MANAGEMENT SYSTEM - Sekretariat Dokumentasi & Arsip"
         subtitle="Inventarisasi Arsip Digital, Proposal Kegiatan, & Laporan Statistik"
       />
 

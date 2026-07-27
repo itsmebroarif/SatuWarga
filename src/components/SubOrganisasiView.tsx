@@ -175,7 +175,7 @@ export const SubOrganisasiView: React.FC<SubOrganisasiViewProps> = ({
         <div className="space-y-6">
           <PrintReportHeader
             title="LAPORAN INVENTARISASI ASET BARANG & LOGISTIK ORGANISASI"
-            unitName="SatuWarga ERP - Departemen Aset & Inventaris Sukamaju"
+            unitName="E-REKAP ENTERPRISE MANAGEMENT SYSTEM - Departemen Aset & Inventaris"
             subtitle="Pencatatan Resmi Aset Barang, Kondisi, Lokasi Penyimpanan, & Riwayat Peminjaman"
           />
 
@@ -285,29 +285,60 @@ export const SubOrganisasiView: React.FC<SubOrganisasiViewProps> = ({
                       <th className="p-2.5">Barang</th>
                       <th className="p-2.5">Jml</th>
                       <th className="p-2.5">Tgl Pinjam / Kembali</th>
+                      <th className="p-2.5">Status</th>
+                      <th className="p-2.5 text-right">Aksi WA</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {peminjamanList.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="p-8 text-center text-slate-500 italic">
+                        <td colSpan={6} className="p-8 text-center text-slate-500 italic">
                           Belum ada riwayat peminjaman barang.
                         </td>
                       </tr>
                     ) : (
-                      peminjamanList.map((p) => (
-                        <tr key={p.id} className="hover:bg-slate-50">
-                          <td className="p-2.5 font-bold text-slate-900">
-                            {p.peminjamNama}
-                            <span className="block text-[10px] font-mono text-slate-500">{p.noHp}</span>
-                          </td>
-                          <td className="p-2.5 text-slate-800 font-semibold">{p.namaBarang}</td>
-                          <td className="p-2.5 font-mono font-bold text-[#0056b3]">{p.jumlah}</td>
-                          <td className="p-2.5 text-[11px] font-mono text-slate-600">
-                            {p.tglPinjam} s/d {p.tglRencanaKembali}
-                          </td>
-                        </tr>
-                      ))
+                      peminjamanList.map((p) => {
+                        const cleanPhone = (p.noHp || '').replace(/[^0-9]/g, '');
+                        const waNumber = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+                        const waMessage = encodeURIComponent(
+                          `Halo Bpk/Ibu ${p.peminjamNama}, pengingat dari Pengurus Lingkungan mengenai peminjaman barang aset Gudang Digital:\n- Barang: ${p.namaBarang} (${p.jumlah} unit)\n- Tanggal Pinjam: ${p.tglPinjam}\n- Rencana Pengembalian: ${p.tglRencanaKembali}\nMohon mengembalikan barang tepat waktu dalam kondisi baik. Terima kasih!`
+                        );
+
+                        return (
+                          <tr key={p.id} className="hover:bg-slate-50">
+                            <td className="p-2.5 font-bold text-slate-900">
+                              {p.peminjamNama}
+                              <span className="block text-[10px] font-mono text-slate-500">{p.noHp}</span>
+                            </td>
+                            <td className="p-2.5 text-slate-800 font-semibold">{p.namaBarang}</td>
+                            <td className="p-2.5 font-mono font-bold text-[#0056b3]">{p.jumlah}</td>
+                            <td className="p-2.5 text-[11px] font-mono text-slate-600">
+                              {p.tglPinjam} s/d {p.tglRencanaKembali}
+                            </td>
+                            <td className="p-2.5">
+                              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                                p.status === 'DIKEMBALIKAN'
+                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  : p.status === 'DIPINJAM'
+                                  ? 'bg-amber-100 text-amber-900 border-amber-300'
+                                  : 'bg-blue-100 text-blue-900 border-blue-300'
+                              }`}>
+                                {p.status || 'DIPINJAM'}
+                              </span>
+                            </td>
+                            <td className="p-2.5 text-right">
+                              <a
+                                href={`https://wa.me/${waNumber}?text=${waMessage}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-2xs transition"
+                              >
+                                💬 WA Pengingat
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>

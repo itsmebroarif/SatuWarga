@@ -1,5 +1,5 @@
 {
-  "name": "E-REKAP Sukamaju",
+  "name": "E-REKAP ENTERPRISE MANAGEMENT SYSTEM",
   "description": "Aplikasi E-REKAP Sistem Pengelolaan Warga Sukamaju (RT/RW, PKK, Karang Taruna, Posyandu, DKM, Linmas) dengan manajemen role otomatis, rekapitulasi data, dan keamanan lokal.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

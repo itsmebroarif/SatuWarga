@@ -39,13 +39,13 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
           {/* Header Kop Surat */}
           <div className="text-center border-b-4 border-double border-slate-900 pb-3 space-y-1">
             <h3 className="font-bold text-base sm:text-lg tracking-widest uppercase text-slate-900">
-              RUKUN TETANGGA {surat.rt} / RUKUN WARGA {surat.rw}
+              RUKUN TETANGGA / RUKUN WARGA
             </h3>
             <h4 className="font-bold text-sm sm:text-base tracking-wider uppercase text-slate-800">
               DESA / KELURAHAN SUKAMAJU
             </h4>
             <p className="text-xs font-sans text-slate-600 italic">
-              Sekretariat: Jl. Graha Warga Utama No. 1, Telp/WA: 0812-9876-5432, Kode Pos 17123
+              Sekretariat: Jl. Graha Warga Utama, Telp/WA Kantor: 0812-9876-5432, Kode Pos 17123
             </p>
           </div>
 
@@ -60,7 +60,7 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
           {/* Opening Body */}
           <div className="text-xs sm:text-sm text-slate-800 space-y-3 leading-relaxed font-sans">
             <p>
-              Yang bertanda tangan di bawah ini Ketua Rukun Tetangga {surat.rt} / Rukun Warga {surat.rw} Kelurahan Graha Warga, dengan ini menerangkan bahwa:
+              Yang bertanda tangan di bawah ini Pengurus Rukun Tetangga / Rukun Warga Kelurahan Sukamaju, dengan ini menerangkan bahwa:
             </p>
 
             <table className="w-full text-xs sm:text-sm my-3 font-sans">
@@ -97,7 +97,7 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
           <div className="pt-8 grid grid-cols-2 text-center text-xs font-sans gap-4">
             <div className="space-y-1">
               <p className="text-slate-600">Mengetahui,</p>
-              <p className="font-bold">Ketua RW {surat.rw}</p>
+              <p className="font-bold">Ketua / Pengurus RW</p>
               <div className="h-16 flex items-center justify-center my-2">
                 <div className="w-20 h-20 border-2 border-dashed border-emerald-600 rounded-full flex flex-col items-center justify-center p-1 text-emerald-700 text-[9px] font-bold">
                   <span>STEMPEL RW</span>
@@ -105,12 +105,12 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
                   <span>TERVERIFIKASI</span>
                 </div>
               </div>
-              <p className="font-bold underline text-slate-900">Drs. Hendra Wijaya</p>
+              <p className="font-bold underline text-slate-900">Pengurus RW Terkait</p>
             </div>
 
             <div className="space-y-1">
-              <p className="text-slate-600">Graha Warga, {surat.tglDisetujui || new Date().toISOString().slice(0, 10)}</p>
-              <p className="font-bold">Ketua RT {surat.rt}</p>
+              <p className="text-slate-600">Wilayah Sukamaju, {surat.tglDisetujui || new Date().toISOString().slice(0, 10)}</p>
+              <p className="font-bold">Ketua / Pengurus RT</p>
               <div className="h-16 flex items-center justify-center my-2">
                 <div className="border border-slate-300 p-1.5 rounded bg-slate-50 flex items-center gap-2">
                   <div className="w-10 h-10 bg-slate-900 text-white font-mono font-bold text-[8px] flex items-center justify-center p-1 text-center">
@@ -122,14 +122,14 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
                   </div>
                 </div>
               </div>
-              <p className="font-bold underline text-slate-900">H. Ahmad Dahlan</p>
+              <p className="font-bold underline text-slate-900">Pengurus RT Terkait</p>
             </div>
           </div>
 
           {/* Bottom Security Note */}
           <div className="border-t border-slate-200 pt-3 flex items-center justify-between text-[10px] text-slate-500 font-sans">
             <span className="flex items-center gap-1 font-mono">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Digital Document Validated by Sukamaju ERP
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Digital Document Validated by E-REKAP ENTERPRISE MANAGEMENT SYSTEM
             </span>
             <span className="font-mono">Hash: {surat.qrCodeHash}</span>
           </div>

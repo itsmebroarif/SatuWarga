@@ -117,16 +117,23 @@ export interface Surat {
   id: string;
   nomorSurat: string;
   jenisSurat:
-    | 'Surat Domisili'
     | 'Surat Pengantar RT/RW'
+    | 'Surat Keterangan Domisili (SKD)'
+    | 'Surat Keterangan Tidak Mampu (SKTM)'
+    | 'Surat Keterangan Usaha (SKU)'
+    | 'Surat Pengantar Pindah Domisili'
+    | 'Surat Keterangan Kematian'
+    | 'Surat Keterangan Belum Menikah'
+    | 'Surat Izin Keramaian'
+    | 'Surat Keterangan Berkelakuan Baik'
+    | 'Surat Kuasa Ahli Waris'
+    | 'Surat Domisili'
     | 'Surat Keterangan Usaha'
     | 'Surat Tidak Mampu (SKTM)'
     | 'Surat Kematian'
     | 'Surat Kelahiran'
     | 'Surat Pindah'
-    | 'Surat Izin Keramaian'
-    | 'Surat Undangan'
-    | 'Surat Keputusan';
+    | string;
   wargaId: string;
   namaWarga: string;
   nik: string;

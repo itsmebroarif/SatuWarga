@@ -228,7 +228,7 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({
   // Full System Export (JSON Flashdisk Migration)
   const handleExportFullJSON = () => {
     const fullData = {
-      app: 'Sukamaju ERP / SatuWarga.id',
+      app: 'E-REKAP ENTERPRISE MANAGEMENT SYSTEM',
       exportDate: new Date().toISOString(),
       version: '1.0.0',
       database: {

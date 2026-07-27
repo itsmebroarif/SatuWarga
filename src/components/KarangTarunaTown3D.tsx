@@ -313,7 +313,7 @@ export const KarangTarunaTown3D: React.FC = () => {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-900 text-amber-300 font-mono font-black text-xs uppercase tracking-wider rounded-lg border-2 border-slate-900 mb-3 shadow-[2px_2px_0px_0px_#ffffff]">
               <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
-              Karang Taruna Tunas Muda Sukamaju (ERP Edition)
+              Karang Taruna Tunas Muda (E-REKAP ENTERPRISE MANAGEMENT SYSTEM)
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-slate-950 uppercase tracking-tight leading-none mb-3 drop-shadow-sm">
               TOWN MAP 3D PEMUDA & SIMULASI LINGKUNGAN

@@ -211,7 +211,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="text-[#17a2b8] text-xs font-mono font-medium">RT 01-05 / RW 05 Graha Warga</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-white">
-            Selamat Datang di Sukamaju ERP
+            Selamat Datang di E-REKAP ENTERPRISE MANAGEMENT SYSTEM
           </h1>
           <p className="text-xs text-slate-300">
             Sistem Operasi Lingkungan Terpadu. Seluruh data warga tersimpan secara aman dan terenkripsi.
@@ -305,7 +305,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <TrendingUp className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-extrabold text-slate-900 text-sm">Visualisasi Capaian Target & Realisasi ERP</h3>
+              <h3 className="font-extrabold text-slate-900 text-sm">Visualisasi Capaian Target & Realisasi E-REKAP ENTERPRISE MANAGEMENT SYSTEM</h3>
               <p className="text-[11px] text-slate-500 font-medium">Monitoring Prosentase Capaian Program Kerja & Keuangan Lingkungan / Karang Taruna</p>
             </div>
           </div>
