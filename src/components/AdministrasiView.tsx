@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   FileCheck,
   Plus,
@@ -292,48 +293,55 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredTemplates.map((tmpl, idx) => (
-              <div
-                key={tmpl.id}
-                className="bg-white p-4 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] hover:shadow-[6px_6px_0px_0px_#0f172a] transition-all flex flex-col justify-between gap-3 group"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 font-mono text-[10px] font-black uppercase">
-                      {idx + 1}. {tmpl.code}
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${tmpl.badgeBg} ${tmpl.badgeText}`}>
-                      {tmpl.categoryLabel}
-                    </span>
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AnimatePresence mode="popLayout">
+              {filteredTemplates.map((tmpl, idx) => (
+                <motion.div
+                  key={tmpl.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.94, y: 8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92, y: -8 }}
+                  transition={{ duration: 0.22, ease: 'easeOut' }}
+                  className="bg-white p-4 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] hover:shadow-[6px_6px_0px_0px_#0f172a] transition-all flex flex-col justify-between gap-3 group"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 font-mono text-[10px] font-black uppercase">
+                        {idx + 1}. {tmpl.code}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${tmpl.badgeBg} ${tmpl.badgeText}`}>
+                        {tmpl.categoryLabel}
+                      </span>
+                    </div>
+
+                    <h4 className="font-black text-sm text-slate-900 group-hover:text-emerald-700 transition">
+                      {tmpl.title}
+                    </h4>
+
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                      {tmpl.description}
+                    </p>
                   </div>
 
-                  <h4 className="font-black text-sm text-slate-900 group-hover:text-emerald-700 transition">
-                    {tmpl.title}
-                  </h4>
-
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                    {tmpl.description}
-                  </p>
-                </div>
-
-                <div className="border-t border-slate-200 pt-3 flex items-center justify-between gap-2 flex-wrap">
-                  <span className="text-[10px] font-mono text-slate-500 italic max-w-[180px] truncate">
-                    Perihal: {tmpl.perihal}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => openA4EditorWithTemplate(tmpl)}
-                      className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs border border-slate-900 shadow-xs flex items-center gap-1 cursor-pointer transition active:translate-y-0.5"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Buka di Editor A4</span>
-                    </button>
+                  <div className="border-t border-slate-200 pt-3 flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-[10px] font-mono text-slate-500 italic max-w-[180px] truncate">
+                      Perihal: {tmpl.perihal}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => openA4EditorWithTemplate(tmpl)}
+                        className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs border border-slate-900 shadow-xs flex items-center gap-1 cursor-pointer transition active:translate-y-0.5"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Buka di Editor A4</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       )}
 
