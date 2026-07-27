@@ -71,14 +71,14 @@ export const PrintSuratModal: React.FC<PrintSuratModalProps> = ({ surat, onClose
                   <td className="py-1 font-bold">{surat.namaWarga}</td>
                 </tr>
                 <tr>
-                  <td className="py-1 font-semibold">NIK</td>
-                  <td className="py-1">:</td>
-                  <td className="py-1 font-mono">{surat.nik}</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-semibold">Alamat Domisili</td>
+                  <td className="py-1 font-semibold">Alamat Lengkap</td>
                   <td className="py-1">:</td>
                   <td className="py-1">{surat.alamatWarga}</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-semibold">Wilayah RT / RW</td>
+                  <td className="py-1">:</td>
+                  <td className="py-1 font-bold">RT {surat.rt || '003'} / RW {surat.rw || '012'}</td>
                 </tr>
                 <tr>
                   <td className="py-1 font-semibold">Keperluan</td>

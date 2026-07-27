@@ -489,7 +489,7 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block text-slate-400 font-medium mb-1">Nama Lengkap Warga</label>
+                  <label className="block text-slate-400 font-medium mb-1">Nama Lengkap Pemohon</label>
                   <input
                     type="text"
                     value={namaWarga}
@@ -497,57 +497,32 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
                     className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-bold"
                   />
                 </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">NIK Warga (16 Digit)</label>
-                  <input
-                    type="text"
-                    value={nikWarga}
-                    onChange={(e) => setNikWarga(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Tempat Lahir</label>
-                  <input
-                    type="text"
-                    value={tempatLahirWarga}
-                    onChange={(e) => setTempatLahirWarga(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Tanggal Lahir</label>
-                  <input
-                    type="text"
-                    value={tanggalLahirWarga}
-                    onChange={(e) => setTanggalLahirWarga(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Pekerjaan</label>
-                  <input
-                    type="text"
-                    value={pekerjaanWarga}
-                    onChange={(e) => setPekerjaanWarga(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Jenis Kelamin</label>
-                  <select
-                    value={jenisKelaminWarga}
-                    onChange={(e) => setJenisKelaminWarga(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-slate-400 font-medium mb-1">RT Pemohon</label>
+                    <input
+                      type="text"
+                      value={rtWarga}
+                      onChange={(e) => setRtWarga(e.target.value)}
+                      placeholder="003"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-medium mb-1">RW Pemohon</label>
+                    <input
+                      type="text"
+                      value={rwWarga}
+                      onChange={(e) => setRwWarga(e.target.value)}
+                      placeholder="012"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Alamat Domisili Lengkap</label>
+                <label className="block text-slate-400 font-medium mb-1">Alamat Lengkap Pemohon</label>
                 <textarea
                   rows={2}
                   value={alamatWarga}
@@ -943,24 +918,14 @@ export const A4SuratEditorModal: React.FC<A4SuratEditorModalProps> = ({
                       <td className="py-1.5 font-bold text-slate-950">{namaWarga}</td>
                     </tr>
                     <tr className="border-b border-slate-100">
-                      <td className="py-1.5 font-semibold text-slate-700">NIK / Nomor Identitas</td>
-                      <td className="py-1.5">:</td>
-                      <td className="py-1.5 font-mono font-bold text-slate-900">{nikWarga}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 font-semibold text-slate-700">Tempat, Tgl Lahir</td>
-                      <td className="py-1.5">:</td>
-                      <td className="py-1.5">{tempatLahirWarga}, {tanggalLahirWarga}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 font-semibold text-slate-700">Jenis Kelamin / Pekerjaan</td>
-                      <td className="py-1.5">:</td>
-                      <td className="py-1.5">{jenisKelaminWarga} / {pekerjaanWarga}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="py-1.5 font-semibold text-slate-700">Alamat Domisili</td>
+                      <td className="py-1.5 font-semibold text-slate-700">Alamat Lengkap</td>
                       <td className="py-1.5">:</td>
                       <td className="py-1.5">{alamatWarga}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-1.5 font-semibold text-slate-700">Wilayah RT / RW</td>
+                      <td className="py-1.5">:</td>
+                      <td className="py-1.5 font-bold text-slate-900">RT {rtWarga} / RW {rwWarga}</td>
                     </tr>
                     <tr>
                       <td className="py-1.5 font-semibold text-slate-700">Maksud / Keperluan</td>
