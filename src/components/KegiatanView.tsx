@@ -52,6 +52,12 @@ export const KegiatanView: React.FC<KegiatanViewProps> = ({
   const [currentCalendarDate, setCurrentCalendarDate] = useState<Date>(new Date(2026, 6, 1)); // July 2026
   const [selectedCalendarDateStr, setSelectedCalendarDateStr] = useState<string | null>(null);
 
+  // E-Sertifikat State
+  const [selectedCertParticipant, setSelectedCertParticipant] = useState('Bambang Supriadi');
+  const [certEventName, setCertEventName] = useState('Gotong Royong & Kerja Bakti Masal');
+  const [selectedCertRole, setSelectedCertRole] = useState('Peserta Aktif / Panitia Pelaksana');
+  const [showCertModal, setShowCertModal] = useState(false);
+
   // Helper for Calendar Days calculation
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => {

@@ -3,31 +3,51 @@ import { Warga, KartuKeluarga, TransaksiKas } from '../types';
 /**
  * Utility to export JavaScript objects to CSV with UTF-8 BOM
  */
-export function exportToCSV(filename: string, rows: Record<string, any>[]) {
-  if (!rows || rows.length === 0) {
-    alert('Tidak ada data untuk diekspor.');
-    return;
+export function exportToCSV(filename: string, headersOrRows: any, maybeRows?: any[][]) {
+  let csvContent = '';
+
+  if (Array.isArray(headersOrRows) && typeof headersOrRows[0] === 'string' && Array.isArray(maybeRows)) {
+    const headers = headersOrRows as string[];
+    const rows = maybeRows;
+    csvContent = [
+      headers.join(','),
+      ...rows.map((row) =>
+        row
+          .map((cellItem: any) => {
+            let cell = cellItem === null || cellItem === undefined ? '' : String(cellItem);
+            cell = cell.replace(/"/g, '""');
+            if (cell.includes(',') || cell.includes('\n') || cell.includes('"')) {
+              cell = `"${cell}"`;
+            }
+            return cell;
+          })
+          .join(',')
+      ),
+    ].join('\r\n');
+  } else {
+    const rows = headersOrRows as Record<string, any>[];
+    if (!rows || rows.length === 0) {
+      alert('Tidak ada data untuk diekspor.');
+      return;
+    }
+    const headers = Object.keys(rows[0]);
+    csvContent = [
+      headers.join(','),
+      ...rows.map((row) =>
+        headers
+          .map((header) => {
+            let cell = row[header] === null || row[header] === undefined ? '' : String(row[header]);
+            cell = cell.replace(/"/g, '""');
+            if (cell.includes(',') || cell.includes('\n') || cell.includes('"')) {
+              cell = `"${cell}"`;
+            }
+            return cell;
+          })
+          .join(',')
+      ),
+    ].join('\r\n');
   }
 
-  // Get headers
-  const headers = Object.keys(rows[0]);
-  const csvContent = [
-    headers.join(','),
-    ...rows.map((row) =>
-      headers
-        .map((header) => {
-          let cell = row[header] === null || row[header] === undefined ? '' : String(row[header]);
-          cell = cell.replace(/"/g, '""'); // escape double quotes
-          if (cell.includes(',') || cell.includes('\n') || cell.includes('"')) {
-            cell = `"${cell}"`;
-          }
-          return cell;
-        })
-        .join(',')
-    ),
-  ].join('\r\n');
-
-  // Add UTF-8 BOM (\uFEFF) for Microsoft Excel compatibility
   const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -192,8 +212,7 @@ export function exportKasCSV(kasList: TransaksiKas[]) {
     Kategori: k.kategori,
     Jumlah: k.jumlah,
     Keterangan: k.keterangan,
-    'Nomor Bukti': k.nomorBukti || '-',
-    Pencatat: k.dicatatOleh,
+    Pencatat: k.createdBy,
   }));
   exportToCSV('Laporan_Kas_Keuangan', formatted);
 }
@@ -203,11 +222,11 @@ export function exportKasPDF(kasList: TransaksiKas[], totalPemasukan: number, to
   const rows = kasList.map((k, idx) => [
     idx + 1,
     k.tanggal,
-    k.jenis === 'MASUK' ? 'Pemasukan' : 'Pengeluaran',
+    k.jenis === 'PEMASUKAN' ? 'Pemasukan' : 'Pengeluaran',
     k.kategori,
     k.keterangan,
     `Rp ${k.jumlah.toLocaleString('id-ID')}`,
-    k.dicatatOleh,
+    k.createdBy,
   ]);
 
   const summary = `Total Pemasukan: Rp ${totalPemasukan.toLocaleString('id-ID')} | Total Pengeluaran: Rp ${totalPengeluaran.toLocaleString('id-ID')} | SALDO AKHIR: Rp ${saldoAkhir.toLocaleString('id-ID')}`;

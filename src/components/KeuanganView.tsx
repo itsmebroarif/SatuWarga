@@ -15,7 +15,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { TransaksiKas, UnitCategory } from '../types';
-import { exportKasCSV, exportKasPDF } from '../utils/exportUtils';
+import { exportKasCSV, exportKasPDF, exportToCSV } from '../utils/exportUtils';
 import { PrintReportHeader } from './PrintReportHeader';
 
 interface KeuanganViewProps {

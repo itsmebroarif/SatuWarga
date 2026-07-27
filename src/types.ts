@@ -113,6 +113,28 @@ export interface Rumah {
 
 export type StatusSurat = 'DRAFT' | 'MENUNGGU_RT' | 'MENUNGGU_RW' | 'DISETUJUI' | 'DITOLAK';
 
+export type SuratCategory = 'RT_RW' | 'PKK' | 'KARANG_TARUNA' | 'POSYANDU' | 'DKM' | 'LINMAS' | 'WARGA' | 'UMUM';
+
+export interface KopSuratConfig {
+  headerLine1: string;
+  headerLine2: string;
+  headerLine3: string;
+  alamatContact: string;
+  logoIcon: 'RTRW' | 'PKK' | 'KARANG_TARUNA' | 'POSYANDU' | 'DKM' | 'LINMAS' | 'GARUDA' | 'LOGOGRAM';
+  borderStyle: 'DOUBLE' | 'SINGLE' | 'THICK';
+}
+
+export interface SignatureSpot {
+  id: string;
+  jabatan: string;
+  nama: string;
+  nikNip?: string;
+  lokasiTgl?: string;
+  showStempel: boolean;
+  stempelLabel?: string;
+  showQrVerify: boolean;
+}
+
 export interface Surat {
   id: string;
   nomorSurat: string;
@@ -148,6 +170,31 @@ export interface Surat {
   stempelUrl?: string;
   catatanAdmin?: string;
   tglDisetujui?: string;
+
+  // Enriched A4 Surat attributes
+  category?: SuratCategory;
+  lampiran?: string;
+  perihal?: string;
+  sifat?: string;
+  tempatSurat?: string;
+  tanggalSurat?: string;
+  
+  // Custom Kop
+  kop?: KopSuratConfig;
+
+  // Custom Content Paragraphs & Detail
+  tempatLahirWarga?: string;
+  tanggalLahirWarga?: string;
+  jenisKelaminWarga?: string;
+  pekerjaanWarga?: string;
+  agamaWarga?: string;
+
+  paragrafPembuka?: string;
+  paragrafIsiUtama?: string;
+  paragrafPenutup?: string;
+
+  // Signatures
+  signatures?: SignatureSpot[];
 }
 
 export interface TransaksiKas {

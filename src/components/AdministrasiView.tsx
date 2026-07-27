@@ -13,11 +13,15 @@ import {
   FileText,
   BookOpen,
   ArrowRight,
-  Send,
+  Edit3,
+  Layers,
+  Zap,
 } from 'lucide-react';
-import { Surat, Warga } from '../types';
+import { Surat, Warga, SuratCategory } from '../types';
 import { PrintSuratModal } from './PrintSuratModal';
 import { PrintReportHeader } from './PrintReportHeader';
+import { A4SuratEditorModal } from './A4SuratEditorModal';
+import { ALL_SURAT_TEMPLATES, SURAT_CATEGORIES, SuratTemplate } from '../data/suratTemplates';
 
 interface AdministrasiViewProps {
   suratList: Surat[];
@@ -26,89 +30,6 @@ interface AdministrasiViewProps {
   onApproveSurat: (id: string) => void;
   onRejectSurat: (id: string) => void;
 }
-
-const SURAT_TEMPLATES = [
-  {
-    title: 'Surat Pengantar RT/RW',
-    code: 'SP-RTRW',
-    description:
-      'Surat ini berfungsi sebagai dokumen pengantar resmi dari pengurus lingkungan setempat untuk menyatakan bahwa pemohon adalah warga setempat yang bermaksud mengurus keperluan administrasi tertentu di tingkat kelurahan atau kecamatan.',
-    defaultKeperluan: 'Pengurusan administrasi kependudukan di Kelurahan / Kecamatan',
-    category: 'Pengantar Umum',
-  },
-  {
-    title: 'Surat Keterangan Domisili (SKD)',
-    code: 'SKD',
-    description:
-      'Surat resmi ini digunakan untuk membuktikan atau menerangkan tempat tinggal legal seseorang saat ini, baik untuk warga asli maupun pendatang yang sedang merantau untuk keperluan pekerjaan, sekolah, atau bisnis.',
-    defaultKeperluan: 'Persyaratan domisili tempat tinggal legal untuk pekerjaan / perbankan / sekolah',
-    category: 'Kependudukan',
-  },
-  {
-    title: 'Surat Keterangan Tidak Mampu (SKTM)',
-    code: 'SKTM',
-    description:
-      'Surat keterangan ini diterbitkan untuk menyatakan bahwa suatu keluarga atau individu berada dalam kondisi ekonomi kurang mampu, yang biasanya digunakan sebagai syarat mendapat bantuan sosial, beasiswa, atau keringanan biaya medis.',
-    defaultKeperluan: 'Pengajuan keringanan biaya pengobatan RS / beasiswa pendidikan / bantuan sosial',
-    category: 'Sosial & Keringanan',
-  },
-  {
-    title: 'Surat Keterangan Usaha (SKU)',
-    code: 'SKU',
-    description:
-      'Surat ini dibuat untuk melegalkan atau menerangkan status kepemilikan sebuah usaha mikro atau kecil di wilayah tersebut, yang biasanya diperlukan warga sebagai syarat pengajuan pinjaman modal ke bank.',
-    defaultKeperluan: 'Persyaratan pengajuan pinjaman modal usaha KUR Bank / legalitas usaha mikro',
-    category: 'Perekonomian',
-  },
-  {
-    title: 'Surat Pengantar Pindah Domisili',
-    code: 'SPPD',
-    description:
-      'Surat resmi ini diajukan oleh warga yang berencana pindah alamat rumah ke luar wilayah RT/RW atau luar kota, yang berfungsi untuk memperbarui data kependudukan pada Kartu Keluarga (KK) dan KTP baru.',
-    defaultKeperluan: 'Permohonan penerbitan SKPWNI / pembaruan Kartu Keluarga & KTP alamat baru',
-    category: 'Kependudukan',
-  },
-  {
-    title: 'Surat Keterangan Kematian',
-    code: 'SK-MATI',
-    description:
-      'Surat ini diterbitkan sebagai bukti formal bahwa seorang warga telah meninggal dunia di wilayah tersebut, yang nantinya digunakan oleh pihak keluarga untuk mengurus akta kematian, asuransi, hingga pembatalan BPJS.',
-    defaultKeperluan: 'Pengurusan Akta Kematian di Disdukcapil / Klaim Asuransi / Penutupan Rekening',
-    category: 'Legalitas & Peristiwa',
-  },
-  {
-    title: 'Surat Keterangan Belum Menikah',
-    code: 'SKBM',
-    description:
-      'Surat pernyataan resmi ini digunakan untuk menerangkan bahwa status sipil seorang warga hingga saat ini adalah lajang atau belum pernah menikah, yang umumnya menjadi syarat mutlak pendaftaran pernikahan di KUA/Pencatatan Sipil atau seleksi kerja tertentu.',
-    defaultKeperluan: 'Persyaratan pendaftaran pernikahan di KUA / Pencatatan Sipil / Seleksi Kedinasan',
-    category: 'Status Sipil',
-  },
-  {
-    title: 'Surat Izin Keramaian',
-    code: 'SIK',
-    description:
-      'Surat pengantar ini diajukan oleh warga yang ingin mengadakan acara besar di lingkungan rumah, seperti resepsi pernikahan atau festival, guna mendapatkan izin keramaian resmi dan jaminan keamanan dari pihak kepolisian setempat.',
-    defaultKeperluan: 'Pengajuan Izin Keramaian Resepsi Pernikahan / Acara Festival ke Polsek setempat',
-    category: 'Ketertiban & Acara',
-  },
-  {
-    title: 'Surat Keterangan Berkelakuan Baik',
-    code: 'SKBB',
-    description:
-      'Surat pengantar dari lingkungan ini menerangkan bahwa warga yang bersangkutan memiliki rekam jejak sosial yang baik dan tidak pernah membuat kerusuhan, biasanya sebagai dokumen awal untuk mengurus SKCK di kepolisian.',
-    defaultKeperluan: 'Persyaratan awal penerbitan SKCK di Kepolisian / Melamar Pekerjaan',
-    category: 'Rekomendasi',
-  },
-  {
-    title: 'Surat Kuasa Ahli Waris',
-    code: 'SKAW',
-    description:
-      'Surat resmi ini dibuat secara bersama oleh para ahli waris sah untuk memberikan wewenang kepada salah satu anggota keluarga dalam mengurus pembagian harta peninggalan, pencairan tabungan, atau balik nama sertifikat tanah almarhum.',
-    defaultKeperluan: 'Pengurusan pembagian harta warisan / balik nama sertifikat / pencairan tabungan bank',
-    category: 'Hukum & Waris',
-  },
-];
 
 export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
   suratList = [],
@@ -120,8 +41,13 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
   const [activeSubView, setActiveSubView] = useState<'DAFTAR' | 'KATALOG_TEMPLATE'>('DAFTAR');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [categoryFilter, setCategoryFilter] = useState<SuratCategory | 'ALL'>('ALL');
 
-  // New Surat Modal
+  // A4 Live Editor Modal state
+  const [isA4EditorOpen, setIsA4EditorOpen] = useState(false);
+  const [editingA4Surat, setEditingA4Surat] = useState<Surat | null>(null);
+
+  // New Quick Surat Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWargaId, setSelectedWargaId] = useState('');
   const [jenisSurat, setJenisSurat] = useState<string>('Surat Pengantar RT/RW');
@@ -143,13 +69,17 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
     return matchesSearch && matchesStatus;
   });
 
+  const filteredTemplates = ALL_SURAT_TEMPLATES.filter((t) => {
+    return categoryFilter === 'ALL' || t.category === categoryFilter;
+  });
+
   const handleCreateSurat = (e: React.FormEvent) => {
     e.preventDefault();
     const wargaObj = wargaList.find((w) => w.id === selectedWargaId) || wargaList[0];
 
     const newSurat: Surat = {
       id: 'srt-' + Date.now(),
-      nomorSurat: `0${suratList.length + 15}/ADM-RTRW/VII/2026`,
+      nomorSurat: `0${suratList.length + 15}/ADM-EEMS/VII/2026`,
       jenisSurat: jenisSurat,
       wargaId: wargaObj?.id || 'w-001',
       namaWarga: wargaObj?.nama || 'Warga Terdaftar',
@@ -169,7 +99,46 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
     setAiDraftResult(null);
   };
 
-  const openModalWithTemplate = (tmpl: typeof SURAT_TEMPLATES[0]) => {
+  const openA4EditorWithTemplate = (tmpl: SuratTemplate) => {
+    const matchedWarga = wargaList.length > 0 ? wargaList[0] : null;
+    const initialSuratObj: Surat = {
+      id: 'srt-' + Date.now(),
+      nomorSurat: `0${suratList.length + 15}/ADM-EEMS/VII/2026`,
+      jenisSurat: tmpl.title,
+      category: tmpl.category,
+      wargaId: matchedWarga?.id || 'w-001',
+      namaWarga: matchedWarga?.nama || 'Bambang Supriadi',
+      nik: matchedWarga?.nik || '3275011205820001',
+      alamatWarga: matchedWarga ? `${matchedWarga.alamat}, RT ${matchedWarga.rt}/RW ${matchedWarga.rw}` : 'Jl. Graha Warga Utama No. 12',
+      rt: matchedWarga?.rt || '003',
+      rw: matchedWarga?.rw || '012',
+      keperluan: tmpl.defaultKeperluan,
+      tanggalPengajuan: new Date().toISOString().slice(0, 10),
+      status: 'MENUNGGU_RT',
+      qrCodeHash: `EEMS-${tmpl.code}-${Date.now().toString().slice(-4)}-VERIFIED`,
+      perihal: tmpl.perihal,
+      lampiran: tmpl.lampiran,
+      sifat: tmpl.sifat,
+      tempatSurat: 'Sukamaju',
+      tanggalSurat: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      kop: tmpl.kop,
+      paragrafPembuka: tmpl.paragrafPembuka,
+      paragrafIsiUtama: tmpl.paragrafIsiUtama,
+      paragrafPenutup: tmpl.paragrafPenutup,
+      signatures: tmpl.defaultSignatures,
+    };
+
+    setEditingA4Surat(initialSuratObj);
+    setIsA4EditorOpen(true);
+  };
+
+  const handleSaveA4Surat = (savedSurat: Surat) => {
+    onAddSurat(savedSurat);
+    setIsA4EditorOpen(false);
+    setEditingA4Surat(null);
+  };
+
+  const openModalWithTemplate = (tmpl: SuratTemplate) => {
     setJenisSurat(tmpl.title);
     setKeperluan(tmpl.defaultKeperluan);
     if (wargaList.length > 0) setSelectedWargaId(wargaList[0].id);
@@ -225,6 +194,15 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
 
         <div className="flex items-center gap-2 flex-wrap">
           <button
+            onClick={() => {
+              const tmpl = ALL_SURAT_TEMPLATES[0];
+              openA4EditorWithTemplate(tmpl);
+            }}
+            className="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs px-3.5 py-2 rounded-xl font-black flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+          >
+            <Edit3 className="w-4 h-4 text-slate-950" /> Buka Live A4 Editor
+          </button>
+          <button
             onClick={() => window.print()}
             className="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
           >
@@ -265,36 +243,68 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
           }`}
         >
           <BookOpen className="w-4 h-4 text-amber-900" />
-          <span>List Template Surat Warga (10 Template Resmi)</span>
+          <span>Katalog 18+ Template Surat Resmi</span>
         </button>
       </div>
 
       {/* Sub-View: Katalog Template Surat */}
       {activeSubView === 'KATALOG_TEMPLATE' && (
         <div className="space-y-4">
-          <div className="bg-amber-50 border-2 border-amber-300 p-4 rounded-2xl flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <h3 className="font-extrabold text-xs text-amber-950">Katalog Template Surat Resmi Lingkungan</h3>
-              <p className="text-xs text-amber-900/90 leading-relaxed">
-                Pilih salah satu dari 10 template surat di bawah ini untuk membuka formulir permohonan dengan isi dan kriteria otomatis yang telah disesuaikan dengan standar administrasi RT/RW & Kelurahan.
-              </p>
+          <div className="bg-amber-50 border-2 border-amber-300 p-4 rounded-2xl flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <h3 className="font-extrabold text-xs text-amber-950">
+                  Katalog 18+ Template Surat Resmi & Editor A4 Interactive
+                </h3>
+                <p className="text-xs text-amber-900/90 leading-relaxed">
+                  Gunakan pembatas kategori di bawah untuk memfilter template khusus RT, RW, PKK, Karang Taruna, Posyandu, DKM, Linmas, atau Warga. Klik "Buka di A4 Editor" untuk mengedit Kop, Isi, dan Spot Tanda Tangan secara langsung!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category Filter Pills (Pembatas Based on Category) */}
+          <div className="bg-white p-3 rounded-2xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_#0f172a] space-y-2">
+            <div className="flex items-center justify-between text-xs font-black text-slate-900 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-emerald-600" /> Pembatas Kategori Surat (18 Template)
+              </span>
+              <span className="text-[10px] font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-300">
+                {filteredTemplates.length} Ditemukan
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              {SURAT_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setCategoryFilter(cat.key as any)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition cursor-pointer border-2 ${
+                    categoryFilter === cat.key
+                      ? 'bg-amber-400 text-slate-950 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                      : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {SURAT_TEMPLATES.map((tmpl, idx) => (
+            {filteredTemplates.map((tmpl, idx) => (
               <div
-                key={tmpl.code}
+                key={tmpl.id}
                 className="bg-white p-4 rounded-2xl border-2 border-slate-900 shadow-[4px_4px_0px_0px_#0f172a] hover:shadow-[6px_6px_0px_0px_#0f172a] transition-all flex flex-col justify-between gap-3 group"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-300 font-mono text-[10px] font-black uppercase">
+                    <span className="px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 font-mono text-[10px] font-black uppercase">
                       {idx + 1}. {tmpl.code}
                     </span>
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-bold">
-                      {tmpl.category}
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${tmpl.badgeBg} ${tmpl.badgeText}`}>
+                      {tmpl.categoryLabel}
                     </span>
                   </div>
 
@@ -307,17 +317,19 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
                   </p>
                 </div>
 
-                <div className="border-t border-slate-200 pt-3 flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-slate-500 italic">
-                    Keperluan: {tmpl.defaultKeperluan.slice(0, 35)}...
+                <div className="border-t border-slate-200 pt-3 flex items-center justify-between gap-2 flex-wrap">
+                  <span className="text-[10px] font-mono text-slate-500 italic max-w-[180px] truncate">
+                    Perihal: {tmpl.perihal}
                   </span>
-                  <button
-                    onClick={() => openModalWithTemplate(tmpl)}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs border border-slate-900 shadow-xs flex items-center gap-1 cursor-pointer transition active:translate-y-0.5"
-                  >
-                    <span>Gunakan Template</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => openA4EditorWithTemplate(tmpl)}
+                      className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs border border-slate-900 shadow-xs flex items-center gap-1 cursor-pointer transition active:translate-y-0.5"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Buka di Editor A4</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -378,7 +390,7 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
                       <td colSpan={7} className="p-8 text-center text-slate-500">
                         <FileCheck className="w-10 h-10 text-slate-300 mx-auto mb-2" />
                         <p className="font-semibold text-slate-700 text-sm">Belum ada pengajuan surat</p>
-                        <p className="text-xs text-slate-500 mt-0.5">Klik "+ Buat Pengajuan Surat" untuk membuat pengajuan baru.</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Klik "+ Ajukan Surat Baru" atau pilih dari Katalog Template.</p>
                       </td>
                     </tr>
                   )}
@@ -423,8 +435,17 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
                             </button>
                           )}
                           <button
+                            onClick={() => {
+                              setEditingA4Surat(surat);
+                              setIsA4EditorOpen(true);
+                            }}
+                            className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold border border-slate-900 text-[11px] px-2.5 py-1 rounded inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            <Edit3 className="w-3 h-3" /> Edit / Preview A4
+                          </button>
+                          <button
                             onClick={() => setPrintingSurat(surat)}
-                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[11px] px-2.5 py-1 rounded font-medium inline-flex items-center gap-1"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[11px] px-2.5 py-1 rounded font-medium inline-flex items-center gap-1 cursor-pointer"
                           >
                             <Printer className="w-3 h-3" /> Cetak Kop
                           </button>
@@ -475,9 +496,9 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
                   onChange={(e) => setJenisSurat(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded px-3 py-1.5 focus:outline-none focus:border-emerald-500 font-medium"
                 >
-                  {SURAT_TEMPLATES.map((t) => (
-                    <option key={t.code} value={t.title}>
-                      {t.title} ({t.category})
+                  {ALL_SURAT_TEMPLATES.map((t) => (
+                    <option key={t.id} value={t.title}>
+                      {t.title} ({t.categoryLabel})
                     </option>
                   ))}
                 </select>
@@ -537,6 +558,15 @@ export const AdministrasiView: React.FC<AdministrasiViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* LIVE A4 EDITOR & PREVIEW MODAL */}
+      <A4SuratEditorModal
+        isOpen={isA4EditorOpen}
+        onClose={() => setIsA4EditorOpen(false)}
+        initialSurat={editingA4Surat}
+        wargaList={wargaList}
+        onSave={handleSaveA4Surat}
+      />
 
       {/* PRINT SURAT KOP MODAL */}
       {printingSurat && (

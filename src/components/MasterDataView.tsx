@@ -28,7 +28,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { Warga, KartuKeluarga, Rumah } from '../types';
-import { exportWargaCSV, exportWargaPDF } from '../utils/exportUtils';
+import { exportWargaCSV, exportWargaPDF, exportToCSV } from '../utils/exportUtils';
 
 interface MasterDataViewProps {
   wargaList: Warga[];
